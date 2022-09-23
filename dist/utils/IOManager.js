@@ -10,7 +10,7 @@ class IOManager extends ObjUtils_1.AutoBound {
         this.scriptName = options.name;
         this.logTimestamp = options.logTimestamp;
         this.timestampFormat = options.timestampFormat;
-        this.isInIFrame = options.detectIFrames && window.self !== window.top;
+        this.isInIFrame = options.detectIFrames && globalThis.self !== globalThis.top;
     }
     getTimestamp() {
         switch (this.timestampFormat) {
@@ -64,7 +64,7 @@ class IOManager extends ObjUtils_1.AutoBound {
 exports.default = IOManager;
 IOManager.IFRAME_LOG_PREFIX = "iframe";
 IOManager.DEFAULT_LOGGER_OPTIONS = {
-    name: (_c = (_b = (_a = globalThis.GM_info) === null || _a === void 0 ? void 0 : _a.call(globalThis)) === null || _b === void 0 ? void 0 : _b.script) === null || _c === void 0 ? void 0 : _c.name,
+    name: (_c = (_b = (_a = globalThis.GM_info) === null || _a === void 0 ? void 0 : _a.script) === null || _b === void 0 ? void 0 : _b.name) !== null && _c !== void 0 ? _c : "",
     logTimestamp: true,
     timestampFormat: "Locale",
     detectIFrames: true
