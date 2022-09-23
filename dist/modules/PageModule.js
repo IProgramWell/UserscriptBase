@@ -22,10 +22,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageModule = void 0;
-const utils = __importStar(require("../utils"));
-class PageModule extends utils.ObjUtils.AutoBound {
+const ObjUtils_1 = require("../utils/ObjUtils");
+const IOManager_1 = __importDefault(require("../utils/IOManager"));
+const URLUtils = __importStar(require("../utils/URLUtils"));
+const PageUtils = __importStar(require("../utils/PageUtils"));
+class PageModule extends ObjUtils_1.AutoBound {
     constructor(moduleDetails) {
         super();
         /**
@@ -40,10 +46,10 @@ class PageModule extends utils.ObjUtils.AutoBound {
         this.methods = {};
         this.shouldBeActive = () => true;
         this.moduleName = null;
-        this.logger = utils.IOManager.GLOBAL_MANAGER;
+        this.logger = IOManager_1.default.GLOBAL_MANAGER;
         this.utils = {
-            urlUtils: utils.URLUtils,
-            pageUtils: utils.PageUtils,
+            urlUtils: URLUtils,
+            pageUtils: PageUtils,
         };
         this.state = {};
         this.isActive = false;

@@ -1,5 +1,6 @@
 import PageModule from "./PageModule";
-import * as utils from "../utils";
+import IOManager from "../utils/IOManager";
+import { getCurrentLocation } from "../utils/URLUtils";
 
 export function onModuleEvent<
 	HN extends keyof Required<PageModule["eventHandlers"]> = keyof Required<PageModule["eventHandlers"]>,
@@ -9,7 +10,7 @@ export function onModuleEvent<
 		moduleList: PageModule[],
 		eventHandlerName: HN,
 		handlerArgs: Parameters<HF>,
-		logger: utils.IOManager,
+		logger: IOManager,
 	}
 )
 {
@@ -18,7 +19,7 @@ export function onModuleEvent<
 	{
 		try
 		{
-			if (module.isActive !== module.shouldBeActive(utils.URLUtils.getCurrentLocation()))
+			if (module.isActive !== module.shouldBeActive(getCurrentLocation()))
 			{
 				newIsActive = (
 					module.eventHandlers[options.eventHandlerName] as
@@ -50,7 +51,7 @@ export function callAllModulesMethod(options: {
 	moduleList: PageModule[],
 	methodName: string,
 	methodArgs: any[],
-	logger: utils.IOManager,
+	logger: IOManager,
 	onlyIfShouldBeActive: boolean
 })
 {
@@ -58,7 +59,7 @@ export function callAllModulesMethod(options: {
 	{
 		try
 		{
-			if (!options.onlyIfShouldBeActive || module.shouldBeActive(utils.URLUtils.getCurrentLocation()))
+			if (!options.onlyIfShouldBeActive || module.shouldBeActive(getCurrentLocation()))
 				module.methods?.[options.methodName]?.(...options.methodArgs);
 		}
 		catch (err)
@@ -75,7 +76,7 @@ export function callAllModulesMethod(options: {
 
 export function onUrlChange(options: {
 	moduleList: PageModule[],
-	logger: utils.IOManager,
+	logger: IOManager,
 	currentLocation: Location | URL | string,
 })
 {
@@ -122,7 +123,7 @@ export function activateForRegex(
 				? new URL(url)
 				: url
 			)
-			: this.utils.urlUtils.getCurrentLocation();
+			: this.getCurrentLocation();
 
 		return ACTIVATE_REGEXP.test(wholeUrl
 			? TEST_URL.href

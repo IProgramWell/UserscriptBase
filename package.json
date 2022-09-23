@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm i && npm run test && tsc",
     "test": "",
-    "circ": "madge --circular --extensions js,ts --warning --ts-config ./tsconfig.json .",
+    "circ": "madge --circular --exclude dist --extensions js,ts --warning --ts-config ./tsconfig.json .",
     "tc": "echo \"Running type checks...\" && tsc --noEmit && echo \"Done!\""
   },
   "author": "",
