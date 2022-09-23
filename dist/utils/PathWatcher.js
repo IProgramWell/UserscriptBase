@@ -7,19 +7,11 @@ const ObjUtils_1 = require("./ObjUtils");
 const IOManager_1 = __importDefault(require("./IOManager"));
 const URLUtils_1 = require("./URLUtils");
 const moduleUtils_1 = require("../modules/moduleUtils");
-const DEFAULT_CTOR_OPTIONS = {
-    moduleList: [],
-    logger: IOManager_1.default.GLOBAL_MANAGER,
-    watchWholeURL: false,
-    onUrlChange: moduleUtils_1.onUrlChange,
-    ObserverClass: MutationObserver,
-    getCurrentLocation: URLUtils_1.getCurrentLocation,
-};
 class PathWatcher extends ObjUtils_1.AutoBound {
-    constructor(options = DEFAULT_CTOR_OPTIONS) {
+    constructor(options = PathWatcher.DEFAULT_WATCHER_OPTIONS) {
         super();
         this.watchWholeURL = false;
-        let fullOptions = Object.assign(Object.assign({}, DEFAULT_CTOR_OPTIONS), options);
+        let fullOptions = Object.assign(Object.assign({}, PathWatcher.DEFAULT_WATCHER_OPTIONS), options);
         this.lastURL = "";
         this.observerInstance = new fullOptions.ObserverClass(this.onUrlChange);
         this.logger = fullOptions.logger;
@@ -51,4 +43,12 @@ class PathWatcher extends ObjUtils_1.AutoBound {
     }
 }
 exports.default = PathWatcher;
+PathWatcher.DEFAULT_WATCHER_OPTIONS = {
+    moduleList: [],
+    logger: IOManager_1.default.GLOBAL_MANAGER,
+    watchWholeURL: false,
+    onUrlChange: moduleUtils_1.onUrlChange,
+    ObserverClass: MutationObserver,
+    getCurrentLocation: URLUtils_1.getCurrentLocation,
+};
 ;

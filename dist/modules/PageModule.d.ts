@@ -1,9 +1,6 @@
-import { AutoBound } from "../utils/ObjUtils";
-import IOManager from "../utils/IOManager";
-import * as URLUtils from "../utils/URLUtils";
-import * as PageUtils from "../utils/PageUtils";
+import * as utils from "../utils";
 import type { ModuleTypes } from "../../types";
-export declare class PageModule extends AutoBound {
+export declare class PageModule extends utils.ObjUtils.AutoBound {
     /**
      * A collection of per module event handlers,
      * bound to the current module instance.
@@ -28,10 +25,10 @@ export declare class PageModule extends AutoBound {
     };
     readonly shouldBeActive: (url?: string | URL | Location) => boolean;
     readonly moduleName: string | null | undefined;
-    readonly logger: IOManager;
+    readonly logger: utils.IOManager;
     readonly utils: {
-        urlUtils: typeof URLUtils;
-        pageUtils: typeof PageUtils;
+        urlUtils: typeof utils.URLUtils;
+        pageUtils: typeof utils.PageUtils;
     };
     state: Record<PropertyKey, any>;
     isActive: boolean;
@@ -41,7 +38,7 @@ export declare class PageModule extends AutoBound {
         utils?: PageModule["utils"];
         shouldBeActive?: PageModule["shouldBeActive"];
         moduleName?: string;
-        logger?: IOManager;
+        logger?: utils.IOManager;
     });
     getStateValue<T>(name: keyof PageModule["state"], defaultValue?: T | null): T | null | undefined;
     setStateValue<T>(name: keyof PageModule["state"], value: T): void;

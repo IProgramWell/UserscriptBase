@@ -1,14 +1,11 @@
-import { AutoBound } from "../utils/ObjUtils";
-import IOManager from "../utils/IOManager";
-import * as URLUtils from "../utils/URLUtils";
-import * as PageUtils from "../utils/PageUtils";
+import * as utils from "../utils";
 
 import type {
 	GeneralTypes,
 	ModuleTypes,
 } from "../../types";
 
-export class PageModule extends AutoBound
+export class PageModule extends utils.ObjUtils.AutoBound
 {
 	/**
 	 * A collection of per module event handlers,
@@ -34,13 +31,13 @@ export class PageModule extends AutoBound
 	} = {};
 	readonly shouldBeActive: (url?: string | URL | Location) => boolean = () => true;
 	readonly moduleName: string | null | undefined = null;
-	readonly logger: IOManager = IOManager.GLOBAL_MANAGER;
+	readonly logger: utils.IOManager = utils.IOManager.GLOBAL_MANAGER;
 	readonly utils: {
-		urlUtils: typeof URLUtils,
-		pageUtils: typeof PageUtils,
+		urlUtils: typeof utils.URLUtils,
+		pageUtils: typeof utils.PageUtils,
 	} = {
-			urlUtils: URLUtils,
-			pageUtils: PageUtils,
+			urlUtils: utils.URLUtils,
+			pageUtils: utils.PageUtils,
 		};
 
 	state: Record<PropertyKey, any> = {};
@@ -52,7 +49,7 @@ export class PageModule extends AutoBound
 		utils?: PageModule["utils"],
 		shouldBeActive?: PageModule["shouldBeActive"],
 		moduleName?: string,
-		logger?: IOManager,
+		logger?: utils.IOManager,
 	})
 	{
 

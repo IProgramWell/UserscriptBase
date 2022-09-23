@@ -1,6 +1,5 @@
-import IOManager from "../utils/IOManager";
 import PageModule from "./PageModule";
-import { getCurrentLocation } from "../utils/URLUtils";
+import * as utils from "../utils";
 
 export function onModuleEvent<
 	HN extends keyof Required<PageModule["eventHandlers"]> = keyof Required<PageModule["eventHandlers"]>,
@@ -10,7 +9,7 @@ export function onModuleEvent<
 		moduleList: PageModule[],
 		eventHandlerName: HN,
 		handlerArgs: Parameters<HF>,
-		logger: IOManager,
+		logger: utils.IOManager,
 	}
 )
 {
@@ -19,7 +18,7 @@ export function onModuleEvent<
 	{
 		try
 		{
-			if (module.isActive !== module.shouldBeActive(getCurrentLocation()))
+			if (module.isActive !== module.shouldBeActive(utils.URLUtils.getCurrentLocation()))
 			{
 				newIsActive = (
 					module.eventHandlers[options.eventHandlerName] as
@@ -31,11 +30,11 @@ export function onModuleEvent<
 				{
 					module.isActive = newIsActive;
 					options.logger.print(
-						`${newIsActive
+						(newIsActive
 							? "Started"
 							: "Stopped"
-						} module: "${module.moduleName
-						}"`
+						) +
+						` module: "${module.moduleName}"`
 					);
 				}
 			}
@@ -51,7 +50,7 @@ export function callAllModulesMethod(options: {
 	moduleList: PageModule[],
 	methodName: string,
 	methodArgs: any[],
-	logger: IOManager,
+	logger: utils.IOManager,
 	onlyIfShouldBeActive: boolean
 })
 {
@@ -59,7 +58,7 @@ export function callAllModulesMethod(options: {
 	{
 		try
 		{
-			if (!options.onlyIfShouldBeActive || module.shouldBeActive(getCurrentLocation()))
+			if (!options.onlyIfShouldBeActive || module.shouldBeActive(utils.URLUtils.getCurrentLocation()))
 				module.methods?.[options.methodName]?.(...options.methodArgs);
 		}
 		catch (err)
@@ -76,7 +75,7 @@ export function callAllModulesMethod(options: {
 
 export function onUrlChange(options: {
 	moduleList: PageModule[],
-	logger: IOManager,
+	logger: utils.IOManager,
 	currentLocation: Location | URL | string,
 })
 {

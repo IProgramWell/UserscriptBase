@@ -5,23 +5,24 @@ import { onUrlChange } from "../modules/moduleUtils";
 
 import type PageModule from "../modules/PageModule";
 
-const DEFAULT_CTOR_OPTIONS: {
-	moduleList: PageModule[],
-	logger: IOManager,
-	watchWholeURL: boolean,
-	onUrlChange: typeof onUrlChange,
-	ObserverClass: typeof MutationObserver,
-	getCurrentLocation: typeof getCurrentLocation,
-} = {
-	moduleList: [],
-	logger: IOManager.GLOBAL_MANAGER,
-	watchWholeURL: false,
-	onUrlChange,
-	ObserverClass: MutationObserver,
-	getCurrentLocation,
-};
 export default class PathWatcher extends AutoBound
 {
+	static readonly DEFAULT_WATCHER_OPTIONS: {
+		moduleList: PageModule[],
+		logger: IOManager,
+		watchWholeURL: boolean,
+		onUrlChange: typeof onUrlChange,
+		ObserverClass: typeof MutationObserver,
+		getCurrentLocation: typeof getCurrentLocation,
+	} = {
+			moduleList: [],
+			logger: IOManager.GLOBAL_MANAGER,
+			watchWholeURL: false,
+			onUrlChange,
+			ObserverClass: MutationObserver,
+			getCurrentLocation,
+		};
+
 	readonly observerInstance: MutationObserver;
 	readonly logger: IOManager;
 	readonly moduleList: PageModule[];
@@ -31,12 +32,12 @@ export default class PathWatcher extends AutoBound
 
 	lastURL: string;
 
-	constructor (options: Partial<typeof DEFAULT_CTOR_OPTIONS> = DEFAULT_CTOR_OPTIONS)
+	constructor (options: Partial<typeof PathWatcher.DEFAULT_WATCHER_OPTIONS> = PathWatcher.DEFAULT_WATCHER_OPTIONS)
 	{
 		super();
 
 		let fullOptions = {
-			...DEFAULT_CTOR_OPTIONS,
+			...PathWatcher.DEFAULT_WATCHER_OPTIONS,
 			...options,
 		};
 
