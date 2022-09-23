@@ -9,7 +9,7 @@ export default class IOManager extends AutoBound
 		timestampFormat: IOManager["timestampFormat"],
 		detectIFrames: boolean,
 	} = {
-			name: globalThis.GM_info?.()?.script?.name,
+			name: globalThis.GM_info?.script?.name ?? "",
 			logTimestamp: true,
 			timestampFormat: "Locale",
 			detectIFrames: true
@@ -36,7 +36,7 @@ export default class IOManager extends AutoBound
 		this.scriptName = options.name;
 		this.logTimestamp = options.logTimestamp;
 		this.timestampFormat = options.timestampFormat;
-		this.isInIFrame = options.detectIFrames && window.self !== window.top;
+		this.isInIFrame = options.detectIFrames && globalThis.self !== globalThis.top;
 	}
 
 	getTimestamp(): string

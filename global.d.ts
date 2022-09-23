@@ -20,39 +20,39 @@ type HeaderObj = TypedObject & {
 
 declare global
 {
-	function GM_info():
-		{
-			/**A unique ID of the script. */
-			uuid: string,
-			/** The meta block of the script. */
-			scriptMetaStr: string,
-			/** Whether the script will be updated automatically. */
-			scriptWillUpdate: boolean,
-			/** The name of userscript manager, which should be the string `Violentmonkey`. */
-			scriptHandler: string,
-			/** Version of Violentmonkey. */
+	// function GM_info(): {
+	var GM_info: {
+		/**A unique ID of the script. */
+		uuid: string,
+		/** The meta block of the script. */
+		scriptMetaStr: string,
+		/** Whether the script will be updated automatically. */
+		scriptWillUpdate: boolean,
+		/** The name of userscript manager, which should be the string `Violentmonkey`. */
+		scriptHandler: string,
+		/** Version of Violentmonkey. */
+		version: string,
+		/** Unlike `navigator.userAgent`, which can be overriden by other extensions/userscripts or by devtools in device-emulation mode, `GM_info.platform` is more reliable as the data is obtained in the background page of Violentmonkey using a specialized extension API (browser.runtime.getPlatformInfo and getBrowserInfo). */
+		platform: {
+			arch: "arm" | "mips" | "mips64" | "x86-32" | "x86-64",
+			browserName: "chrome" | "firefox",
+			browserVersion: string,
+			os: "android" | "cros" | "linux" | "mac" | "openbsd" | "win",
+		},
+		/** Contains structured fields from the {@link https://violentmonkey.github.io/api/metadata-block/ Metadata Block} */
+		script: {
+			description: string,
+			excludes: string[],
+			includes: string[],
+			matches: string[],
+			name: string,
+			namespace: string,
+			resources: string[],
+			runAt: "document-start" | "document-end" | "document-idle",
 			version: string,
-			/** Unlike `navigator.userAgent`, which can be overriden by other extensions/userscripts or by devtools in device-emulation mode, `GM_info.platform` is more reliable as the data is obtained in the background page of Violentmonkey using a specialized extension API (browser.runtime.getPlatformInfo and getBrowserInfo). */
-			platform: {
-				arch: "arm" | "mips" | "mips64" | "x86-32" | "x86-64",
-				browserName: "chrome" | "firefox",
-				browserVersion: string,
-				os: "android" | "cros" | "linux" | "mac" | "openbsd" | "win",
-			},
-			/** Contains structured fields from the {@link https://violentmonkey.github.io/api/metadata-block/ Metadata Block} */
-			script: {
-				description: string,
-				excludes: string[],
-				includes: string[],
-				matches: string[],
-				name: string,
-				namespace: string,
-				resources: string[],
-				runAt: "document-start" | "document-end" | "document-idle",
-				version: string,
-			},
-			injectInto: "page" | "content" | "auto",
-		};
+		},
+		injectInto: "page" | "content" | "auto",
+	};
 	/**
 	 * Retrieves a value for current script from storage.
 	 * @param key The name for `value` to load.
@@ -169,9 +169,9 @@ declare global
 		onclick?: () => void,
 		ondone?: () => void,
 	}):
-			{
-				remove: () => Promise<unknown>,
-			};
+		{
+			remove: () => Promise<unknown>,
+		};
 	/**
 	 * Shows an HTML5 desktop notification.
 	 * @see https://violentmonkey.github.io/api/gm/#gm_notification
@@ -214,9 +214,9 @@ declare global
 		onreadystatechange?: (responseObject: ResponseObject<ContextType>) => void,
 		ontimeout?: (responseObject: ResponseObject<ContextType>) => void,
 	}):
-			{
-				abort: () => void,
-			};
+		{
+			abort: () => void,
+		};
 	/**
 	 * Downloads a URL to a local file.
 	 * @param options 
@@ -247,7 +247,8 @@ declare global
 		function getResourceUrl(...args: Parameters<typeof GM_getResourceURL>): Promise<ReturnType<typeof GM_getResourceURL>>;
 		function getResourceURL(...args: Parameters<typeof GM_getResourceURL>): Promise<ReturnType<typeof GM_getResourceURL>>;
 		function getValue(...args: Parameters<typeof GM_getValue>): Promise<ReturnType<typeof GM_getValue>>;
-		function info(...args: Parameters<typeof GM_info>): ReturnType<typeof GM_info>;
+		// function info(...args: Parameters<typeof GM_info>): ReturnType<typeof GM_info>;
+		const info: typeof GM_info;
 		function listValues(...args: Parameters<typeof GM_listValues>): Promise<ReturnType<typeof GM_listValues>>;
 		function notification(...args: Parameters<typeof GM_notification>): ReturnType<typeof GM_notification>;
 		function openInTab(...args: Parameters<typeof GM_openInTab>): ReturnType<typeof GM_openInTab>;
