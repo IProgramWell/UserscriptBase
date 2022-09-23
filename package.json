@@ -1,0 +1,17 @@
+{
+  "name": "userscriptbase",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "",
+    "circ": "madge --circular --extensions js,ts --warning --ts-config ./tsconfig.json .",
+    "tc": "echo \"Running type checks...\" && tsc --noEmit && echo \"Done!\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "madge": "^5.0.1",
+    "typescript": "^4.7.4"
+  }
+}

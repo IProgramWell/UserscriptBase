@@ -1,0 +1,39 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strictBindCallApply": true,
+		"allowSyntheticDefaultImports": true,
+		"module": "CommonJS",
+		"moduleResolution": "NodeNext",
+		"resolveJsonModule": true,
+		"rootDirs": ["src"],
+		"noEmitOnError": true,
+		"outDir": "dist",
+		"checkJs": true,
+		"maxNodeModuleJsDepth": 2,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": false,
+		"lib": [
+			"ESNext",
+			"DOM",
+		],
+		"target": "ES6",
+	},
+	"include": [
+		"./src",
+		"./types",
+	],
+	"files": [
+		"./global.d.ts"
+	]
+}

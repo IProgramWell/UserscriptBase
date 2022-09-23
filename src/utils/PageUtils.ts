@@ -1,0 +1,109 @@
+import { arrToObj } from "./ObjUtils";
+
+import type { Component } from "../../types/Component";
+
+export function queryElement<R extends Element = Element>(query: string): R | null
+{
+	return document.querySelector<R>(query);
+}
+
+export function queryAllElements<R extends Element = Element>(query: string): NodeListOf<R>
+{
+	return document.querySelectorAll<R>(query);
+}
+
+export function getSearchParams(url: URL | Location = document.location): { [searchParam: string]: string }
+{
+	return arrToObj(
+		url
+			.search
+			.substring(1)
+			.split("&"),
+		param => param.substring(0, param.indexOf("=")),
+		param => param.substring(param.indexOf("=") + 1)
+	);
+}
+
+export function removeElementById(id: string | null)
+{
+	if (!id)
+		return;
+
+	document.getElementById(id)?.remove?.();
+};
+
+export function elementize<
+	TagName extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap,
+>(component: Component<TagName>): HTMLElementTagNameMap[TagName]
+{
+	const [tagName, attributes, ...children] = component;
+	const element = Object.assign(
+		document.createElement(tagName),
+		attributes ?? {}
+	);
+	const elementChildren = children?.reduce<(string | Node)[]>(
+		(elems, child) =>
+		{
+			if (child !== null && child !== undefined)
+			{
+				switch (typeof child)
+				{
+					case "string":
+						elems.push(child);
+						break;
+					case "object":
+						if (Array.isArray(child))
+							elems.push(elementize(child));
+						else
+							elems.push(child);
+						break;
+					default:
+						elems.push(`${child}`);
+						break;
+				}
+			}
+			return elems;
+		},
+		[]
+	);
+
+	if (elementChildren && elementChildren.length > 0)
+	{
+		element.append(...elementChildren);
+	}
+	return element;
+}
+
+export function render(
+	parentElement: Element | null,
+	components: (Component | Element | Node | string)[],
+	insertAt: "start" | "end" = "end"
+): void
+{
+	if (!parentElement || !components || components.length === 0)
+		return;
+	const elements = components.reduce<(Node | string)[]>(
+		(elems, comp) =>
+		{
+			if (comp)
+			{
+				if (Array.isArray(comp))
+					elems.push(elementize(comp));
+				else
+					elems.push(comp);
+			}
+			return elems;
+		},
+		[]
+	);
+	switch (insertAt)
+	{
+		case "start":
+			parentElement.prepend(...elements);
+			break;
+		case "end":
+		default:
+			parentElement.append(...elements);
+			break;
+	}
+}
