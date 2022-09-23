@@ -28,6 +28,7 @@
 			"DOM",
 		],
 		"target": "ES6",
+		"declaration": true
 	},
 	"include": [
 		"./src",

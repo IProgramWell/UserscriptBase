@@ -2,8 +2,9 @@
   "name": "userscriptbase",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "npm i && npm run test && tsc",
     "test": "",
     "circ": "madge --circular --extensions js,ts --warning --ts-config ./tsconfig.json .",
     "tc": "echo \"Running type checks...\" && tsc --noEmit && echo \"Done!\""
