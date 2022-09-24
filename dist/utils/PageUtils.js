@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.render = exports.elementize = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
+exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
 const ObjUtils_1 = require("./ObjUtils");
 function queryElement(query) {
     return document.querySelector(query);
@@ -25,9 +25,13 @@ function removeElementById(id) {
 }
 exports.removeElementById = removeElementById;
 ;
+function createElement(type, attributes = {}) {
+    return Object.assign(document.createElement(type), attributes);
+}
+exports.createElement = createElement;
 function elementize(component) {
     const [tagName, attributes, ...children] = component;
-    const element = Object.assign(document.createElement(tagName), attributes !== null && attributes !== void 0 ? attributes : {});
+    const element = createElement(tagName, attributes !== null && attributes !== void 0 ? attributes : {});
     const elementChildren = children === null || children === void 0 ? void 0 : children.reduce((elems, child) => {
         if (child !== null && child !== undefined) {
             switch (typeof child) {
@@ -56,15 +60,16 @@ exports.elementize = elementize;
 function render(parentElement, components, insertAt = "end") {
     if (!parentElement || !components || components.length === 0)
         return;
-    const elements = components.reduce((elems, comp) => {
-        if (comp) {
+    const elements = [];
+    for (let comp of components) {
+        if (comp !== null &&
+            comp !== undefined) {
             if (Array.isArray(comp))
-                elems.push(elementize(comp));
+                elements.push(elementize(comp));
             else
-                elems.push(comp);
+                elements.push(comp);
         }
-        return elems;
-    }, []);
+    }
     switch (insertAt) {
         case "start":
             parentElement.prepend(...elements);

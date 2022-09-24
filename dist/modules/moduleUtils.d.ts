@@ -1,6 +1,6 @@
 import PageModule from "./PageModule";
 import IOManager from "../utils/IOManager";
-export declare function onModuleEvent<HN extends keyof Required<PageModule["eventHandlers"]> = keyof Required<PageModule["eventHandlers"]>, HF extends Required<PageModule["eventHandlers"]>[HN] = Required<PageModule["eventHandlers"]>[HN]>(options: {
+export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"], HF extends Required<PageModule["eventHandlers"]>[HN] = Required<PageModule["eventHandlers"]>[HN]>(options: {
     moduleList: PageModule[];
     eventHandlerName: HN;
     handlerArgs: Parameters<HF>;

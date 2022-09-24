@@ -9,6 +9,11 @@ function onModuleEvent(options) {
         try {
             if (module.isActive !== module.shouldBeActive((0, URLUtils_1.getCurrentLocation)())) {
                 newIsActive = (_b = (_a = module.eventHandlers)[options.eventHandlerName]) === null || _b === void 0 ? void 0 : _b.call(_a, ...options.handlerArgs);
+                /* newIsActive = module.eventHandlers[
+                    options.eventHandlerName
+                ]?.(
+                    ...options.handlerArgs
+                ); */
                 if (typeof newIsActive === "boolean") {
                     module.isActive = newIsActive;
                     options.logger.print((newIsActive
