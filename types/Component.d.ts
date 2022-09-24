@@ -1,4 +1,4 @@
-// Giving an alias to this long thing
+/** Giving an alias to this long thing */
 export interface TagMap extends HTMLElementTagNameMap { }
 
 export type AttributeMap<TagName extends keyof TagMap = keyof TagMap> = {

@@ -1,6 +1,6 @@
 import { arrToObj } from "./ObjUtils";
 
-import type { Component } from "../../types/Component";
+import type { Component, TagMap, AttributeMap } from "../../types/Component";
 
 export function queryElement<R extends Element = Element>(query: string): R | null
 {
@@ -32,13 +32,26 @@ export function removeElementById(id: string | null)
 	document.getElementById(id)?.remove?.();
 };
 
+export function createElement<
+	T extends keyof TagMap = keyof TagMap,
+>(
+	type: T,
+	attributes: Partial<AttributeMap<T>> = {}
+): TagMap[T]
+{
+	return Object.assign(
+		document.createElement(type),
+		attributes
+	);
+}
+
 export function elementize<
 	TagName extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap,
 >(component: Component<TagName>): HTMLElementTagNameMap[TagName]
 {
 	const [tagName, attributes, ...children] = component;
-	const element = Object.assign(
-		document.createElement(tagName),
+	const element = createElement(
+		tagName,
 		attributes ?? {}
 	);
 	const elementChildren = children?.reduce<(string | Node)[]>(
@@ -77,25 +90,25 @@ export function elementize<
 export function render(
 	parentElement: Element | null,
 	components: (Component | Element | Node | string)[],
-	insertAt: "start" | "end" = "end"
+	insertAt: "start" | "end" = "end",
 ): void
 {
 	if (!parentElement || !components || components.length === 0)
 		return;
-	const elements = components.reduce<(Node | string)[]>(
-		(elems, comp) =>
+	const elements: (Node | string)[] = [];
+	for (let comp of components)
+	{
+		if (
+			comp !== null &&
+			comp !== undefined
+		)
 		{
-			if (comp)
-			{
-				if (Array.isArray(comp))
-					elems.push(elementize(comp));
-				else
-					elems.push(comp);
-			}
-			return elems;
-		},
-		[]
-	);
+			if (Array.isArray(comp))
+				elements.push(elementize(comp));
+			else
+				elements.push(comp);
+		}
+	}
 	switch (insertAt)
 	{
 		case "start":

@@ -3,7 +3,7 @@ import IOManager from "../utils/IOManager";
 import { getCurrentLocation } from "../utils/URLUtils";
 
 export function onModuleEvent<
-	HN extends keyof Required<PageModule["eventHandlers"]> = keyof Required<PageModule["eventHandlers"]>,
+	HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"],
 	HF extends Required<PageModule["eventHandlers"]>[HN] = Required<PageModule["eventHandlers"]>[HN],
 >(
 	options: {
@@ -27,6 +27,11 @@ export function onModuleEvent<
 					(...args: Parameters<HF>) => ReturnType<HF>
 				)
 					?.(...options.handlerArgs);
+				/* newIsActive = module.eventHandlers[
+					options.eventHandlerName
+				]?.(
+					...options.handlerArgs
+				); */
 				if (typeof newIsActive === "boolean")
 				{
 					module.isActive = newIsActive;
