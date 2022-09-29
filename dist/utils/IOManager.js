@@ -1,7 +1,8 @@
 "use strict";
-var _a, _b, _c;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ObjUtils_1 = require("./ObjUtils");
+const { script: { name: scriptName, version: scriptVersion } } = (_a = globalThis.GM_info) !== null && _a !== void 0 ? _a : { script: {} };
 class IOManager extends ObjUtils_1.AutoBound {
     constructor(loggerOptions = IOManager.DEFAULT_LOGGER_OPTIONS) {
         const options = Object.assign(Object.assign({}, IOManager.DEFAULT_LOGGER_OPTIONS), loggerOptions);
@@ -64,7 +65,9 @@ class IOManager extends ObjUtils_1.AutoBound {
 exports.default = IOManager;
 IOManager.IFRAME_LOG_PREFIX = "iframe";
 IOManager.DEFAULT_LOGGER_OPTIONS = {
-    name: (_c = (_b = (_a = globalThis.GM_info) === null || _a === void 0 ? void 0 : _a.script) === null || _b === void 0 ? void 0 : _b.name) !== null && _c !== void 0 ? _c : "",
+    name: globalThis.GM_info
+        ? `${scriptName} v${scriptVersion}`
+        : "",
     logTimestamp: true,
     timestampFormat: "Locale",
     detectIFrames: true
