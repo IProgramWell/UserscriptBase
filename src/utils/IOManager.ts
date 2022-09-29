@@ -1,5 +1,11 @@
 import { AutoBound } from "./ObjUtils";
 
+const {
+	script: {
+		name: scriptName,
+		version: scriptVersion
+	}
+} = globalThis.GM_info ?? { script: {} };
 export default class IOManager extends AutoBound
 {
 	static readonly IFRAME_LOG_PREFIX: string = "iframe";
@@ -9,7 +15,9 @@ export default class IOManager extends AutoBound
 		timestampFormat: IOManager["timestampFormat"],
 		detectIFrames: boolean,
 	} = {
-			name: globalThis.GM_info?.script?.name ?? "",
+			name: globalThis.GM_info
+				? `${scriptName} v${scriptVersion}`
+				: "",
 			logTimestamp: true,
 			timestampFormat: "Locale",
 			detectIFrames: true
