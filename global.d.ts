@@ -1,5 +1,3 @@
-import { TypedObject } from "./types/GeneralTypes";
-
 type ResponseObject<ContextType = any> = {
 	status: number,
 	statusText: string,
@@ -10,7 +8,7 @@ type ResponseObject<ContextType = any> = {
 	finalUrl: string,
 	context: ContextType,
 };
-type HeaderObj = TypedObject & {
+type HeaderObj = Record<PropertyKey, any> & {
 	Cookie: string,
 	Host: string,
 	Origin: string,
@@ -20,7 +18,7 @@ type HeaderObj = TypedObject & {
 
 declare global
 {
-	// function GM_info(): {
+	// const GM_info: {
 	var GM_info: {
 		/**A unique ID of the script. */
 		uuid: string,
@@ -47,7 +45,8 @@ declare global
 			matches: string[],
 			name: string,
 			namespace: string,
-			resources: string[],
+			// resources: string[],
+			resources: Array<{ name: string, url: string }>,
 			runAt: "document-start" | "document-end" | "document-idle",
 			version: string,
 		},
@@ -109,12 +108,12 @@ declare global
 	 * Appends and returns an element with the specified attributes.
 	 * @see https://violentmonkey.github.io/api/gm/#gm_addelement
 	 */
-	function GM_addElement(tagName: string, attributes: TypedObject): HTMLElement;
+	function GM_addElement(tagName: string, attributes: Record<PropertyKey, any>): HTMLElement;
 	/**
 	 * Appends and returns an element with the specified attributes.
 	 * @see https://violentmonkey.github.io/api/gm/#gm_addelement
 	 */
-	function GM_addElement(parentNode: HTMLElement, tagName: string, attributes: TypedObject): HTMLElement;
+	function GM_addElement(parentNode: HTMLElement, tagName: string, attributes: Record<PropertyKey, any>): HTMLElement;
 	/**
 	 * Appends and returns a `<style>` element with the specified CSS.
 	 * @param css 
@@ -126,7 +125,7 @@ declare global
 	 * @param options 
 	 * @see https://violentmonkey.github.io/api/gm/#gm_openintab
 	 */
-	function GM_openInTab(url: string, options?: TypedObject):
+	function GM_openInTab(url: string, options?: Record<PropertyKey, any>):
 		{
 			/** Сan be assigned to a function. If provided, it will be called when the opened tab is closed. */
 			onclose?: () => void,
@@ -247,7 +246,6 @@ declare global
 		function getResourceUrl(...args: Parameters<typeof GM_getResourceURL>): Promise<ReturnType<typeof GM_getResourceURL>>;
 		function getResourceURL(...args: Parameters<typeof GM_getResourceURL>): Promise<ReturnType<typeof GM_getResourceURL>>;
 		function getValue(...args: Parameters<typeof GM_getValue>): Promise<ReturnType<typeof GM_getValue>>;
-		// function info(...args: Parameters<typeof GM_info>): ReturnType<typeof GM_info>;
 		const info: typeof GM_info;
 		function listValues(...args: Parameters<typeof GM_listValues>): Promise<ReturnType<typeof GM_listValues>>;
 		function notification(...args: Parameters<typeof GM_notification>): ReturnType<typeof GM_notification>;
@@ -257,3 +255,5 @@ declare global
 		function xmlHttpRequest(...args: Parameters<typeof GM_xmlhttpRequest>): ReturnType<typeof GM_xmlhttpRequest>;
 	}
 }
+
+export { };

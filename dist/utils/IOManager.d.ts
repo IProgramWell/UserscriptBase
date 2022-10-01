@@ -7,7 +7,7 @@ export default class IOManager extends AutoBound {
         timestampFormat: IOManager["timestampFormat"];
         detectIFrames: boolean;
     };
-    static GLOBAL_MANAGER: IOManager;
+    static readonly GLOBAL_MANAGER: IOManager;
     scriptName: string;
     logTimestamp: boolean;
     timestampFormat: "ISO" | "UTC" | "Locale" | "Milliseconds" | "Human";

@@ -1,5 +1,3 @@
-import type { TypedObject } from "../../types/GeneralTypes";
-
 /**
  * I want intelisense to recognise the methods as, well, methods,
  * but I also want auto-bound functions.
@@ -8,8 +6,8 @@ import type { TypedObject } from "../../types/GeneralTypes";
  */
 export function bindMethods<
 	T extends
-	TypedObject<((...args: any[]) => any) | any> =
-	TypedObject<((...args: any[]) => any) | any>
+	Record<PropertyKey, ((...args: any[]) => any) | any> =
+	Record<PropertyKey, ((...args: any[]) => any) | any>
 >(
 	source: T,
 	bindTo: T | null = null,

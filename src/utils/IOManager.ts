@@ -22,7 +22,7 @@ export default class IOManager extends AutoBound
 			timestampFormat: "Locale",
 			detectIFrames: true
 		};
-	static GLOBAL_MANAGER = new IOManager();
+	static readonly GLOBAL_MANAGER = new IOManager();
 
 	scriptName: string;
 	logTimestamp: boolean;

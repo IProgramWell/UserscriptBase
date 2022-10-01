@@ -27,8 +27,8 @@ export default class PathWatcher extends AutoBound
 	readonly logger: IOManager;
 	readonly moduleList: PageModule[];
 	readonly watchWholeURL: boolean = false;
-	readonly urlChangeHandler: typeof onUrlChange;
-	readonly getCurrentLocation: typeof getCurrentLocation;
+	readonly urlChangeHandler: typeof onUrlChange = onUrlChange;
+	readonly getCurrentLocation: typeof getCurrentLocation = getCurrentLocation;
 
 	lastURL: string;
 

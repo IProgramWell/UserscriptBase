@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm i && npm run test && tsc",
+    "build": "npm i && npm test && tsc",
     "test": "",
     "circ": "madge --circular --exclude dist --extensions js,ts --warning --ts-config ./tsconfig.json .",
     "tc": "echo \"Running type checks...\" && tsc --noEmit && echo \"Done!\""

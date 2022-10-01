@@ -33,6 +33,7 @@ const URLUtils = __importStar(require("../utils/URLUtils"));
 const PageUtils = __importStar(require("../utils/PageUtils"));
 class PageModule extends ObjUtils_1.AutoBound {
     constructor(moduleDetails) {
+        var _a, _b;
         super();
         /**
          * A collection of per module event handlers,
@@ -57,36 +58,16 @@ class PageModule extends ObjUtils_1.AutoBound {
             this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
         else
             throw new Error("Path regex not specified");
-        if (moduleDetails.eventHandlers) {
-            /* Object.assign(
-                this.eventHandlers,
-                arrToObj(
-                    Object.entries(moduleDetails.eventHandlers),
-                    ([eventHandlerName]) => eventHandlerName,
-                    ([_, eventHandler]) => eventHandler.bind(this)
-                )
-            ); */
-            for (let [methodName, methodFunc] of Object.entries(moduleDetails.eventHandlers)) {
-                if (typeof methodFunc === "function") {
-                    this.eventHandlers[methodName]
-                        = methodFunc.bind(this);
-                }
+        for (let [methodName, methodFunc] of Object.entries((_a = moduleDetails.eventHandlers) !== null && _a !== void 0 ? _a : {})) {
+            if (typeof methodFunc === "function") {
+                this.eventHandlers[methodName]
+                    = methodFunc.bind(this);
             }
         }
-        if (moduleDetails.methods) {
-            /* Object.assign(
-                this.methods,
-                arrToObj(
-                    Object.entries(moduleDetails.methods),
-                    ([methodName]) => methodName,
-                    ([_, methodFunc]) => methodFunc.bind(this)
-                )
-            ); */
-            for (let [methodName, methodFunc] of Object.entries(moduleDetails.methods)) {
-                if (typeof methodFunc === "function") {
-                    this.methods[methodName]
-                        = methodFunc.bind(this);
-                }
+        for (let [methodName, methodFunc] of Object.entries((_b = moduleDetails.methods) !== null && _b !== void 0 ? _b : {})) {
+            if (typeof methodFunc === "function") {
+                this.methods[methodName]
+                    = methodFunc.bind(this);
             }
         }
         if (moduleDetails.logger)

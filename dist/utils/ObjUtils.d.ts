@@ -1,11 +1,10 @@
-import type { TypedObject } from "../../types/GeneralTypes";
 /**
  * I want intelisense to recognise the methods as, well, methods,
  * but I also want auto-bound functions.
  *
  * This function replaces all methods in provided object with versions bound to said object.
  */
-export declare function bindMethods<T extends TypedObject<((...args: any[]) => any) | any> = TypedObject<((...args: any[]) => any) | any>>(source: T, bindTo?: T | null, assignTo?: T | null): void;
+export declare function bindMethods<T extends Record<PropertyKey, ((...args: any[]) => any) | any> = Record<PropertyKey, ((...args: any[]) => any) | any>>(source: T, bindTo?: T | null, assignTo?: T | null): void;
 /**
  * A simple class whose methods are all automatically bound.
  *

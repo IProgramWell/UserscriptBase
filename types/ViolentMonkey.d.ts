@@ -1,4 +1,4 @@
-type GMFunc = `GM_${"info" |
+type GM_API = `GM_${"info" |
 	"getValue" |
 	"setValue" |
 	"deleteValue" |
@@ -37,7 +37,7 @@ export interface Metadata
 	}[];
 	"run-at"?: "document-end" | "document-start" | "document-idle";
 	noframes?: boolean;
-	grant?: ("none" | GMFunc)[];
+	grant?: "none" | GM_API[];
 	"inject-into"?: "page" | "content" | "auto";
 	downloadURL?: string | URL;
 	supportURL?: string | URL;

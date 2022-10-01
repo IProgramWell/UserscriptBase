@@ -1,6 +1,5 @@
-import PageModule from "./PageModule";
-import IOManager from "../utils/IOManager";
-import { getCurrentLocation } from "../utils/URLUtils";
+import type PageModule from "./PageModule";
+import type IOManager from "../utils/IOManager";
 
 export function onModuleEvent<
 	HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"],
@@ -14,13 +13,18 @@ export function onModuleEvent<
 	}
 )
 {
-	let newIsActive: boolean;
+	let wasModuleActive: boolean, newIsActive: boolean;
 	for (let module of options.moduleList)
 	{
 		try
 		{
-			if (module.isActive !== module.shouldBeActive(getCurrentLocation()))
+			if (
+				module.isActive !== module.shouldBeActive(
+					module.utils.urlUtils.getCurrentLocation()
+				)
+			)
 			{
+				wasModuleActive = module.isActive;
 				newIsActive = (
 					module.eventHandlers[options.eventHandlerName] as
 					//I hate that I have to use `as` EVERYWHERE in typecript
@@ -32,7 +36,10 @@ export function onModuleEvent<
 				]?.(
 					...options.handlerArgs
 				); */
-				if (typeof newIsActive === "boolean")
+				if (
+					typeof newIsActive === "boolean" &&
+					newIsActive !== wasModuleActive
+				)
 				{
 					module.isActive = newIsActive;
 					options.logger.print(
@@ -64,7 +71,12 @@ export function callAllModulesMethod(options: {
 	{
 		try
 		{
-			if (!options.onlyIfShouldBeActive || module.shouldBeActive(getCurrentLocation()))
+			if (
+				!options.onlyIfShouldBeActive ||
+				module.shouldBeActive(
+					module.utils.urlUtils.getCurrentLocation()
+				)
+			)
 				module.methods?.[options.methodName]?.(...options.methodArgs);
 		}
 		catch (err)
@@ -113,9 +125,9 @@ export function onUrlChange(options: {
 export function activateForRegex(
 	regex: RegExp | string,
 	wholeUrl: boolean = false
-)
+): PageModule["shouldBeActive"]
 {
-	const ACTIVATE_REGEXP = typeof regex === "string"
+	const ACTIVATE_REGEXP: RegExp = typeof regex === "string"
 		? new RegExp(regex)
 		: regex;
 	return function (
@@ -123,12 +135,12 @@ export function activateForRegex(
 		url?: URL | string | Location
 	): boolean
 	{
-		const TEST_URL = url
+		const TEST_URL: URL | Location = url
 			? (typeof url === "string"
 				? new URL(url)
 				: url
 			)
-			: this.getCurrentLocation();
+			: this.utils.urlUtils.getCurrentLocation();
 
 		return ACTIVATE_REGEXP.test(wholeUrl
 			? TEST_URL.href

@@ -63,60 +63,38 @@ export class PageModule extends AutoBound
 		else
 			throw new Error("Path regex not specified");
 
-		if (moduleDetails.eventHandlers)
-		{
-			/* Object.assign(
-				this.eventHandlers,
-				arrToObj(
-					Object.entries(moduleDetails.eventHandlers),
-					([eventHandlerName]) => eventHandlerName,
-					([_, eventHandler]) => eventHandler.bind(this)
-				)
-			); */
-			for (
-				let [methodName, methodFunc]
-				of (
-					Object.entries(moduleDetails.eventHandlers) as
-					GeneralTypes.EntryArray<PageModule["eventHandlers"]>
-				)
+		for (
+			let [methodName, methodFunc]
+			of (
+				Object.entries(moduleDetails.eventHandlers ?? {}) as
+				GeneralTypes.EntryArray<PageModule["eventHandlers"]>
 			)
+		)
+		{
+			if (typeof methodFunc === "function")
 			{
-				if (typeof methodFunc === "function")
-				{
-					(
-						this.eventHandlers[methodName] as
-						PageModule["eventHandlers"][typeof methodName]
-					)
-						= methodFunc.bind(this);
-				}
+				(
+					this.eventHandlers[methodName] as
+					PageModule["eventHandlers"][typeof methodName]
+				)
+					= methodFunc.bind(this);
 			}
 		}
-		if (moduleDetails.methods)
-		{
-			/* Object.assign(
-				this.methods,
-				arrToObj(
-					Object.entries(moduleDetails.methods),
-					([methodName]) => methodName,
-					([_, methodFunc]) => methodFunc.bind(this)
-				)
-			); */
-			for (
-				let [methodName, methodFunc]
-				of (
-					Object.entries(moduleDetails.methods) as
-					GeneralTypes.EntryArray<PageModule["methods"]>
-				)
+		for (
+			let [methodName, methodFunc]
+			of (
+				Object.entries(moduleDetails.methods ?? {}) as
+				GeneralTypes.EntryArray<PageModule["methods"]>
 			)
+		)
+		{
+			if (typeof methodFunc === "function")
 			{
-				if (typeof methodFunc === "function")
-				{
-					(
-						this.methods[methodName] as
-						PageModule["methods"][typeof methodName]
-					)
-						= methodFunc.bind(this);
-				}
+				(
+					this.methods[methodName] as
+					PageModule["methods"][typeof methodName]
+				)
+					= methodFunc.bind(this);
 			}
 		}
 
@@ -130,12 +108,15 @@ export class PageModule extends AutoBound
 			this.utils = moduleDetails.utils;
 	}
 
-	getStateValue<T>(name: keyof PageModule["state"], defaultValue: T | null = null): T | null | undefined
+	getStateValue<T>(
+		name: keyof PageModule["state"],
+		defaultValue: T | null = null
+	): T | null | undefined
 	{
 		return this.state[name] ?? defaultValue;
 	}
 
-	setStateValue<T>(name: keyof PageModule["state"], value: T)
+	setStateValue<T>(name: keyof PageModule["state"], value: T): void
 	{
 		this.state[name] = value;
 	}
