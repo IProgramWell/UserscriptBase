@@ -51,7 +51,7 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
             else
                 queryResult = null;
             if ((queryResult instanceof NodeList && queryResult.length > 0) ||
-                (queryResult instanceof XPathResult && queryResult.booleanValue))
+                (queryResult instanceof XPathResult))
                 query.callback(queryResult);
             else
                 remainingQueries.push(query);

@@ -74,7 +74,7 @@ export default class QueryAwaiter extends AutoBound
 				queryResult = null;
 			if (
 				(queryResult instanceof NodeList && queryResult.length > 0) ||
-				(queryResult instanceof XPathResult && queryResult.booleanValue)
+				(queryResult instanceof XPathResult)
 			)
 				query.callback(queryResult);
 			else
