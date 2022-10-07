@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
+exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
 const ObjUtils_1 = require("./ObjUtils");
 function queryElement(query) {
     return document.querySelector(query);
@@ -81,3 +81,9 @@ function render(parentElement, components, insertAt = "end") {
     }
 }
 exports.render = render;
+function isVisible(element) {
+    let style = globalThis.getComputedStyle(element);
+    return (style.display !== "none" &&
+        style.visibility !== "hidden");
+}
+exports.isVisible = isVisible;

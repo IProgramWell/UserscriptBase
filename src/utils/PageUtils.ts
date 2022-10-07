@@ -120,3 +120,12 @@ export function render(
 			break;
 	}
 }
+
+export function isVisible(element: Element): boolean
+{
+	let style: CSSStyleDeclaration = globalThis.getComputedStyle(element);
+	return (
+		style.display !== "none" &&
+		style.visibility !== "hidden"
+	);
+}

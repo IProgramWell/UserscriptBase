@@ -8,3 +8,4 @@ export declare function removeElementById(id: string | null): void;
 export declare function createElement<T extends keyof TagMap = keyof TagMap>(type: T, attributes?: Partial<AttributeMap<T>>): TagMap[T];
 export declare function elementize<TagName extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap>(component: Component<TagName>): HTMLElementTagNameMap[TagName];
 export declare function render(parentElement: Element | null, components: (Component | Element | Node | string)[], insertAt?: "start" | "end"): void;
+export declare function isVisible(element: Element): boolean;
