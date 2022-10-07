@@ -29,9 +29,13 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
     constructor(config = QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS) {
         super();
         this.queries = [];
+        this.target = document.body;
         this.pageUtils = config.pageUtils;
         this.observerInstance = new config.ObserverClass(this.onMutation);
+        this.target = config.target;
         this.queries = [];
+        if (config.autoStart)
+            this.start();
     }
     onMutation( /* mutations: MutationRecord[], observer: MutationObserver */) {
         const remainingQueries = [];
@@ -48,9 +52,20 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
     addQuery(query, callback) {
         this.queries.push({ query, callback });
     }
+    start() {
+        this.observerInstance.observe(this.target, {
+            subtree: true,
+            childList: true,
+        });
+    }
+    stop() {
+        this.observerInstance.disconnect();
+    }
 }
 exports.default = QueryAwaiter;
 QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS = {
     ObserverClass: MutationObserver,
-    pageUtils
+    pageUtils,
+    target: document.body,
+    autoStart: false,
 };

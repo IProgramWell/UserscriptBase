@@ -7,9 +7,13 @@ export default class QueryAwaiter extends AutoBound
 	static readonly DEFAULT_CONSTRUCTOR_PARAMS: {
 		ObserverClass: typeof MutationObserver,
 		pageUtils: typeof pageUtils,
+		target: QueryAwaiter["target"],
+		autoStart: boolean,
 	} = {
 			ObserverClass: MutationObserver,
-			pageUtils
+			pageUtils,
+			target: document.body,
+			autoStart: false,
 		};
 
 	observerInstance: MutationObserver;
@@ -18,6 +22,7 @@ export default class QueryAwaiter extends AutoBound
 		query: string,
 		callback: QueryCallback
 	}[] = [];
+	target: Node = document.body;
 	constructor (
 		config:
 			typeof QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS =
@@ -28,7 +33,10 @@ export default class QueryAwaiter extends AutoBound
 
 		this.pageUtils = config.pageUtils;
 		this.observerInstance = new config.ObserverClass(this.onMutation);
+		this.target = config.target;
 		this.queries = [];
+		if (config.autoStart)
+			this.start();
 	}
 
 	onMutation(/* mutations: MutationRecord[], observer: MutationObserver */)
@@ -49,5 +57,21 @@ export default class QueryAwaiter extends AutoBound
 	addQuery(query: string, callback: QueryCallback)
 	{
 		this.queries.push({ query, callback });
+	}
+
+	start()
+	{
+		this.observerInstance.observe(
+			this.target,
+			{
+				subtree: true,
+				childList: true,
+			}
+		);
+	}
+
+	stop()
+	{
+		this.observerInstance.disconnect();
 	}
 }
