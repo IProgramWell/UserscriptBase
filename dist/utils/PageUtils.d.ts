@@ -1,4 +1,5 @@
 import type { Component, TagMap, AttributeMap } from "../../types/Component";
+import type PageModule from "../modules/PageModule";
 export declare function queryElement<R extends Element = Element>(query: string): R | null;
 export declare function queryAllElements<R extends Element = Element>(query: string): NodeListOf<R>;
 export declare function getSearchParams(url?: URL | Location): {
@@ -9,3 +10,4 @@ export declare function createElement<T extends keyof TagMap = keyof TagMap>(typ
 export declare function elementize<TagName extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap>(component: Component<TagName>): HTMLElementTagNameMap[TagName];
 export declare function render(parentElement: Element | null, components: (Component | Element | Node | string)[], insertAt?: "start" | "end"): void;
 export declare function isVisible(element: Element): boolean;
+export declare function getIDFor(module: PageModule, ...IDComponents: string[]): string;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
+exports.getIDFor = exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
 const ObjUtils_1 = require("./ObjUtils");
 function queryElement(query) {
     return document.querySelector(query);
@@ -87,3 +87,16 @@ function isVisible(element) {
         style.visibility !== "hidden");
 }
 exports.isVisible = isVisible;
+function getIDFor(module, ...IDComponents) {
+    var _a, _b;
+    const scriptName = (_b = (_a = globalThis.GM_info) === null || _a === void 0 ? void 0 : _a.script) === null || _b === void 0 ? void 0 : _b.name, { moduleName } = module;
+    return [
+        scriptName,
+        moduleName
+    ]
+        .concat(...IDComponents)
+        .filter(c => c)
+        .map(c => Array.from(c.matchAll(/\w+/g)).join(""))
+        .join("-");
+}
+exports.getIDFor = getIDFor;

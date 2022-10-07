@@ -1,6 +1,7 @@
 import { arrToObj } from "./ObjUtils";
 
 import type { Component, TagMap, AttributeMap } from "../../types/Component";
+import type PageModule from "../modules/PageModule";
 
 export function queryElement<R extends Element = Element>(query: string): R | null
 {
@@ -128,4 +129,18 @@ export function isVisible(element: Element): boolean
 		style.display !== "none" &&
 		style.visibility !== "hidden"
 	);
+}
+
+export function getIDFor(module: PageModule, ...IDComponents: string[])
+{
+	const scriptName = globalThis.GM_info?.script?.name,
+		{ moduleName } = module;
+	return [
+		scriptName,
+		moduleName
+	]
+		.concat(...IDComponents)
+		.filter(c => c)
+		.map(c => Array.from(c.matchAll(/\w+/g)).join(""))
+		.join("-");
 }
