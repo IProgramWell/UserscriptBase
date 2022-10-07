@@ -26,15 +26,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pageUtils = __importStar(require("./PageUtils"));
 const ObjUtils_1 = require("./ObjUtils");
 class QueryAwaiter extends ObjUtils_1.AutoBound {
-    constructor(config = QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS) {
+    constructor(options = QueryAwaiter.DEFAULY_AWAITER_OPTIONS) {
+        let fullOptions = Object.assign(Object.assign({}, QueryAwaiter.DEFAULY_AWAITER_OPTIONS), options);
         super();
         this.queries = [];
         this.target = document.body;
-        this.pageUtils = config.pageUtils;
-        this.observerInstance = new config.ObserverClass(this.onMutation);
-        this.target = config.target;
+        this.pageUtils = fullOptions.pageUtils;
+        this.observerInstance = new fullOptions.ObserverClass(this.onMutation);
+        this.target = fullOptions.target;
         this.queries = [];
-        if (config.autoStart)
+        if (fullOptions.autoStart)
             this.start();
     }
     onMutation( /* mutations: MutationRecord[], observer: MutationObserver */) {
@@ -63,7 +64,7 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
     }
 }
 exports.default = QueryAwaiter;
-QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS = {
+QueryAwaiter.DEFAULY_AWAITER_OPTIONS = {
     ObserverClass: MutationObserver,
     pageUtils,
     target: document.body,

@@ -4,7 +4,7 @@ import { AutoBound } from "./ObjUtils";
 type QueryCallback = (elements: Node[]) => void
 export default class QueryAwaiter extends AutoBound
 {
-	static readonly DEFAULT_CONSTRUCTOR_PARAMS: {
+	static readonly DEFAULY_AWAITER_OPTIONS: {
 		ObserverClass: typeof MutationObserver,
 		pageUtils: typeof pageUtils,
 		target: QueryAwaiter["target"],
@@ -24,18 +24,23 @@ export default class QueryAwaiter extends AutoBound
 	}[] = [];
 	target: Node = document.body;
 	constructor (
-		config:
-			typeof QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS =
-			QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS
+		options:
+			Partial<typeof QueryAwaiter.DEFAULY_AWAITER_OPTIONS> =
+			QueryAwaiter.DEFAULY_AWAITER_OPTIONS
 	)
 	{
+		let fullOptions = {
+			...QueryAwaiter.DEFAULY_AWAITER_OPTIONS,
+			...options,
+		};
+
 		super();
 
-		this.pageUtils = config.pageUtils;
-		this.observerInstance = new config.ObserverClass(this.onMutation);
-		this.target = config.target;
+		this.pageUtils = fullOptions.pageUtils;
+		this.observerInstance = new fullOptions.ObserverClass(this.onMutation);
+		this.target = fullOptions.target;
 		this.queries = [];
-		if (config.autoStart)
+		if (fullOptions.autoStart)
 			this.start();
 	}
 

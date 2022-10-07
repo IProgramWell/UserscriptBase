@@ -2,7 +2,7 @@ import * as pageUtils from "./PageUtils";
 import { AutoBound } from "./ObjUtils";
 declare type QueryCallback = (elements: Node[]) => void;
 export default class QueryAwaiter extends AutoBound {
-    static readonly DEFAULT_CONSTRUCTOR_PARAMS: {
+    static readonly DEFAULY_AWAITER_OPTIONS: {
         ObserverClass: typeof MutationObserver;
         pageUtils: typeof pageUtils;
         target: QueryAwaiter["target"];
@@ -15,7 +15,7 @@ export default class QueryAwaiter extends AutoBound {
         callback: QueryCallback;
     }[];
     target: Node;
-    constructor(config?: typeof QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS);
+    constructor(options?: Partial<typeof QueryAwaiter.DEFAULY_AWAITER_OPTIONS>);
     onMutation(): void;
     addQuery(query: string, callback: QueryCallback): void;
     start(): void;
