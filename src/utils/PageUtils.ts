@@ -54,8 +54,8 @@ export function createElement<
 }
 
 export function elementize<
-	TagName extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap,
->(component: Component<TagName>): HTMLElementTagNameMap[TagName]
+	TagName extends keyof TagMap = keyof TagMap,
+>(component: Component<TagName>): TagMap[TagName]
 {
 	const [tagName, attributes, ...children] = component;
 	const element = createElement(
