@@ -22,18 +22,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryAwaiter = exports.PathWatcher = exports.IOManager = exports.URLUtils = exports.PageUtils = exports.DateUtils = exports.ObjUtils = void 0;
-exports.ObjUtils = __importStar(require("./ObjUtils"));
-exports.DateUtils = __importStar(require("./DateUtils"));
-exports.PageUtils = __importStar(require("./PageUtils"));
-exports.URLUtils = __importStar(require("./URLUtils"));
-var IOManager_1 = require("./IOManager");
-Object.defineProperty(exports, "IOManager", { enumerable: true, get: function () { return __importDefault(IOManager_1).default; } });
-var PathWatcher_1 = require("./PathWatcher");
-Object.defineProperty(exports, "PathWatcher", { enumerable: true, get: function () { return __importDefault(PathWatcher_1).default; } });
-var QueryAwaiter_1 = require("./QueryAwaiter");
-Object.defineProperty(exports, "QueryAwaiter", { enumerable: true, get: function () { return __importDefault(QueryAwaiter_1).default; } });
+const pageUtils = __importStar(require("./PageUtils"));
+const ObjUtils_1 = require("./ObjUtils");
+class QueryAwaiter extends ObjUtils_1.AutoBound {
+    constructor(config = QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS) {
+        super();
+        this.queries = [];
+        this.pageUtils = config.pageUtils;
+        this.observerInstance = new config.ObserverClass(this.onMutation);
+        this.queries = [];
+    }
+    onMutation( /* mutations: MutationRecord[], observer: MutationObserver */) {
+        const remainingQueries = [];
+        let queryResult;
+        for (let query of this.queries) {
+            queryResult = this.pageUtils.queryAllElements(query.query);
+            if (queryResult.length > 0)
+                query.callback(Array.from(queryResult));
+            else
+                remainingQueries.push(query);
+        }
+        this.queries = remainingQueries;
+    }
+    addQuery(query, callback) {
+        this.queries.push({ query, callback });
+    }
+}
+exports.default = QueryAwaiter;
+QueryAwaiter.DEFAULT_CONSTRUCTOR_PARAMS = {
+    ObserverClass: MutationObserver,
+    pageUtils
+};
