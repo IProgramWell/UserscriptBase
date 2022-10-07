@@ -39,7 +39,7 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
             this.start();
     }
     onMutation( /* mutations: MutationRecord[], observer: MutationObserver */) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f;
         const remainingQueries = [];
         let queryResult;
         for (let query of this.queries) {
@@ -51,7 +51,7 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
             else
                 queryResult = null;
             if ((queryResult instanceof NodeList && queryResult.length > 0) ||
-                (queryResult instanceof XPathResult))
+                (queryResult instanceof XPathResult && ((_f = (_e = query.xpath).isValidResult) === null || _f === void 0 ? void 0 : _f.call(_e, queryResult))))
                 query.callback(queryResult);
             else
                 remainingQueries.push(query);
