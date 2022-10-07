@@ -19,13 +19,14 @@ export default class QueryAwaiter extends AutoBound
 	observerInstance: MutationObserver;
 	pageUtils: typeof pageUtils;
 	queries: {
-		query?: string,
+		query?: string;
 		xpath?: {
-			xpath: string,
-			contextNode?: Node,
-			namespaceResolver?: XPathNSResolver,
-			resultType?: number,
-			result?: XPathResult,
+			xpath: string;
+			contextNode?: Node;
+			namespaceResolver?: XPathNSResolver;
+			resultType?: number;
+			result?: XPathResult;
+			isValidResult?(result: XPathResult): boolean;
 		},
 		callback: QueryCallback
 	}[] = [];
@@ -84,16 +85,30 @@ export default class QueryAwaiter extends AutoBound
 
 	addQuery(query: string, callback: QueryCallback): void
 	{
-		if (query)
-			this.queries.push({ query, callback });
+		if (!query)
+			return;
+		const currentResult = this.pageUtils.queryAllElements(query);
+		if (currentResult.length > 0)
+			return callback(currentResult);
+		this.queries.push({ query, callback });
 	}
 	addXpath(
 		xpath: QueryAwaiter["queries"][number]["xpath"],
 		callback: QueryCallback
 	): void
 	{
-		if (xpath)
-			this.queries.push({ xpath, callback });
+		if (!xpath)
+			return;
+		const currentResult = this.pageUtils.evaluate(
+			xpath.xpath,
+			xpath.contextNode ?? document.body,
+			xpath.namespaceResolver ?? null,
+			xpath.resultType ?? XPathResult.ANY_TYPE,
+			xpath.result ?? null
+		);
+		if (xpath.isValidResult?.(currentResult))
+			return callback(currentResult);
+		this.queries.push({ xpath, callback });
 	}
 
 	start(): void

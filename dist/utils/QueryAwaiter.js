@@ -59,12 +59,21 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
         this.queries = remainingQueries;
     }
     addQuery(query, callback) {
-        if (query)
-            this.queries.push({ query, callback });
+        if (!query)
+            return;
+        const currentResult = this.pageUtils.queryAllElements(query);
+        if (currentResult.length > 0)
+            return callback(currentResult);
+        this.queries.push({ query, callback });
     }
     addXpath(xpath, callback) {
-        if (xpath)
-            this.queries.push({ xpath, callback });
+        var _a, _b, _c, _d, _e;
+        if (!xpath)
+            return;
+        const currentResult = this.pageUtils.evaluate(xpath.xpath, (_a = xpath.contextNode) !== null && _a !== void 0 ? _a : document.body, (_b = xpath.namespaceResolver) !== null && _b !== void 0 ? _b : null, (_c = xpath.resultType) !== null && _c !== void 0 ? _c : XPathResult.ANY_TYPE, (_d = xpath.result) !== null && _d !== void 0 ? _d : null);
+        if ((_e = xpath.isValidResult) === null || _e === void 0 ? void 0 : _e.call(xpath, currentResult))
+            return callback(currentResult);
+        this.queries.push({ xpath, callback });
     }
     start() {
         this.observerInstance.observe(this.target, {

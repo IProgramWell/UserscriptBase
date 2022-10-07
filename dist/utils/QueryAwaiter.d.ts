@@ -18,6 +18,7 @@ export default class QueryAwaiter extends AutoBound {
             namespaceResolver?: XPathNSResolver;
             resultType?: number;
             result?: XPathResult;
+            isValidResult?(result: XPathResult): boolean;
         };
         callback: QueryCallback;
     }[];
