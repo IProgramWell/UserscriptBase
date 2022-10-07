@@ -13,6 +13,13 @@ export function queryAllElements<R extends Element = Element>(query: string): No
 	return document.querySelectorAll<R>(query);
 }
 
+export function evaluate(
+	...args: Parameters<typeof document.evaluate>
+): ReturnType<typeof document.evaluate>
+{
+	return document.evaluate(...args);
+}
+
 export function getSearchParams(url: URL | Location = document.location): { [searchParam: string]: string }
 {
 	return arrToObj(

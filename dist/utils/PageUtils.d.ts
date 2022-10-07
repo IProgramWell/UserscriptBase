@@ -2,6 +2,7 @@ import type { Component, TagMap, AttributeMap } from "../../types/Component";
 import type PageModule from "../modules/PageModule";
 export declare function queryElement<R extends Element = Element>(query: string): R | null;
 export declare function queryAllElements<R extends Element = Element>(query: string): NodeListOf<R>;
+export declare function evaluate(...args: Parameters<typeof document.evaluate>): ReturnType<typeof document.evaluate>;
 export declare function getSearchParams(url?: URL | Location): {
     [searchParam: string]: string;
 };

@@ -1,7 +1,7 @@
 import * as pageUtils from "./PageUtils";
 import { AutoBound } from "./ObjUtils";
 
-type QueryCallback = (elements: Node[]) => void
+type QueryCallback = (elements: NodeList | XPathResult) => void
 export default class QueryAwaiter extends AutoBound
 {
 	static readonly DEFAULY_AWAITER_OPTIONS: {
@@ -19,7 +19,14 @@ export default class QueryAwaiter extends AutoBound
 	observerInstance: MutationObserver;
 	pageUtils: typeof pageUtils;
 	queries: {
-		query: string,
+		query?: string,
+		xpath?: {
+			xpath: string,
+			contextNode?: Node,
+			namespaceResolver?: XPathNSResolver,
+			resultType?: number,
+			result?: XPathResult,
+		},
 		callback: QueryCallback
 	}[] = [];
 	target: Node = document.body;
@@ -47,24 +54,49 @@ export default class QueryAwaiter extends AutoBound
 	onMutation(/* mutations: MutationRecord[], observer: MutationObserver */)
 	{
 		const remainingQueries: QueryAwaiter["queries"] = [];
-		let queryResult: NodeList;
+		let queryResult: NodeList | XPathResult | null;
 		for (let query of this.queries)
 		{
-			queryResult = this.pageUtils.queryAllElements(query.query);
-			if (queryResult.length > 0)
-				query.callback(Array.from(queryResult));
+			if (query.query)
+				queryResult = this.pageUtils.queryAllElements(query.query);
+			else if (query.xpath)
+			{
+				queryResult = this.pageUtils.evaluate(
+					query.xpath.xpath,
+					query.xpath.contextNode ?? document.body,
+					query.xpath.namespaceResolver ?? null,
+					query.xpath.resultType ?? XPathResult.ANY_TYPE,
+					query.xpath.result ?? null
+				);
+			}
+			else
+				queryResult = null;
+			if (
+				(queryResult instanceof NodeList && queryResult.length > 0) ||
+				(queryResult instanceof XPathResult && queryResult.booleanValue)
+			)
+				query.callback(queryResult);
 			else
 				remainingQueries.push(query);
 		}
 		this.queries = remainingQueries;
 	}
 
-	addQuery(query: string, callback: QueryCallback)
+	addQuery(query: string, callback: QueryCallback): void
 	{
-		this.queries.push({ query, callback });
+		if (query)
+			this.queries.push({ query, callback });
+	}
+	addXpath(
+		xpath: QueryAwaiter["queries"][number]["xpath"],
+		callback: QueryCallback
+	): void
+	{
+		if (xpath)
+			this.queries.push({ xpath, callback });
 	}
 
-	start()
+	start(): void
 	{
 		this.observerInstance.observe(
 			this.target,

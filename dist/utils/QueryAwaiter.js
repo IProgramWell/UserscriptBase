@@ -39,19 +39,32 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
             this.start();
     }
     onMutation( /* mutations: MutationRecord[], observer: MutationObserver */) {
+        var _a, _b, _c, _d;
         const remainingQueries = [];
         let queryResult;
         for (let query of this.queries) {
-            queryResult = this.pageUtils.queryAllElements(query.query);
-            if (queryResult.length > 0)
-                query.callback(Array.from(queryResult));
+            if (query.query)
+                queryResult = this.pageUtils.queryAllElements(query.query);
+            else if (query.xpath) {
+                queryResult = this.pageUtils.evaluate(query.xpath.xpath, (_a = query.xpath.contextNode) !== null && _a !== void 0 ? _a : document.body, (_b = query.xpath.namespaceResolver) !== null && _b !== void 0 ? _b : null, (_c = query.xpath.resultType) !== null && _c !== void 0 ? _c : XPathResult.ANY_TYPE, (_d = query.xpath.result) !== null && _d !== void 0 ? _d : null);
+            }
+            else
+                queryResult = null;
+            if ((queryResult instanceof NodeList && queryResult.length > 0) ||
+                (queryResult instanceof XPathResult && queryResult.booleanValue))
+                query.callback(queryResult);
             else
                 remainingQueries.push(query);
         }
         this.queries = remainingQueries;
     }
     addQuery(query, callback) {
-        this.queries.push({ query, callback });
+        if (query)
+            this.queries.push({ query, callback });
+    }
+    addXpath(xpath, callback) {
+        if (xpath)
+            this.queries.push({ xpath, callback });
     }
     start() {
         this.observerInstance.observe(this.target, {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIDFor = exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.queryAllElements = exports.queryElement = void 0;
+exports.getIDFor = exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.evaluate = exports.queryAllElements = exports.queryElement = void 0;
 const ObjUtils_1 = require("./ObjUtils");
 function queryElement(query) {
     return document.querySelector(query);
@@ -10,6 +10,10 @@ function queryAllElements(query) {
     return document.querySelectorAll(query);
 }
 exports.queryAllElements = queryAllElements;
+function evaluate(...args) {
+    return document.evaluate(...args);
+}
+exports.evaluate = evaluate;
 function getSearchParams(url = document.location) {
     return (0, ObjUtils_1.arrToObj)(url
         .search
