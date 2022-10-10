@@ -3,6 +3,7 @@ import IOManager from "../utils/IOManager";
 import * as URLUtils from "../utils/URLUtils";
 import * as PageUtils from "../utils/PageUtils";
 
+import type QueryAwaiter from "../utils/QueryAwaiter";
 import type {
 	GeneralTypes,
 	ModuleTypes,
@@ -39,6 +40,7 @@ export class PageModule extends AutoBound
 	readonly utils: {
 		urlUtils: typeof URLUtils,
 		pageUtils: typeof PageUtils,
+		queryAwaiter?: QueryAwaiter,
 	} = {
 			urlUtils: URLUtils,
 			pageUtils: PageUtils,

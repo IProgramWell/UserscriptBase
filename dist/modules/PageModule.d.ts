@@ -1,6 +1,7 @@
 import { AutoBound } from "../utils/ObjUtils";
 import * as URLUtils from "../utils/URLUtils";
 import * as PageUtils from "../utils/PageUtils";
+import type QueryAwaiter from "../utils/QueryAwaiter";
 import type { ModuleTypes, Interfaces } from "../../types";
 export declare class PageModule extends AutoBound {
     /**
@@ -31,6 +32,7 @@ export declare class PageModule extends AutoBound {
     readonly utils: {
         urlUtils: typeof URLUtils;
         pageUtils: typeof PageUtils;
+        queryAwaiter?: QueryAwaiter;
     };
     state: Record<PropertyKey, any>;
     isActive: boolean;
