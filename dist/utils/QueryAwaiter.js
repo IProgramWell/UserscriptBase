@@ -76,10 +76,7 @@ class QueryAwaiter extends ObjUtils_1.AutoBound {
         this.queries.push({ xpath, callback });
     }
     start() {
-        this.observerInstance.observe(this.target, {
-            subtree: true,
-            childList: true,
-        });
+        this.observerInstance.observe(this.target, { subtree: true, childList: true, });
     }
     stop() {
         this.observerInstance.disconnect();

@@ -24,14 +24,9 @@ export function bindMethods<
 			Object.getPrototypeOf(source)
 		);
 
-	if (!bindTo)
-		bindTo = source;
-	if (!assignTo)
-		assignTo = source;
-
 	for (let key of sourceProperties)
 		if (key !== "constructor" && typeof source[key] === "function")
-			assignTo[key] = source[key].bind(bindTo);
+			(assignTo ?? source)[key] = source[key].bind(bindTo ?? source);
 }
 
 /**
@@ -40,38 +35,4 @@ export function bindMethods<
  * I want intelisense to recognise the methods as, well, methods,
  * but I also want auto-bound functions.
  */
-export class AutoBound
-{
-	[key: string]: ((...args: any[]) => any) | any;
-
-	constructor ()
-	{
-		let properties = Object.getOwnPropertyNames(
-			Object.getPrototypeOf(this)
-		);
-
-		for (let key of properties)
-			if (key !== "constructor" && typeof this[key] === "function")
-				this[key] = this[key].bind(this);
-	}
-}
-
-export function arrToObj<T, R = T>(
-	arr: T[],
-	getKey: (
-		element: T,
-		index: number,
-		array: T[]
-	) => string = (_, index) => index.toString(),
-	getValue: (
-		element: T,
-		index: number,
-		array: T[]
-	) => (R | T) = elem => elem
-): Record<string, (R | T)>
-{
-	const result: ReturnType<typeof arrToObj<T, R>> = {};
-	for (let i = 0; i < arr.length; i++)
-		result[getKey(arr[i], i, arr)] = getValue(arr[i], i, arr);
-	return result;
-};
+export class AutoBound { constructor () { bindMethods(this); } }

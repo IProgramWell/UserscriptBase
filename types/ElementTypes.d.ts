@@ -8,10 +8,3 @@ export type AttributeMap<TagName extends keyof TagMap = keyof TagMap> = {
 } & {
 	style: string
 };
-
-export type Component<TagName extends keyof TagMap = keyof TagMap> = [
-	tagName: TagName,
-	attributes: Partial<AttributeMap<TagName>> | {} | null | undefined,
-	...children: (string | Node | Component<keyof TagMap>)[]
-];
-export default Component;

@@ -1,7 +1,10 @@
 import * as pageUtils from "./PageUtils";
 import { AutoBound } from "./ObjUtils";
 
-type QueryCallback = (elements: NodeList | XPathResult) => void
+type QueryCallback<
+	R extends NodeList | XPathResult =
+	NodeList | XPathResult
+> = (elements: R) => void;
 export default class QueryAwaiter extends AutoBound
 {
 	static readonly DEFAULY_AWAITER_OPTIONS: {
@@ -83,7 +86,7 @@ export default class QueryAwaiter extends AutoBound
 		this.queries = remainingQueries;
 	}
 
-	addQuery(query: string, callback: QueryCallback): void
+	addQuery(query: string, callback: QueryCallback<NodeList>): void
 	{
 		if (!query)
 			return;
@@ -94,7 +97,7 @@ export default class QueryAwaiter extends AutoBound
 	}
 	addXpath(
 		xpath: QueryAwaiter["queries"][number]["xpath"],
-		callback: QueryCallback
+		callback: QueryCallback<XPathResult>
 	): void
 	{
 		if (!xpath)
@@ -115,10 +118,7 @@ export default class QueryAwaiter extends AutoBound
 	{
 		this.observerInstance.observe(
 			this.target,
-			{
-				subtree: true,
-				childList: true,
-			}
+			{ subtree: true, childList: true, }
 		);
 	}
 

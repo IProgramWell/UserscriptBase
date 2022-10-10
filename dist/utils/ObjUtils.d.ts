@@ -12,7 +12,5 @@ export declare function bindMethods<T extends Record<PropertyKey, ((...args: any
  * but I also want auto-bound functions.
  */
 export declare class AutoBound {
-    [key: string]: ((...args: any[]) => any) | any;
     constructor();
 }
-export declare function arrToObj<T, R = T>(arr: T[], getKey?: (element: T, index: number, array: T[]) => string, getValue?: (element: T, index: number, array: T[]) => (R | T)): Record<string, (R | T)>;

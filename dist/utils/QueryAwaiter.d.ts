@@ -1,6 +1,6 @@
 import * as pageUtils from "./PageUtils";
 import { AutoBound } from "./ObjUtils";
-declare type QueryCallback = (elements: NodeList | XPathResult) => void;
+declare type QueryCallback<R extends NodeList | XPathResult = NodeList | XPathResult> = (elements: R) => void;
 export default class QueryAwaiter extends AutoBound {
     static readonly DEFAULY_AWAITER_OPTIONS: {
         ObserverClass: typeof MutationObserver;
@@ -25,8 +25,8 @@ export default class QueryAwaiter extends AutoBound {
     target: Node;
     constructor(options?: Partial<typeof QueryAwaiter.DEFAULY_AWAITER_OPTIONS>);
     onMutation(): void;
-    addQuery(query: string, callback: QueryCallback): void;
-    addXpath(xpath: QueryAwaiter["queries"][number]["xpath"], callback: QueryCallback): void;
+    addQuery(query: string, callback: QueryCallback<NodeList>): void;
+    addXpath(xpath: QueryAwaiter["queries"][number]["xpath"], callback: QueryCallback<XPathResult>): void;
     start(): void;
     stop(): void;
 }
