@@ -2,20 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activateForRegex = exports.onUrlChange = exports.callAllModulesMethod = exports.onModuleEvent = void 0;
 function onModuleEvent(options) {
-    var _a, _b;
-    let wasModuleActive, newIsActive;
+    var _a, _b, _c;
+    let newIsActive;
     for (let module of options.moduleList) {
         try {
-            if (module.isActive !== module.shouldBeActive(module.utils.urlUtils.getCurrentLocation())) {
-                wasModuleActive = module.isActive;
-                newIsActive = (_b = (_a = module.eventHandlers)[options.eventHandlerName]) === null || _b === void 0 ? void 0 : _b.call(_a, ...options.handlerArgs);
-                /* newIsActive = module.eventHandlers[
-                    options.eventHandlerName
-                ]?.(
-                    ...options.handlerArgs
-                ); */
+            if (module.isActive !== module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
+                newIsActive = (_c = (_b = module.eventHandlers)[options.eventHandlerName]) === null || _c === void 0 ? void 0 : _c.call(_b, ...(options.handlerArgs));
                 if (typeof newIsActive === "boolean" &&
-                    newIsActive !== wasModuleActive) {
+                    newIsActive !== module.isActive) {
                     module.isActive = newIsActive;
                     options.logger.print((newIsActive
                         ? "Started"
@@ -32,12 +26,13 @@ function onModuleEvent(options) {
 exports.onModuleEvent = onModuleEvent;
 ;
 function callAllModulesMethod(options) {
-    var _a, _b;
+    var _a, _b, _c;
     for (let module of options.moduleList) {
         try {
             if (!options.onlyIfShouldBeActive ||
-                module.shouldBeActive(module.utils.urlUtils.getCurrentLocation()))
-                (_b = (_a = module.methods) === null || _a === void 0 ? void 0 : _a[options.methodName]) === null || _b === void 0 ? void 0 : _b.call(_a, ...options.methodArgs);
+                module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
+                (_c = (_b = module.methods) === null || _b === void 0 ? void 0 : _b[options.methodName]) === null || _c === void 0 ? void 0 : _c.call(_b, ...options.methodArgs);
+            }
         }
         catch (err) {
             options.logger.error({
@@ -51,18 +46,18 @@ function callAllModulesMethod(options) {
 }
 exports.callAllModulesMethod = callAllModulesMethod;
 function onUrlChange(options) {
-    var _a, _b;
+    var _a, _b, _c;
     for (let module of options.moduleList) {
         try {
-            if (module.shouldBeActive(options.currentLocation)) {
+            if (module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
                 if (!module.isActive && module.eventHandlers.onModuleStart) {
                     module.isActive = module.eventHandlers.onModuleStart();
-                    (_a = options.logger) === null || _a === void 0 ? void 0 : _a.print(`Started module: "${module.moduleName}"`);
+                    (_b = options.logger) === null || _b === void 0 ? void 0 : _b.print(`Started module: "${module.moduleName}"`);
                 }
             }
             else if (module.isActive && module.eventHandlers.onModuleStop) {
                 module.isActive = module.eventHandlers.onModuleStop();
-                (_b = options.logger) === null || _b === void 0 ? void 0 : _b.print(`Stopped module: "${module.moduleName}"`);
+                (_c = options.logger) === null || _c === void 0 ? void 0 : _c.print(`Stopped module: "${module.moduleName}"`);
             }
         }
         catch (err) {

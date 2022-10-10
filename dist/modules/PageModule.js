@@ -56,20 +56,12 @@ class PageModule extends ObjUtils_1.AutoBound {
         this.isActive = false;
         if (moduleDetails.shouldBeActive)
             this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
-        else
-            throw new Error("Path regex not specified");
-        for (let [methodName, methodFunc] of Object.entries((_a = moduleDetails.eventHandlers) !== null && _a !== void 0 ? _a : {})) {
-            if (typeof methodFunc === "function") {
-                this.eventHandlers[methodName]
-                    = methodFunc.bind(this);
-            }
-        }
-        for (let [methodName, methodFunc] of Object.entries((_b = moduleDetails.methods) !== null && _b !== void 0 ? _b : {})) {
-            if (typeof methodFunc === "function") {
-                this.methods[methodName]
-                    = methodFunc.bind(this);
-            }
-        }
+        for (let [methodName, methodFunc] of Object.entries((_a = moduleDetails.eventHandlers) !== null && _a !== void 0 ? _a : {}))
+            if (typeof methodFunc === "function")
+                this.eventHandlers[methodName] = methodFunc.bind(this);
+        for (let [methodName, methodFunc] of Object.entries((_b = moduleDetails.methods) !== null && _b !== void 0 ? _b : {}))
+            if (typeof methodFunc === "function")
+                this.methods[methodName] = methodFunc.bind(this);
         if (moduleDetails.logger)
             this.logger = moduleDetails.logger;
         if (moduleDetails.moduleName)

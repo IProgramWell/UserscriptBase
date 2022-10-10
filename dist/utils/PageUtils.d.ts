@@ -12,3 +12,4 @@ export declare function elementize<TagName extends keyof TagMap = keyof TagMap>(
 export declare function render(parentElement: Element | null, components: (Component | Element | Node | string)[], insertAt?: "start" | "end"): void;
 export declare function isVisible(element: Element): boolean;
 export declare function getIDFor(module: PageModule, ...IDComponents: string[]): string;
+export declare function isScriptInIFrame(): boolean;

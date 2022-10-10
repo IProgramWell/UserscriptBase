@@ -151,3 +151,5 @@ export function getIDFor(module: PageModule, ...IDComponents: string[])
 		.map(c => Array.from(c.matchAll(/\w+/g)).join(""))
 		.join("-");
 }
+
+export function isScriptInIFrame(): boolean { return globalThis.self !== globalThis.top }

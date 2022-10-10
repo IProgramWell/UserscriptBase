@@ -1,4 +1,7 @@
 import { AutoBound } from "./ObjUtils";
+import { isScriptInIFrame } from "./PageUtils";
+
+import type { ILogger } from "../../types/Interfaces";
 
 const {
 	script: {
@@ -6,21 +9,21 @@ const {
 		version: scriptVersion
 	}
 } = globalThis.GM_info ?? { script: {} };
-export default class IOManager extends AutoBound
+export default class IOManager extends AutoBound implements ILogger
 {
 	static readonly IFRAME_LOG_PREFIX: string = "iframe";
 	static readonly DEFAULT_LOGGER_OPTIONS: {
 		name: string,
 		logTimestamp: boolean,
 		timestampFormat: IOManager["timestampFormat"],
-		detectIFrames: boolean,
+		detectIFrames(): boolean,
 	} = {
 			name: globalThis.GM_info
 				? `${scriptName} v${scriptVersion}`
 				: "",
 			logTimestamp: true,
 			timestampFormat: "Locale",
-			detectIFrames: true
+			detectIFrames: isScriptInIFrame
 		};
 	static readonly GLOBAL_MANAGER = new IOManager();
 
@@ -44,7 +47,7 @@ export default class IOManager extends AutoBound
 		this.scriptName = options.name;
 		this.logTimestamp = options.logTimestamp;
 		this.timestampFormat = options.timestampFormat;
-		this.isInIFrame = options.detectIFrames && globalThis.self !== globalThis.top;
+		this.isInIFrame = options.detectIFrames?.() ?? false;
 	}
 
 	getTimestamp(): string
@@ -67,18 +70,12 @@ export default class IOManager extends AutoBound
 
 	joinPrefixes(prefixList: string[], addSpace: boolean = false): string
 	{
-		return prefixList
-			.reduce(
-				(list: string[], prfx: string) =>
-				{
-					if (prfx)
-						list.push(`[${prfx}]`);
-					return list;
-				},
-				[]
-			)
-			.join(" ") + ":" +
-			(addSpace ? " " : "");
+		const formattedList: string[] = [];
+		for (let prfx of prefixList)
+			if (prfx)
+				formattedList.push(`[${prfx}]`);
+		const prefix: string = `${formattedList.join(" ")}:`;
+		return (addSpace ? prefix + " " : prefix);
 	}
 
 	getPrefix(includeTimestamp: boolean = false, addSpace: boolean = false): string

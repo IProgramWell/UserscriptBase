@@ -2,16 +2,18 @@
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ObjUtils_1 = require("./ObjUtils");
+const PageUtils_1 = require("./PageUtils");
 const { script: { name: scriptName, version: scriptVersion } } = (_a = globalThis.GM_info) !== null && _a !== void 0 ? _a : { script: {} };
 class IOManager extends ObjUtils_1.AutoBound {
     constructor(loggerOptions = IOManager.DEFAULT_LOGGER_OPTIONS) {
+        var _a, _b;
         const options = Object.assign(Object.assign({}, IOManager.DEFAULT_LOGGER_OPTIONS), loggerOptions);
         super();
         this.isInIFrame = false;
         this.scriptName = options.name;
         this.logTimestamp = options.logTimestamp;
         this.timestampFormat = options.timestampFormat;
-        this.isInIFrame = options.detectIFrames && globalThis.self !== globalThis.top;
+        this.isInIFrame = (_b = (_a = options.detectIFrames) === null || _a === void 0 ? void 0 : _a.call(options)) !== null && _b !== void 0 ? _b : false;
     }
     getTimestamp() {
         switch (this.timestampFormat) {
@@ -29,14 +31,12 @@ class IOManager extends ObjUtils_1.AutoBound {
         }
     }
     joinPrefixes(prefixList, addSpace = false) {
-        return prefixList
-            .reduce((list, prfx) => {
+        const formattedList = [];
+        for (let prfx of prefixList)
             if (prfx)
-                list.push(`[${prfx}]`);
-            return list;
-        }, [])
-            .join(" ") + ":" +
-            (addSpace ? " " : "");
+                formattedList.push(`[${prfx}]`);
+        const prefix = `${formattedList.join(" ")}:`;
+        return (addSpace ? prefix + " " : prefix);
     }
     getPrefix(includeTimestamp = false, addSpace = false) {
         const prefixList = [];
@@ -70,6 +70,6 @@ IOManager.DEFAULT_LOGGER_OPTIONS = {
         : "",
     logTimestamp: true,
     timestampFormat: "Locale",
-    detectIFrames: true
+    detectIFrames: PageUtils_1.isScriptInIFrame
 };
 IOManager.GLOBAL_MANAGER = new IOManager();

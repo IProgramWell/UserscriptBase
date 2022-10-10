@@ -1,21 +1,23 @@
 import type PageModule from "./PageModule";
-import type IOManager from "../utils/IOManager";
+import type { ILogger } from "../../types/Interfaces";
 export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"], HF extends Required<PageModule["eventHandlers"]>[HN] = Required<PageModule["eventHandlers"]>[HN]>(options: {
     moduleList: PageModule[];
     eventHandlerName: HN;
     handlerArgs: Parameters<HF>;
-    logger: IOManager;
+    logger: ILogger;
+    currentLocation?: Location | URL | string | null;
 }): void;
 export declare function callAllModulesMethod(options: {
     moduleList: PageModule[];
     methodName: string;
     methodArgs: any[];
-    logger: IOManager;
+    logger: ILogger;
     onlyIfShouldBeActive: boolean;
+    currentLocation?: Location | URL | string | null;
 }): void;
 export declare function onUrlChange(options: {
     moduleList: PageModule[];
-    logger: IOManager;
-    currentLocation: Location | URL | string;
+    logger?: ILogger;
+    currentLocation?: Location | URL | string | null;
 }): void;
 export declare function activateForRegex(regex: RegExp | string, wholeUrl?: boolean): PageModule["shouldBeActive"];

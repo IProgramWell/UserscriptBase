@@ -4,12 +4,13 @@ import { getCurrentLocation } from "./URLUtils";
 import { onUrlChange } from "../modules/moduleUtils";
 
 import type PageModule from "../modules/PageModule";
+import type { ILogger } from "../../types/Interfaces";
 
 export default class PathWatcher extends AutoBound
 {
 	static readonly DEFAULT_WATCHER_OPTIONS: {
 		moduleList: PageModule[],
-		logger: IOManager,
+		logger: ILogger,
 		watchWholeURL: boolean,
 		onUrlChange: typeof onUrlChange,
 		ObserverClass: typeof MutationObserver,
@@ -24,7 +25,7 @@ export default class PathWatcher extends AutoBound
 		};
 
 	readonly observerInstance: MutationObserver;
-	readonly logger: IOManager;
+	readonly logger: ILogger;
 	readonly moduleList: PageModule[];
 	readonly watchWholeURL: boolean = false;
 	readonly urlChangeHandler: typeof onUrlChange = onUrlChange;

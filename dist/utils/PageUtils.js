@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIDFor = exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.evaluate = exports.queryAllElements = exports.queryElement = void 0;
+exports.isScriptInIFrame = exports.getIDFor = exports.isVisible = exports.render = exports.elementize = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.evaluate = exports.queryAllElements = exports.queryElement = void 0;
 const ObjUtils_1 = require("./ObjUtils");
 function queryElement(query) {
     return document.querySelector(query);
@@ -104,3 +104,5 @@ function getIDFor(module, ...IDComponents) {
         .join("-");
 }
 exports.getIDFor = getIDFor;
+function isScriptInIFrame() { return globalThis.self !== globalThis.top; }
+exports.isScriptInIFrame = isScriptInIFrame;

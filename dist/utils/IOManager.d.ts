@@ -1,11 +1,12 @@
 import { AutoBound } from "./ObjUtils";
-export default class IOManager extends AutoBound {
+import type { ILogger } from "../../types/Interfaces";
+export default class IOManager extends AutoBound implements ILogger {
     static readonly IFRAME_LOG_PREFIX: string;
     static readonly DEFAULT_LOGGER_OPTIONS: {
         name: string;
         logTimestamp: boolean;
         timestampFormat: IOManager["timestampFormat"];
-        detectIFrames: boolean;
+        detectIFrames(): boolean;
     };
     static readonly GLOBAL_MANAGER: IOManager;
     scriptName: string;

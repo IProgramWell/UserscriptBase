@@ -6,6 +6,7 @@ import * as PageUtils from "../utils/PageUtils";
 import type {
 	GeneralTypes,
 	ModuleTypes,
+	Interfaces,
 } from "../../types";
 
 export class PageModule extends AutoBound
@@ -34,7 +35,7 @@ export class PageModule extends AutoBound
 	} = {};
 	readonly shouldBeActive: (url?: string | URL | Location) => boolean = () => true;
 	readonly moduleName: string | null | undefined = null;
-	readonly logger: IOManager = IOManager.GLOBAL_MANAGER;
+	readonly logger: Interfaces.ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
 		urlUtils: typeof URLUtils,
 		pageUtils: typeof PageUtils,
@@ -52,16 +53,13 @@ export class PageModule extends AutoBound
 		utils?: PageModule["utils"],
 		shouldBeActive?: PageModule["shouldBeActive"],
 		moduleName?: string,
-		logger?: IOManager,
+		logger?: Interfaces.ILogger,
 	})
 	{
-
 		super();
 
 		if (moduleDetails.shouldBeActive)
 			this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
-		else
-			throw new Error("Path regex not specified");
 
 		for (
 			let [methodName, methodFunc]
@@ -70,16 +68,9 @@ export class PageModule extends AutoBound
 				GeneralTypes.EntryArray<PageModule["eventHandlers"]>
 			)
 		)
-		{
 			if (typeof methodFunc === "function")
-			{
-				(
-					this.eventHandlers[methodName] as
-					PageModule["eventHandlers"][typeof methodName]
-				)
-					= methodFunc.bind(this);
-			}
-		}
+				this.eventHandlers[methodName] = methodFunc.bind(this);
+
 		for (
 			let [methodName, methodFunc]
 			of (
@@ -87,16 +78,8 @@ export class PageModule extends AutoBound
 				GeneralTypes.EntryArray<PageModule["methods"]>
 			)
 		)
-		{
 			if (typeof methodFunc === "function")
-			{
-				(
-					this.methods[methodName] as
-					PageModule["methods"][typeof methodName]
-				)
-					= methodFunc.bind(this);
-			}
-		}
+				this.methods[methodName] = methodFunc.bind(this);
 
 		if (moduleDetails.logger)
 			this.logger = moduleDetails.logger;

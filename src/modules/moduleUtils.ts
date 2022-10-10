@@ -1,5 +1,5 @@
 import type PageModule from "./PageModule";
-import type IOManager from "../utils/IOManager";
+import type { ILogger } from "../../types/Interfaces";
 
 export function onModuleEvent<
 	HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"],
@@ -9,36 +9,31 @@ export function onModuleEvent<
 		moduleList: PageModule[],
 		eventHandlerName: HN,
 		handlerArgs: Parameters<HF>,
-		logger: IOManager,
+		logger: ILogger,
+		currentLocation?: Location | URL | string | null,
 	}
 )
 {
-	let wasModuleActive: boolean, newIsActive: boolean;
+	let newIsActive: boolean;
 	for (let module of options.moduleList)
 	{
 		try
 		{
 			if (
 				module.isActive !== module.shouldBeActive(
+					options.currentLocation ??
 					module.utils.urlUtils.getCurrentLocation()
 				)
 			)
 			{
-				wasModuleActive = module.isActive;
 				newIsActive = (
 					module.eventHandlers[options.eventHandlerName] as
 					//I hate that I have to use `as` EVERYWHERE in typecript
 					(...args: Parameters<HF>) => ReturnType<HF>
-				)
-					?.(...options.handlerArgs);
-				/* newIsActive = module.eventHandlers[
-					options.eventHandlerName
-				]?.(
-					...options.handlerArgs
-				); */
+				)?.(...(options.handlerArgs));
 				if (
 					typeof newIsActive === "boolean" &&
-					newIsActive !== wasModuleActive
+					newIsActive !== module.isActive
 				)
 				{
 					module.isActive = newIsActive;
@@ -63,8 +58,9 @@ export function callAllModulesMethod(options: {
 	moduleList: PageModule[],
 	methodName: string,
 	methodArgs: any[],
-	logger: IOManager,
-	onlyIfShouldBeActive: boolean
+	logger: ILogger,
+	onlyIfShouldBeActive: boolean,
+	currentLocation?: Location | URL | string | null,
 })
 {
 	for (let module of options.moduleList)
@@ -74,10 +70,13 @@ export function callAllModulesMethod(options: {
 			if (
 				!options.onlyIfShouldBeActive ||
 				module.shouldBeActive(
+					options.currentLocation ??
 					module.utils.urlUtils.getCurrentLocation()
 				)
 			)
+			{
 				module.methods?.[options.methodName]?.(...options.methodArgs);
+			}
 		}
 		catch (err)
 		{
@@ -93,15 +92,18 @@ export function callAllModulesMethod(options: {
 
 export function onUrlChange(options: {
 	moduleList: PageModule[],
-	logger: IOManager,
-	currentLocation: Location | URL | string,
+	logger?: ILogger,
+	currentLocation?: Location | URL | string | null,
 })
 {
 	for (let module of options.moduleList)
 	{
 		try
 		{
-			if (module.shouldBeActive(options.currentLocation))
+			if (module.shouldBeActive(
+				options.currentLocation ??
+				module.utils.urlUtils.getCurrentLocation()
+			))
 			{
 				if (!module.isActive && module.eventHandlers.onModuleStart)
 				{
