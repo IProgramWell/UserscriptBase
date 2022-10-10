@@ -1,3 +1,5 @@
+import IOManager from "../utils/IOManager";
+
 import type PageModule from "./PageModule";
 import type { ILogger } from "../../types/Interfaces";
 
@@ -9,7 +11,7 @@ export function onModuleEvent<
 		moduleList: PageModule[],
 		eventHandlerName: HN,
 		handlerArgs: Parameters<HF>,
-		logger: ILogger,
+		logger?: ILogger,
 		currentLocation?: Location | URL | string | null,
 	}
 )
@@ -37,7 +39,7 @@ export function onModuleEvent<
 				)
 				{
 					module.isActive = newIsActive;
-					options.logger.print(
+					(options.logger ?? IOManager.GLOBAL_MANAGER).print(
 						(newIsActive
 							? "Started"
 							: "Stopped"
@@ -49,7 +51,7 @@ export function onModuleEvent<
 		}
 		catch (err)
 		{
-			options.logger.error(err, module);
+			(options.logger ?? IOManager.GLOBAL_MANAGER).error(err, module);
 		}
 	}
 };
@@ -58,7 +60,7 @@ export function callAllModulesMethod(options: {
 	moduleList: PageModule[],
 	methodName: string,
 	methodArgs: any[],
-	logger: ILogger,
+	logger?: ILogger,
 	onlyIfShouldBeActive: boolean,
 	currentLocation?: Location | URL | string | null,
 })
@@ -80,7 +82,7 @@ export function callAllModulesMethod(options: {
 		}
 		catch (err)
 		{
-			options.logger.error({
+			(options.logger ?? IOManager.GLOBAL_MANAGER).error({
 				err,
 				module,
 				methodName: options.methodName,
@@ -119,7 +121,7 @@ export function onUrlChange(options: {
 		}
 		catch (err)
 		{
-			options.logger.error(err, module);
+			(options.logger ?? IOManager.GLOBAL_MANAGER).error(err, module);
 		}
 	}
 }

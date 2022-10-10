@@ -4,14 +4,14 @@ export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers
     moduleList: PageModule[];
     eventHandlerName: HN;
     handlerArgs: Parameters<HF>;
-    logger: ILogger;
+    logger?: ILogger;
     currentLocation?: Location | URL | string | null;
 }): void;
 export declare function callAllModulesMethod(options: {
     moduleList: PageModule[];
     methodName: string;
     methodArgs: any[];
-    logger: ILogger;
+    logger?: ILogger;
     onlyIfShouldBeActive: boolean;
     currentLocation?: Location | URL | string | null;
 }): void;

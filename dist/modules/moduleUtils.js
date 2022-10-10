@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activateForRegex = exports.onUrlChange = exports.callAllModulesMethod = exports.onModuleEvent = void 0;
+const IOManager_1 = __importDefault(require("../utils/IOManager"));
 function onModuleEvent(options) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     let newIsActive;
     for (let module of options.moduleList) {
         try {
@@ -11,7 +15,7 @@ function onModuleEvent(options) {
                 if (typeof newIsActive === "boolean" &&
                     newIsActive !== module.isActive) {
                     module.isActive = newIsActive;
-                    options.logger.print((newIsActive
+                    ((_d = options.logger) !== null && _d !== void 0 ? _d : IOManager_1.default.GLOBAL_MANAGER).print((newIsActive
                         ? "Started"
                         : "Stopped") +
                         ` module: "${module.moduleName}"`);
@@ -19,14 +23,14 @@ function onModuleEvent(options) {
             }
         }
         catch (err) {
-            options.logger.error(err, module);
+            ((_e = options.logger) !== null && _e !== void 0 ? _e : IOManager_1.default.GLOBAL_MANAGER).error(err, module);
         }
     }
 }
 exports.onModuleEvent = onModuleEvent;
 ;
 function callAllModulesMethod(options) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     for (let module of options.moduleList) {
         try {
             if (!options.onlyIfShouldBeActive ||
@@ -35,7 +39,7 @@ function callAllModulesMethod(options) {
             }
         }
         catch (err) {
-            options.logger.error({
+            ((_d = options.logger) !== null && _d !== void 0 ? _d : IOManager_1.default.GLOBAL_MANAGER).error({
                 err,
                 module,
                 methodName: options.methodName,
@@ -46,7 +50,7 @@ function callAllModulesMethod(options) {
 }
 exports.callAllModulesMethod = callAllModulesMethod;
 function onUrlChange(options) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     for (let module of options.moduleList) {
         try {
             if (module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
@@ -61,7 +65,7 @@ function onUrlChange(options) {
             }
         }
         catch (err) {
-            options.logger.error(err, module);
+            ((_d = options.logger) !== null && _d !== void 0 ? _d : IOManager_1.default.GLOBAL_MANAGER).error(err, module);
         }
     }
 }

@@ -10,7 +10,7 @@ export default class PathWatcher extends AutoBound
 {
 	static readonly DEFAULT_WATCHER_OPTIONS: {
 		moduleList: PageModule[],
-		logger: ILogger,
+		logger?: ILogger,
 		watchWholeURL: boolean,
 		onUrlChange: typeof onUrlChange,
 		ObserverClass: typeof MutationObserver,
