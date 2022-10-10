@@ -15,13 +15,12 @@ function evaluate(...args) {
 exports.evaluate = evaluate;
 function getSearchParams(url = document.location) {
     const params = {};
-    let key, value;
     for (let param of url
         .search
         .substring(1)
         .split("&")) {
-        [key, value] = param.split("=");
-        params[key] = value;
+        params[param.substring(0, param.indexOf("="))] =
+            param.substring(param.indexOf("=") + 1);
     }
     return params;
 }
@@ -34,8 +33,11 @@ function removeElementById(id) {
 }
 exports.removeElementById = removeElementById;
 ;
-function createElement(type, attributes = {}) {
-    return Object.assign(document.createElement(type), attributes);
+function createElement(type, attributes = {}, children) {
+    const element = Object.assign(document.createElement(type), attributes);
+    if (children)
+        element.append(...children);
+    return element;
 }
 exports.createElement = createElement;
 function isVisible(element) {

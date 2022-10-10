@@ -20,15 +20,16 @@ export function evaluate(
 export function getSearchParams(url: URL | Location = document.location): { [searchParam: string]: string }
 {
 	const params: Record<string, string> = {};
-	let key: string, value: string;
 	for (let param of url
 		.search
 		.substring(1)
 		.split("&")
 	)
 	{
-		[key, value] = param.split("=");
-		params[key] = value;
+		params[
+			param.substring(0, param.indexOf("="))
+		] =
+			param.substring(param.indexOf("=") + 1);
 	}
 	return params;
 }
@@ -45,13 +46,17 @@ export function createElement<
 	T extends keyof TagMap = keyof TagMap,
 >(
 	type: T,
-	attributes: Partial<AttributeMap<T>> = {}
+	attributes: Partial<AttributeMap<T>> = {},
+	children?: (Node | string)[]
 ): TagMap[T]
 {
-	return Object.assign(
+	const element = Object.assign(
 		document.createElement(type),
 		attributes
 	);
+	if (children)
+		element.append(...children);
+	return element;
 }
 
 export function isVisible(element: Element): boolean

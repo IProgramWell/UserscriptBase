@@ -6,6 +6,6 @@ export declare function getSearchParams(url?: URL | Location): {
     [searchParam: string]: string;
 };
 export declare function removeElementById(id: string | null): void;
-export declare function createElement<T extends keyof TagMap = keyof TagMap>(type: T, attributes?: Partial<AttributeMap<T>>): TagMap[T];
+export declare function createElement<T extends keyof TagMap = keyof TagMap>(type: T, attributes?: Partial<AttributeMap<T>>, children?: (Node | string)[]): TagMap[T];
 export declare function isVisible(element: Element): boolean;
 export declare function isScriptInIFrame(): boolean;
