@@ -1,7 +1,7 @@
 import type { TagMap, AttributeMap } from "../../types/ElementTypes";
 export declare function queryElement<R extends Element = Element>(query: string): R | null;
 export declare function queryAllElements<R extends Element = Element>(query: string): NodeListOf<R>;
-export declare function evaluate(...args: Parameters<typeof document.evaluate>): ReturnType<typeof document.evaluate>;
+export declare function evaluate(expression: string, contextNode: Node, resolver?: XPathNSResolver, type?: number, result?: XPathResult): XPathResult;
 export declare function getSearchParams(url?: URL | Location): {
     [searchParam: string]: string;
 };

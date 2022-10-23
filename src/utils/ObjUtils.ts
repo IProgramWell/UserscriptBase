@@ -5,9 +5,7 @@
  * This function replaces all methods in provided object with versions bound to said object.
  */
 export function bindMethods<
-	T extends
-	Record<PropertyKey, ((...args: any[]) => any) | any> =
-	Record<PropertyKey, ((...args: any[]) => any) | any>
+	T extends Record<PropertyKey, any> = Record<PropertyKey, any>
 >(
 	source: T,
 	bindTo: T | null = null,

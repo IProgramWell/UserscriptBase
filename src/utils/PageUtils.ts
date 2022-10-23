@@ -11,10 +11,14 @@ export function queryAllElements<R extends Element = Element>(query: string): No
 }
 
 export function evaluate(
-	...args: Parameters<typeof document.evaluate>
-): ReturnType<typeof document.evaluate>
+	expression: string,
+	contextNode: Node,
+	resolver?: XPathNSResolver,
+	type?: number,
+	result?: XPathResult
+): XPathResult
 {
-	return document.evaluate(...args);
+	return document.evaluate(expression, contextNode, resolver, type, result);
 }
 
 export function getSearchParams(url: URL | Location = document.location): { [searchParam: string]: string }

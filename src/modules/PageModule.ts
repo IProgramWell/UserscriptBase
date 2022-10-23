@@ -4,11 +4,7 @@ import * as URLUtils from "../utils/URLUtils";
 import * as PageUtils from "../utils/PageUtils";
 
 import type QueryAwaiter from "../utils/QueryAwaiter";
-import type {
-	GeneralTypes,
-	ModuleTypes,
-	Interfaces,
-} from "../../types";
+import type { GeneralTypes, Interfaces } from "../../types";
 
 export class PageModule extends AutoBound
 {
@@ -21,15 +17,11 @@ export class PageModule extends AutoBound
 	 * 
 	 */
 	readonly eventHandlers: {
-		init?: ModuleTypes.ModuleEventHandler<[], boolean>;
-		onDocumentLoad?: ModuleTypes.ModuleEventHandler<[], boolean>;
-		/**
-		 * Technically useless because `onModuleStart`
-		 * runs when the document is started, too.
-		 */
-		onDocumentStart?: ModuleTypes.ModuleEventHandler<[], boolean>;
-		onModuleStart?: ModuleTypes.ModuleEventHandler<[], boolean>;
-		onModuleStop?: ModuleTypes.ModuleEventHandler<[], boolean>;
+		init?(): boolean;
+		onDocumentLoad?(): boolean;
+		onDocumentStart?(): boolean;
+		onModuleStart?(): boolean;
+		onModuleStop?(): boolean;
 	} = {};
 	readonly methods: {
 		[methodName: PropertyKey]: (...args: any) => any

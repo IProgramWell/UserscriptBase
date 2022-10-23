@@ -5,7 +5,7 @@ export interface ILogger
 	prompt(
 		message: string,
 		defaultText: string
-	): ReturnType<typeof globalThis.prompt>;
+	): string | null;
 	alert(message: string): void;
 }
 export interface IComparable<T>

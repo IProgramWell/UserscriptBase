@@ -119,7 +119,7 @@ export default class IOManager extends AutoBound implements ILogger
 		message: string,
 		defaultText: string,
 		includeTimestamp: boolean = false
-	): ReturnType<typeof globalThis.prompt>
+	): string | null
 	{
 		return globalThis.prompt(
 			this.getPrefix(

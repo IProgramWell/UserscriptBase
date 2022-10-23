@@ -19,6 +19,6 @@ export default class IOManager extends AutoBound implements ILogger {
     getPrefix(includeTimestamp?: boolean, addSpace?: boolean): string;
     print(...messages: (string | any)[]): void;
     error(...errors: (string | any)[]): void;
-    prompt(message: string, defaultText: string, includeTimestamp?: boolean): ReturnType<typeof globalThis.prompt>;
+    prompt(message: string, defaultText: string, includeTimestamp?: boolean): string | null;
     alert(message: string, includeTimestamp?: boolean): void;
 }

@@ -9,8 +9,8 @@ function queryAllElements(query) {
     return document.querySelectorAll(query);
 }
 exports.queryAllElements = queryAllElements;
-function evaluate(...args) {
-    return document.evaluate(...args);
+function evaluate(expression, contextNode, resolver, type, result) {
+    return document.evaluate(expression, contextNode, resolver, type, result);
 }
 exports.evaluate = evaluate;
 function getSearchParams(url = document.location) {
