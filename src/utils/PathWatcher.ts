@@ -51,7 +51,7 @@ export default class PathWatcher extends AutoBound
 		this.getCurrentLocation = fullOptions.getCurrentLocation.bind(this);
 	}
 
-	onUrlChange()
+	onUrlChange(): void
 	{
 		let location = this.getCurrentLocation(),
 			url = this.watchWholeURL
@@ -72,7 +72,7 @@ export default class PathWatcher extends AutoBound
 		});
 	}
 
-	start()
+	start(): void
 	{
 		this.observerInstance.observe(
 			document,

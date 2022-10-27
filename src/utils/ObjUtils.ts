@@ -6,25 +6,26 @@
  */
 export function bindMethods<
 	T extends Record<PropertyKey, any> = Record<PropertyKey, any>
->(
-	source: T,
-	bindTo: T | null = null,
-	assignTo: T | null = null
-)
+>(options: {
+	source: T;
+	assignTo?: T | null;
+	bindTo?: T | null;
+	pure?: boolean;
+}): T
 {
-	let sourceProperties: (keyof T)[] = [];
-
-	//If `source` is a plain JS object
-	if (source.constructor === Object)
-		sourceProperties = Object.keys(source);
-	else
-		sourceProperties = Object.getOwnPropertyNames(
-			Object.getPrototypeOf(source)
-		);
+	const bindTo = options.bindTo ?? options.source,
+		assignTo: Partial<T> = options.pure
+			? {}
+			: options.assignTo ?? options.source,
+		//If `source` is a plain JS object
+		sourceProperties: (keyof T)[] = options.source.constructor === Object
+			? Object.keys(options.source)
+			: Object.getOwnPropertyNames(Object.getPrototypeOf(options.source));
 
 	for (let key of sourceProperties)
-		if (key !== "constructor" && typeof source[key] === "function")
-			(assignTo ?? source)[key] = source[key].bind(bindTo ?? source);
+		if (key !== "constructor" && typeof options.source[key] === "function")
+			assignTo[key] = options.source[key].bind(bindTo);
+	return assignTo as T;
 }
 
 /**
@@ -33,4 +34,4 @@ export function bindMethods<
  * I want intelisense to recognise the methods as, well, methods,
  * but I also want auto-bound functions.
  */
-export class AutoBound { constructor () { bindMethods(this); } }
+export class AutoBound { constructor () { bindMethods({ source: this, }); } }

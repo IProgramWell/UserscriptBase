@@ -55,7 +55,7 @@ export default class QueryAwaiter extends AutoBound
 			this.start();
 	}
 
-	onMutation(/* mutations: MutationRecord[], observer: MutationObserver */)
+	onMutation(/* mutations: MutationRecord[], observer: MutationObserver */): void
 	{
 		const remainingQueries: QueryAwaiter["queries"] = [];
 		let queryResult: NodeList | XPathResult | null;
@@ -122,7 +122,7 @@ export default class QueryAwaiter extends AutoBound
 		);
 	}
 
-	stop()
+	stop(): void
 	{
 		this.observerInstance.disconnect();
 	}

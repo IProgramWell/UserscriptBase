@@ -1,4 +1,4 @@
-export function navigate(NewURL: string | URL | Location)
+export function navigate(NewURL: string | URL | Location): void
 {
 	document.location.assign(NewURL.toString());
 }
@@ -13,12 +13,12 @@ export function setLocationAttribute(
 		"protocol" |
 		"search",
 	AttrValue: string
-)
+): void
 {
 	document.location[AttrName] = AttrValue;
 }
 
-export function openNewTab(URL: string | URL | Location)
+export function openNewTab(URL: string | URL | Location): void
 {
 	if (globalThis.GM_openInTab)
 		GM_openInTab(URL.toString());
@@ -26,7 +26,7 @@ export function openNewTab(URL: string | URL | Location)
 		globalThis.open(URL.toString(), "_blank");
 }
 
-export function getCurrentLocation()
+export function getCurrentLocation(): URL | Location
 {
 	return document.location;
 }

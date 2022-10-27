@@ -7,16 +7,19 @@ exports.AutoBound = exports.bindMethods = void 0;
  *
  * This function replaces all methods in provided object with versions bound to said object.
  */
-function bindMethods(source, bindTo = null, assignTo = null) {
-    let sourceProperties = [];
+function bindMethods(options) {
+    var _a, _b;
+    const bindTo = (_a = options.bindTo) !== null && _a !== void 0 ? _a : options.source, assignTo = options.pure
+        ? {}
+        : (_b = options.assignTo) !== null && _b !== void 0 ? _b : options.source, 
     //If `source` is a plain JS object
-    if (source.constructor === Object)
-        sourceProperties = Object.keys(source);
-    else
-        sourceProperties = Object.getOwnPropertyNames(Object.getPrototypeOf(source));
+    sourceProperties = options.source.constructor === Object
+        ? Object.keys(options.source)
+        : Object.getOwnPropertyNames(Object.getPrototypeOf(options.source));
     for (let key of sourceProperties)
-        if (key !== "constructor" && typeof source[key] === "function")
-            (assignTo !== null && assignTo !== void 0 ? assignTo : source)[key] = source[key].bind(bindTo !== null && bindTo !== void 0 ? bindTo : source);
+        if (key !== "constructor" && typeof options.source[key] === "function")
+            assignTo[key] = options.source[key].bind(bindTo);
+    return assignTo;
 }
 exports.bindMethods = bindMethods;
 /**
@@ -26,6 +29,6 @@ exports.bindMethods = bindMethods;
  * but I also want auto-bound functions.
  */
 class AutoBound {
-    constructor() { bindMethods(this); }
+    constructor() { bindMethods({ source: this, }); }
 }
 exports.AutoBound = AutoBound;

@@ -38,7 +38,7 @@ export function getSearchParams(url: URL | Location = document.location): { [sea
 	return params;
 }
 
-export function removeElementById(id: string | null)
+export function removeElementById(id: string | null): void
 {
 	if (!id)
 		return;
