@@ -11,7 +11,8 @@ function onModuleEvent(options) {
     ;
     for (let module of options.moduleList) {
         try {
-            if (module.isActive !== module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
+            if (!options.onlyIfShouldBeActive ||
+                module.isActive !== module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
                 newIsActive = (_c = (_b = module.eventHandlers)[options.eventHandlerName]) === null || _c === void 0 ? void 0 : _c.call(_b, ...(options.handlerArgs));
                 if (typeof newIsActive === "boolean" &&
                     newIsActive !== module.isActive) {

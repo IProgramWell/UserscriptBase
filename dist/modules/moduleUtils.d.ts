@@ -6,6 +6,7 @@ export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers
     handlerArgs: Parameters<HF>;
     logger?: ILogger;
     currentLocation?: Location | URL | string | null;
+    onlyIfShouldBeActive?: boolean;
 }): number;
 export declare function callAllModulesMethod(options: {
     moduleList: PageModule[];
