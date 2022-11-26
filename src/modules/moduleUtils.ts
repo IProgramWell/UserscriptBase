@@ -13,6 +13,7 @@ export function onModuleEvent<
 		handlerArgs: Parameters<HF>,
 		logger?: ILogger,
 		currentLocation?: Location | URL | string | null,
+		onlyIfShouldBeActive?: boolean,
 	}
 ): number
 {
@@ -22,6 +23,7 @@ export function onModuleEvent<
 		try
 		{
 			if (
+				!options.onlyIfShouldBeActive ||
 				module.isActive !== module.shouldBeActive(
 					options.currentLocation ??
 					module.utils.urlUtils.getCurrentLocation()
