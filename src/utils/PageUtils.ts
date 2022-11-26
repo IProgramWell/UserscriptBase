@@ -73,3 +73,7 @@ export function isVisible(element: Element): boolean
 }
 
 export function isScriptInIFrame(): boolean { return globalThis.self !== globalThis.top }
+
+export const DOCUMENT: Document = document;
+export const HEAD: HTMLHeadElement = document.head;
+export const BODY/* : HTMLBodyElement */ = document.body;

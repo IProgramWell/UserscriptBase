@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isScriptInIFrame = exports.isVisible = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.evaluate = exports.queryAllElements = exports.queryElement = void 0;
+exports.BODY = exports.HEAD = exports.DOCUMENT = exports.isScriptInIFrame = exports.isVisible = exports.createElement = exports.removeElementById = exports.getSearchParams = exports.evaluate = exports.queryAllElements = exports.queryElement = void 0;
 function queryElement(query) {
     return document.querySelector(query);
 }
@@ -48,3 +48,6 @@ function isVisible(element) {
 exports.isVisible = isVisible;
 function isScriptInIFrame() { return globalThis.self !== globalThis.top; }
 exports.isScriptInIFrame = isScriptInIFrame;
+exports.DOCUMENT = document;
+exports.HEAD = document.head;
+exports.BODY /* : HTMLBodyElement */ = document.body;
