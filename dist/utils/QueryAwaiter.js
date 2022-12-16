@@ -25,12 +25,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const pageUtils = __importStar(require("./PageUtils"));
 const ObjUtils_1 = require("./ObjUtils");
-class QueryAwaiter extends ObjUtils_1.AutoBound {
+class QueryAwaiter {
     constructor(options = QueryAwaiter.DEFAULY_AWAITER_OPTIONS) {
-        let fullOptions = Object.assign(Object.assign({}, QueryAwaiter.DEFAULY_AWAITER_OPTIONS), options);
-        super();
         this.queries = [];
         this.target = document.body;
+        const fullOptions = Object.assign(Object.assign({}, QueryAwaiter.DEFAULY_AWAITER_OPTIONS), options);
+        (0, ObjUtils_1.bindMethods)({ source: this });
         this.pageUtils = fullOptions.pageUtils;
         this.observerInstance = new fullOptions.ObserverClass(this.onMutation);
         this.target = fullOptions.target;

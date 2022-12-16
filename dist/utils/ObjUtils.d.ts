@@ -10,12 +10,3 @@ export declare function bindMethods<T extends Record<PropertyKey, any> = Record<
     bindTo?: T | null;
     pure?: boolean;
 }): T;
-/**
- * A simple class whose methods are all automatically bound.
- *
- * I want intelisense to recognise the methods as, well, methods,
- * but I also want auto-bound functions.
- */
-export declare class AutoBound {
-    constructor();
-}

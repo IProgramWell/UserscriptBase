@@ -1,15 +1,13 @@
 "use strict";
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ObjUtils_1 = require("./ObjUtils");
 const PageUtils_1 = require("./PageUtils");
-const { script: { name: scriptName, version: scriptVersion } } = (_a = globalThis.GM_info) !== null && _a !== void 0 ? _a : { script: {} };
-class IOManager extends ObjUtils_1.AutoBound {
+class IOManager {
     constructor(loggerOptions = IOManager.DEFAULT_LOGGER_OPTIONS) {
         var _a, _b;
-        const options = Object.assign(Object.assign({}, IOManager.DEFAULT_LOGGER_OPTIONS), loggerOptions);
-        super();
         this.isInIFrame = false;
+        const options = Object.assign(Object.assign({}, IOManager.DEFAULT_LOGGER_OPTIONS), loggerOptions);
+        (0, ObjUtils_1.bindMethods)({ source: this });
         this.scriptName = options.name;
         this.logTimestamp = options.logTimestamp;
         this.timestampFormat = options.timestampFormat;
@@ -66,7 +64,9 @@ exports.default = IOManager;
 IOManager.IFRAME_LOG_PREFIX = "iframe";
 IOManager.DEFAULT_LOGGER_OPTIONS = {
     name: globalThis.GM_info
-        ? `${scriptName} v${scriptVersion}`
+        ? (GM_info.script.name +
+            " v"
+            + GM_info.script.version)
         : "",
     logTimestamp: true,
     timestampFormat: "Locale",

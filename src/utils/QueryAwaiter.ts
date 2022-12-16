@@ -1,11 +1,11 @@
 import * as pageUtils from "./PageUtils";
-import { AutoBound } from "./ObjUtils";
+import { bindMethods } from "./ObjUtils";
 
 type QueryCallback<
 	R extends NodeList | XPathResult =
 	NodeList | XPathResult
 > = (elements: R) => void;
-export default class QueryAwaiter extends AutoBound
+export default class QueryAwaiter
 {
 	static readonly DEFAULY_AWAITER_OPTIONS: {
 		ObserverClass: typeof MutationObserver,
@@ -40,12 +40,12 @@ export default class QueryAwaiter extends AutoBound
 			QueryAwaiter.DEFAULY_AWAITER_OPTIONS
 	)
 	{
-		let fullOptions = {
+		const fullOptions = {
 			...QueryAwaiter.DEFAULY_AWAITER_OPTIONS,
 			...options,
 		};
 
-		super();
+		bindMethods({ source: this });
 
 		this.pageUtils = fullOptions.pageUtils;
 		this.observerInstance = new fullOptions.ObserverClass(this.onMutation);

@@ -1,4 +1,4 @@
-import { AutoBound } from "../utils/ObjUtils";
+import { bindMethods } from "../utils/ObjUtils";
 import IOManager from "../utils/IOManager";
 import * as URLUtils from "../utils/URLUtils";
 import * as PageUtils from "../utils/PageUtils";
@@ -6,7 +6,7 @@ import * as PageUtils from "../utils/PageUtils";
 import type QueryAwaiter from "../utils/QueryAwaiter";
 import type { GeneralTypes, Interfaces } from "../../types";
 
-export class PageModule extends AutoBound
+export class PageModule
 {
 	/**
 	 * A collection of per module event handlers,
@@ -50,7 +50,7 @@ export class PageModule extends AutoBound
 		logger?: Interfaces.ILogger,
 	})
 	{
-		super();
+		bindMethods({ source: this });
 
 		if (moduleDetails.shouldBeActive)
 			this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);

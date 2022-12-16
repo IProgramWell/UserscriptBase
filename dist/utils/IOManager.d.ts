@@ -1,6 +1,5 @@
-import { AutoBound } from "./ObjUtils";
 import type { ILogger } from "../../types/Interfaces";
-export default class IOManager extends AutoBound implements ILogger {
+export default class IOManager implements ILogger {
     static readonly IFRAME_LOG_PREFIX: string;
     static readonly DEFAULT_LOGGER_OPTIONS: {
         name: string;

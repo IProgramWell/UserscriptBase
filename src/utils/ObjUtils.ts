@@ -25,13 +25,7 @@ export function bindMethods<
 	for (let key of sourceProperties)
 		if (key !== "constructor" && typeof options.source[key] === "function")
 			assignTo[key] = options.source[key].bind(bindTo);
+		else
+			assignTo[key] = options.source[key];
 	return assignTo as T;
 }
-
-/**
- * A simple class whose methods are all automatically bound.
- * 
- * I want intelisense to recognise the methods as, well, methods,
- * but I also want auto-bound functions.
- */
-export class AutoBound { constructor () { bindMethods({ source: this, }); } }

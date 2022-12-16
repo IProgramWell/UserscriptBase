@@ -1,4 +1,4 @@
-import { AutoBound } from "./ObjUtils";
+import { bindMethods } from "./ObjUtils";
 import IOManager from "./IOManager";
 import { getCurrentLocation } from "./URLUtils";
 import { onUrlChange } from "../modules/moduleUtils";
@@ -6,7 +6,7 @@ import { onUrlChange } from "../modules/moduleUtils";
 import type PageModule from "../modules/PageModule";
 import type { ILogger } from "../../types/Interfaces";
 
-export default class PathWatcher extends AutoBound
+export default class PathWatcher
 {
 	static readonly DEFAULT_WATCHER_OPTIONS: {
 		moduleList: PageModule[],
@@ -35,7 +35,7 @@ export default class PathWatcher extends AutoBound
 
 	constructor (options: Partial<typeof PathWatcher.DEFAULT_WATCHER_OPTIONS> = PathWatcher.DEFAULT_WATCHER_OPTIONS)
 	{
-		super();
+		bindMethods({ source: this });
 
 		let fullOptions = {
 			...PathWatcher.DEFAULT_WATCHER_OPTIONS,

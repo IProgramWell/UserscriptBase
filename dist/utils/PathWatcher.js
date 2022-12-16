@@ -7,12 +7,12 @@ const ObjUtils_1 = require("./ObjUtils");
 const IOManager_1 = __importDefault(require("./IOManager"));
 const URLUtils_1 = require("./URLUtils");
 const moduleUtils_1 = require("../modules/moduleUtils");
-class PathWatcher extends ObjUtils_1.AutoBound {
+class PathWatcher {
     constructor(options = PathWatcher.DEFAULT_WATCHER_OPTIONS) {
-        super();
         this.watchWholeURL = false;
         this.urlChangeHandler = moduleUtils_1.onUrlChange;
         this.getCurrentLocation = URLUtils_1.getCurrentLocation;
+        (0, ObjUtils_1.bindMethods)({ source: this });
         let fullOptions = Object.assign(Object.assign({}, PathWatcher.DEFAULT_WATCHER_OPTIONS), options);
         this.lastURL = "";
         this.observerInstance = new fullOptions.ObserverClass(this.onUrlChange);

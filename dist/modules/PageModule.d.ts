@@ -1,9 +1,8 @@
-import { AutoBound } from "../utils/ObjUtils";
 import * as URLUtils from "../utils/URLUtils";
 import * as PageUtils from "../utils/PageUtils";
 import type QueryAwaiter from "../utils/QueryAwaiter";
 import type { Interfaces } from "../../types";
-export declare class PageModule extends AutoBound {
+export declare class PageModule {
     /**
      * A collection of per module event handlers,
      * bound to the current module instance.

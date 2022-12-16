@@ -1,7 +1,6 @@
 import * as pageUtils from "./PageUtils";
-import { AutoBound } from "./ObjUtils";
 declare type QueryCallback<R extends NodeList | XPathResult = NodeList | XPathResult> = (elements: R) => void;
-export default class QueryAwaiter extends AutoBound {
+export default class QueryAwaiter {
     static readonly DEFAULY_AWAITER_OPTIONS: {
         ObserverClass: typeof MutationObserver;
         pageUtils: typeof pageUtils;

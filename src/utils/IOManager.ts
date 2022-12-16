@@ -1,15 +1,9 @@
-import { AutoBound } from "./ObjUtils";
+import { bindMethods } from "./ObjUtils";
 import { isScriptInIFrame } from "./PageUtils";
 
 import type { ILogger } from "../../types/Interfaces";
 
-const {
-	script: {
-		name: scriptName,
-		version: scriptVersion
-	}
-} = globalThis.GM_info ?? { script: {} };
-export default class IOManager extends AutoBound implements ILogger
+export default class IOManager implements ILogger
 {
 	static readonly IFRAME_LOG_PREFIX: string = "iframe";
 	static readonly DEFAULT_LOGGER_OPTIONS: {
@@ -19,7 +13,11 @@ export default class IOManager extends AutoBound implements ILogger
 		detectIFrames(): boolean,
 	} = {
 			name: globalThis.GM_info
-				? `${scriptName} v${scriptVersion}`
+				? (
+					GM_info.script.name +
+					" v"
+					+ GM_info.script.version
+				)
 				: "",
 			logTimestamp: true,
 			timestampFormat: "Locale",
@@ -42,7 +40,7 @@ export default class IOManager extends AutoBound implements ILogger
 			...IOManager.DEFAULT_LOGGER_OPTIONS,
 			...loggerOptions,
 		};
-		super();
+		bindMethods({ source: this });
 
 		this.scriptName = options.name;
 		this.logTimestamp = options.logTimestamp;

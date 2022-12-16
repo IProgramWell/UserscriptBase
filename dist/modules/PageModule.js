@@ -31,10 +31,9 @@ const ObjUtils_1 = require("../utils/ObjUtils");
 const IOManager_1 = __importDefault(require("../utils/IOManager"));
 const URLUtils = __importStar(require("../utils/URLUtils"));
 const PageUtils = __importStar(require("../utils/PageUtils"));
-class PageModule extends ObjUtils_1.AutoBound {
+class PageModule {
     constructor(moduleDetails) {
         var _a, _b;
-        super();
         /**
          * A collection of per module event handlers,
          * bound to the current module instance.
@@ -54,6 +53,7 @@ class PageModule extends ObjUtils_1.AutoBound {
         };
         this.state = {};
         this.isActive = false;
+        (0, ObjUtils_1.bindMethods)({ source: this });
         if (moduleDetails.shouldBeActive)
             this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
         for (let [methodName, methodFunc] of Object.entries((_a = moduleDetails.eventHandlers) !== null && _a !== void 0 ? _a : {}))

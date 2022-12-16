@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AutoBound = exports.bindMethods = void 0;
+exports.bindMethods = void 0;
 /**
  * I want intelisense to recognise the methods as, well, methods,
  * but I also want auto-bound functions.
@@ -19,16 +19,8 @@ function bindMethods(options) {
     for (let key of sourceProperties)
         if (key !== "constructor" && typeof options.source[key] === "function")
             assignTo[key] = options.source[key].bind(bindTo);
+        else
+            assignTo[key] = options.source[key];
     return assignTo;
 }
 exports.bindMethods = bindMethods;
-/**
- * A simple class whose methods are all automatically bound.
- *
- * I want intelisense to recognise the methods as, well, methods,
- * but I also want auto-bound functions.
- */
-class AutoBound {
-    constructor() { bindMethods({ source: this, }); }
-}
-exports.AutoBound = AutoBound;
