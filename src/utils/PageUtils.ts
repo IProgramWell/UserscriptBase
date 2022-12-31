@@ -24,16 +24,18 @@ export function evaluate(
 export function getSearchParams(url: URL | Location = document.location): { [searchParam: string]: string }
 {
 	const params: Record<string, string> = {};
-	for (let param of url
-		.search
-		.substring(1)
-		.split("&")
+
+	let eqIndex: number;
+	for (
+		let param
+		of (url.search.startsWith("?")
+			? url.search.substring(1)
+			: url.search
+		).split("&")
 	)
 	{
-		params[
-			param.substring(0, param.indexOf("="))
-		] =
-			param.substring(param.indexOf("=") + 1);
+		eqIndex = param.indexOf("=");
+		params[param.substring(0, eqIndex)] = param.substring(eqIndex + 1);
 	}
 	return params;
 }
@@ -73,7 +75,3 @@ export function isVisible(element: Element): boolean
 }
 
 export function isScriptInIFrame(): boolean { return globalThis.self !== globalThis.top }
-
-export const DOCUMENT: Document = document;
-export const HEAD: HTMLHeadElement = document.head;
-export const BODY/* : HTMLBodyElement */ = document.body;

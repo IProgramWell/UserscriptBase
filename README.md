@@ -3,3 +3,5 @@ A basis for typescript-based userscript projects because `github:violentmonkey/g
 List of permissions needed for utilities to work properly (and where they're used):
 - GM_info
 	* IO_Manager.ts
+- GM_openInTab
+	* URLUtils.ts

@@ -1,6 +1,6 @@
 export function getTimeString(seconds: number): string
 {
-	let remainingSeconds = seconds
+	let remainingSeconds = seconds;
 
 	let hours = Math.floor(remainingSeconds / 3600);
 	remainingSeconds = remainingSeconds % 3600;

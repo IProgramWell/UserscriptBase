@@ -1,7 +1,7 @@
 import { bindMethods } from "../utils/ObjUtils";
 import IOManager from "../utils/IOManager";
-import * as URLUtils from "../utils/URLUtils";
-import * as PageUtils from "../utils/PageUtils";
+import * as urlUtils from "../utils/URLUtils";
+import * as pageUtils from "../utils/PageUtils";
 
 import type QueryAwaiter from "../utils/QueryAwaiter";
 import type { GeneralTypes, Interfaces } from "../../types";
@@ -30,13 +30,10 @@ export class PageModule
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: Interfaces.ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
-		urlUtils: typeof URLUtils,
-		pageUtils: typeof PageUtils,
+		urlUtils: Interfaces.IURLUtils,
+		pageUtils: Interfaces.IPageUtils,
 		queryAwaiter?: QueryAwaiter,
-	} = {
-			urlUtils: URLUtils,
-			pageUtils: PageUtils,
-		};
+	} = { urlUtils, pageUtils, };
 
 	state: Record<PropertyKey, any> = {};
 	isActive: boolean = false;

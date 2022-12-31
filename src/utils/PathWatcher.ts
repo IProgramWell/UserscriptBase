@@ -9,12 +9,12 @@ import type { ILogger } from "../../types/Interfaces";
 export default class PathWatcher
 {
 	static readonly DEFAULT_WATCHER_OPTIONS: {
-		moduleList: PageModule[],
-		logger?: ILogger,
-		watchWholeURL: boolean,
-		onUrlChange: typeof onUrlChange,
-		ObserverClass: typeof MutationObserver,
-		getCurrentLocation: typeof getCurrentLocation,
+		moduleList: PageModule[];
+		logger?: ILogger;
+		watchWholeURL: boolean;
+		onUrlChange: typeof onUrlChange;
+		ObserverClass: typeof MutationObserver;
+		getCurrentLocation: typeof getCurrentLocation;
 	} = {
 			moduleList: [],
 			logger: IOManager.GLOBAL_MANAGER,

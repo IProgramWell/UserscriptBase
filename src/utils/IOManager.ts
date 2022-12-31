@@ -2,37 +2,29 @@ import { bindMethods } from "./ObjUtils";
 import { isScriptInIFrame } from "./PageUtils";
 
 import type { ILogger } from "../../types/Interfaces";
+import type { IOManagerOptions, TimeStampFormat } from "types/UtilityTypes";
 
 export default class IOManager implements ILogger
 {
 	static readonly IFRAME_LOG_PREFIX: string = "iframe";
-	static readonly DEFAULT_LOGGER_OPTIONS: {
-		name: string,
-		logTimestamp: boolean,
-		timestampFormat: IOManager["timestampFormat"],
-		detectIFrames(): boolean,
-	} = {
-			name: globalThis.GM_info
-				? (
-					GM_info.script.name +
-					" v"
-					+ GM_info.script.version
-				)
-				: "",
-			logTimestamp: true,
-			timestampFormat: "Locale",
-			detectIFrames: isScriptInIFrame
-		};
+	static readonly DEFAULT_LOGGER_OPTIONS: IOManagerOptions = {
+		name: globalThis.GM_info
+			? GM_info.script.name + " v" + GM_info.script.version
+			: "",
+		logTimestamp: true,
+		timestampFormat: "Locale",
+		isInIFrame: isScriptInIFrame(),
+	};
 	static readonly GLOBAL_MANAGER = new IOManager();
 
 	scriptName: string;
 	logTimestamp: boolean;
-	timestampFormat: "ISO" | "UTC" | "Locale" | "Milliseconds" | "Human";
+	timestampFormat: TimeStampFormat;
 	isInIFrame: boolean = false;
 
 	constructor (
 		loggerOptions:
-			Partial<typeof IOManager["DEFAULT_LOGGER_OPTIONS"]> =
+			Partial<IOManagerOptions> =
 			IOManager.DEFAULT_LOGGER_OPTIONS
 	)
 	{
@@ -45,12 +37,12 @@ export default class IOManager implements ILogger
 		this.scriptName = options.name;
 		this.logTimestamp = options.logTimestamp;
 		this.timestampFormat = options.timestampFormat;
-		this.isInIFrame = options.detectIFrames?.() ?? false;
+		this.isInIFrame = options.isInIFrame ?? false;
 	}
 
-	getTimestamp(): string
+	static getTimestamp(timestampFormat: TimeStampFormat = IOManager.DEFAULT_LOGGER_OPTIONS.timestampFormat): string
 	{
-		switch (this.timestampFormat)
+		switch (timestampFormat)
 		{
 			case "UTC":
 				return new Date().toUTCString();
@@ -66,26 +58,25 @@ export default class IOManager implements ILogger
 		}
 	}
 
-	joinPrefixes(prefixList: string[], addSpace: boolean = false): string
+	static joinPrefixes(prefixList: string[], addSpace: boolean = false): string
 	{
 		const formattedList: string[] = [];
 		for (let prfx of prefixList)
 			if (prfx)
 				formattedList.push(`[${prfx}]`);
-		const prefix: string = `${formattedList.join(" ")}:`;
-		return (addSpace ? prefix + " " : prefix);
+		return formattedList.join(" ") + ":" + (addSpace ? " " : "");
 	}
 
 	getPrefix(includeTimestamp: boolean = false, addSpace: boolean = false): string
 	{
 		const prefixList: string[] = [];
 		if (includeTimestamp)
-			prefixList.push(this.getTimestamp());
+			prefixList.push(IOManager.getTimestamp(this.timestampFormat));
 		if (this.isInIFrame)
 			prefixList.push(IOManager.IFRAME_LOG_PREFIX);
 		prefixList.push(this.scriptName);
 
-		return this.joinPrefixes(
+		return IOManager.joinPrefixes(
 			prefixList,
 			addSpace
 		);

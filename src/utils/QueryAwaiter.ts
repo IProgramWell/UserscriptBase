@@ -1,39 +1,31 @@
 import * as pageUtils from "./PageUtils";
 import { bindMethods } from "./ObjUtils";
 
-type QueryCallback<
-	R extends NodeList | XPathResult =
-	NodeList | XPathResult
-> = (elements: R) => void;
+import type { XPathQuery, QueryCallback } from "types/UtilityTypes";
+import type { IPageUtils } from "types/Interfaces";
+
 export default class QueryAwaiter
 {
 	static readonly DEFAULY_AWAITER_OPTIONS: {
-		ObserverClass: typeof MutationObserver,
-		pageUtils: typeof pageUtils,
-		target: QueryAwaiter["target"],
-		autoStart: boolean,
+		ObserverClass: typeof MutationObserver;
+		pageUtils: IPageUtils;
+		target: QueryAwaiter["target"];
+		autoStart: boolean;
 	} = {
 			ObserverClass: MutationObserver,
 			pageUtils,
-			target: document.body,
+			target: document.body ?? document,
 			autoStart: false,
 		};
 
 	observerInstance: MutationObserver;
-	pageUtils: typeof pageUtils;
+	pageUtils: IPageUtils;
 	queries: {
 		query?: string;
-		xpath?: {
-			xpath: string;
-			contextNode?: Node;
-			namespaceResolver?: XPathNSResolver;
-			resultType?: number;
-			result?: XPathResult;
-			isValidResult?(result: XPathResult): boolean;
-		},
+		xpath?: XPathQuery,
 		callback: QueryCallback
 	}[] = [];
-	target: Node = document.body;
+	target: Node = document.body ?? document;
 	constructor (
 		options:
 			Partial<typeof QueryAwaiter.DEFAULY_AWAITER_OPTIONS> =
@@ -95,16 +87,13 @@ export default class QueryAwaiter
 			return callback(currentResult);
 		this.queries.push({ query, callback });
 	}
-	addXpath(
-		xpath: QueryAwaiter["queries"][number]["xpath"],
-		callback: QueryCallback<XPathResult>
-	): void
+	addXpath(xpath: XPathQuery, callback: QueryCallback<XPathResult>): void
 	{
-		if (!xpath)
+		if (!xpath?.xpath)
 			return;
 		const currentResult = this.pageUtils.evaluate(
 			xpath.xpath,
-			xpath.contextNode ?? document.body,
+			xpath.contextNode ?? document.body ?? document,
 			xpath.namespaceResolver ?? null,
 			xpath.resultType ?? XPathResult.ANY_TYPE,
 			xpath.result ?? null

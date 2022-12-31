@@ -15,9 +15,9 @@ export function onModuleEvent<
 		currentLocation?: Location | URL | string | null,
 		onlyIfShouldBeActive?: boolean,
 	}
-): number
+): void
 {
-	let newIsActive: boolean, numOfCalls: number = 0;;
+	let newIsActive: boolean;
 	for (let module of options.moduleList)
 	{
 		try
@@ -34,14 +34,13 @@ export function onModuleEvent<
 					module.eventHandlers[options.eventHandlerName] as
 					//I hate that I have to use `as` EVERYWHERE in typecript
 					(...args: Parameters<HF>) => ReturnType<HF>
-				)?.(...(options.handlerArgs));
+				)?.(...options.handlerArgs);
 				if (
 					typeof newIsActive === "boolean" &&
 					newIsActive !== module.isActive
 				)
 				{
 					module.isActive = newIsActive;
-					numOfCalls++;
 					(options.logger ?? IOManager.GLOBAL_MANAGER).print(
 						(newIsActive
 							? "Started"
@@ -57,7 +56,6 @@ export function onModuleEvent<
 			(options.logger ?? IOManager.GLOBAL_MANAGER).error(err, module);
 		}
 	}
-	return numOfCalls;
 };
 
 export function callAllModulesMethod(options: {
@@ -67,9 +65,8 @@ export function callAllModulesMethod(options: {
 	logger?: ILogger,
 	onlyIfShouldBeActive: boolean,
 	currentLocation?: Location | URL | string | null,
-}): number
+}): void
 {
-	let numOfCalls: number = 0;
 	for (let module of options.moduleList)
 	{
 		try
@@ -82,7 +79,6 @@ export function callAllModulesMethod(options: {
 				)
 			)
 			{
-				numOfCalls++;
 				module.methods?.[options.methodName]?.(...options.methodArgs);
 			}
 		}
@@ -96,16 +92,14 @@ export function callAllModulesMethod(options: {
 			});
 		}
 	}
-	return numOfCalls;
 }
 
 export function onUrlChange(options: {
 	moduleList: PageModule[],
 	logger?: ILogger,
 	currentLocation?: Location | URL | string | null,
-}): number
+}): void
 {
-	let numOfCalls: number = 0;
 	for (let module of options.moduleList)
 	{
 		try
@@ -117,14 +111,12 @@ export function onUrlChange(options: {
 			{
 				if (!module.isActive && module.eventHandlers.onModuleStart)
 				{
-					numOfCalls++;
 					module.isActive = module.eventHandlers.onModuleStart();
 					options.logger?.print(`Started module: "${module.moduleName}"`);
 				}
 			}
 			else if (module.isActive && module.eventHandlers.onModuleStop)
 			{
-				numOfCalls++;
 				module.isActive = module.eventHandlers.onModuleStop();
 				options.logger?.print(`Stopped module: "${module.moduleName}"`);
 			}
@@ -134,7 +126,6 @@ export function onUrlChange(options: {
 			(options.logger ?? IOManager.GLOBAL_MANAGER).error(err, module);
 		}
 	}
-	return numOfCalls;
 }
 
 export function activateForRegex(
