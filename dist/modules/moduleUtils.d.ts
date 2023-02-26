@@ -7,7 +7,7 @@ export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers
     logger?: ILogger;
     currentLocation?: Location | URL | string | null;
     onlyIfShouldBeActive?: boolean;
-}): number;
+}): void;
 export declare function callAllModulesMethod(options: {
     moduleList: PageModule[];
     methodName: string;
@@ -15,10 +15,10 @@ export declare function callAllModulesMethod(options: {
     logger?: ILogger;
     onlyIfShouldBeActive: boolean;
     currentLocation?: Location | URL | string | null;
-}): number;
+}): void;
 export declare function onUrlChange(options: {
     moduleList: PageModule[];
     logger?: ILogger;
     currentLocation?: Location | URL | string | null;
-}): number;
+}): void;
 export declare function activateForRegex(regex: RegExp | string, wholeUrl?: boolean): PageModule["shouldBeActive"];

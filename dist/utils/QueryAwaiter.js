@@ -22,13 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const pageUtils = __importStar(require("./PageUtils"));
 const ObjUtils_1 = require("./ObjUtils");
 class QueryAwaiter {
     constructor(options = QueryAwaiter.DEFAULY_AWAITER_OPTIONS) {
+        var _a;
         this.queries = [];
-        this.target = document.body;
+        this.target = (_a = document.body) !== null && _a !== void 0 ? _a : document;
         const fullOptions = Object.assign(Object.assign({}, QueryAwaiter.DEFAULY_AWAITER_OPTIONS), options);
         (0, ObjUtils_1.bindMethods)({ source: this });
         this.pageUtils = fullOptions.pageUtils;
@@ -67,11 +69,11 @@ class QueryAwaiter {
         this.queries.push({ query, callback });
     }
     addXpath(xpath, callback) {
-        var _a, _b, _c, _d, _e;
-        if (!xpath)
+        var _a, _b, _c, _d, _e, _f;
+        if (!(xpath === null || xpath === void 0 ? void 0 : xpath.xpath))
             return;
-        const currentResult = this.pageUtils.evaluate(xpath.xpath, (_a = xpath.contextNode) !== null && _a !== void 0 ? _a : document.body, (_b = xpath.namespaceResolver) !== null && _b !== void 0 ? _b : null, (_c = xpath.resultType) !== null && _c !== void 0 ? _c : XPathResult.ANY_TYPE, (_d = xpath.result) !== null && _d !== void 0 ? _d : null);
-        if ((_e = xpath.isValidResult) === null || _e === void 0 ? void 0 : _e.call(xpath, currentResult))
+        const currentResult = this.pageUtils.evaluate(xpath.xpath, (_b = (_a = xpath.contextNode) !== null && _a !== void 0 ? _a : document.body) !== null && _b !== void 0 ? _b : document, (_c = xpath.namespaceResolver) !== null && _c !== void 0 ? _c : null, (_d = xpath.resultType) !== null && _d !== void 0 ? _d : XPathResult.ANY_TYPE, (_e = xpath.result) !== null && _e !== void 0 ? _e : null);
+        if ((_f = xpath.isValidResult) === null || _f === void 0 ? void 0 : _f.call(xpath, currentResult))
             return callback(currentResult);
         this.queries.push({ xpath, callback });
     }
@@ -86,6 +88,6 @@ exports.default = QueryAwaiter;
 QueryAwaiter.DEFAULY_AWAITER_OPTIONS = {
     ObserverClass: MutationObserver,
     pageUtils,
-    target: document.body,
+    target: (_a = document.body) !== null && _a !== void 0 ? _a : document,
     autoStart: false,
 };

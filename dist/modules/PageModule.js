@@ -29,8 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageModule = void 0;
 const ObjUtils_1 = require("../utils/ObjUtils");
 const IOManager_1 = __importDefault(require("../utils/IOManager"));
-const URLUtils = __importStar(require("../utils/URLUtils"));
-const PageUtils = __importStar(require("../utils/PageUtils"));
+const urlUtils = __importStar(require("../utils/URLUtils"));
+const pageUtils = __importStar(require("../utils/PageUtils"));
 class PageModule {
     constructor(moduleDetails) {
         var _a, _b;
@@ -47,10 +47,7 @@ class PageModule {
         this.shouldBeActive = () => true;
         this.moduleName = null;
         this.logger = IOManager_1.default.GLOBAL_MANAGER;
-        this.utils = {
-            urlUtils: URLUtils,
-            pageUtils: PageUtils,
-        };
+        this.utils = { urlUtils, pageUtils, };
         this.state = {};
         this.isActive = false;
         (0, ObjUtils_1.bindMethods)({ source: this });

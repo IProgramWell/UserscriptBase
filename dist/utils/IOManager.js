@@ -4,17 +4,17 @@ const ObjUtils_1 = require("./ObjUtils");
 const PageUtils_1 = require("./PageUtils");
 class IOManager {
     constructor(loggerOptions = IOManager.DEFAULT_LOGGER_OPTIONS) {
-        var _a, _b;
+        var _a;
         this.isInIFrame = false;
         const options = Object.assign(Object.assign({}, IOManager.DEFAULT_LOGGER_OPTIONS), loggerOptions);
         (0, ObjUtils_1.bindMethods)({ source: this });
         this.scriptName = options.name;
         this.logTimestamp = options.logTimestamp;
         this.timestampFormat = options.timestampFormat;
-        this.isInIFrame = (_b = (_a = options.detectIFrames) === null || _a === void 0 ? void 0 : _a.call(options)) !== null && _b !== void 0 ? _b : false;
+        this.isInIFrame = (_a = options.isInIFrame) !== null && _a !== void 0 ? _a : false;
     }
-    getTimestamp() {
-        switch (this.timestampFormat) {
+    static getTimestamp(timestampFormat = IOManager.DEFAULT_LOGGER_OPTIONS.timestampFormat) {
+        switch (timestampFormat) {
             case "UTC":
                 return new Date().toUTCString();
             case "ISO":
@@ -28,22 +28,21 @@ class IOManager {
                 return new Date().toString();
         }
     }
-    joinPrefixes(prefixList, addSpace = false) {
+    static joinPrefixes(prefixList, addSpace = false) {
         const formattedList = [];
         for (let prfx of prefixList)
             if (prfx)
                 formattedList.push(`[${prfx}]`);
-        const prefix = `${formattedList.join(" ")}:`;
-        return (addSpace ? prefix + " " : prefix);
+        return formattedList.join(" ") + ":" + (addSpace ? " " : "");
     }
     getPrefix(includeTimestamp = false, addSpace = false) {
         const prefixList = [];
         if (includeTimestamp)
-            prefixList.push(this.getTimestamp());
+            prefixList.push(IOManager.getTimestamp(this.timestampFormat));
         if (this.isInIFrame)
             prefixList.push(IOManager.IFRAME_LOG_PREFIX);
         prefixList.push(this.scriptName);
-        return this.joinPrefixes(prefixList, addSpace);
+        return IOManager.joinPrefixes(prefixList, addSpace);
     }
     print(...messages) {
         console.log(this.getPrefix(this.logTimestamp, false), ...messages);
@@ -64,12 +63,10 @@ exports.default = IOManager;
 IOManager.IFRAME_LOG_PREFIX = "iframe";
 IOManager.DEFAULT_LOGGER_OPTIONS = {
     name: globalThis.GM_info
-        ? (GM_info.script.name +
-            " v"
-            + GM_info.script.version)
+        ? GM_info.script.name + " v" + GM_info.script.version
         : "",
     logTimestamp: true,
     timestampFormat: "Locale",
-    detectIFrames: PageUtils_1.isScriptInIFrame
+    isInIFrame: (0, PageUtils_1.isScriptInIFrame)(),
 };
 IOManager.GLOBAL_MANAGER = new IOManager();

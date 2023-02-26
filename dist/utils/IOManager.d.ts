@@ -1,20 +1,16 @@
 import type { ILogger } from "../../types/Interfaces";
+import type { IOManagerOptions, TimeStampFormat } from "types/UtilityTypes";
 export default class IOManager implements ILogger {
     static readonly IFRAME_LOG_PREFIX: string;
-    static readonly DEFAULT_LOGGER_OPTIONS: {
-        name: string;
-        logTimestamp: boolean;
-        timestampFormat: IOManager["timestampFormat"];
-        detectIFrames(): boolean;
-    };
+    static readonly DEFAULT_LOGGER_OPTIONS: IOManagerOptions;
     static readonly GLOBAL_MANAGER: IOManager;
     scriptName: string;
     logTimestamp: boolean;
-    timestampFormat: "ISO" | "UTC" | "Locale" | "Milliseconds" | "Human";
+    timestampFormat: TimeStampFormat;
     isInIFrame: boolean;
-    constructor(loggerOptions?: Partial<typeof IOManager["DEFAULT_LOGGER_OPTIONS"]>);
-    getTimestamp(): string;
-    joinPrefixes(prefixList: string[], addSpace?: boolean): string;
+    constructor(loggerOptions?: Partial<IOManagerOptions>);
+    static getTimestamp(timestampFormat?: TimeStampFormat): string;
+    static joinPrefixes(prefixList: string[], addSpace?: boolean): string;
     getPrefix(includeTimestamp?: boolean, addSpace?: boolean): string;
     print(...messages: (string | any)[]): void;
     error(...errors: (string | any)[]): void;

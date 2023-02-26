@@ -1,5 +1,3 @@
-import * as URLUtils from "../utils/URLUtils";
-import * as PageUtils from "../utils/PageUtils";
 import type QueryAwaiter from "../utils/QueryAwaiter";
 import type { Interfaces } from "../../types";
 export declare class PageModule {
@@ -25,8 +23,8 @@ export declare class PageModule {
     readonly moduleName: string | null | undefined;
     readonly logger: Interfaces.ILogger;
     readonly utils: {
-        urlUtils: typeof URLUtils;
-        pageUtils: typeof PageUtils;
+        urlUtils: Interfaces.IURLUtils;
+        pageUtils: Interfaces.IPageUtils;
         queryAwaiter?: QueryAwaiter;
     };
     state: Record<PropertyKey, any>;
