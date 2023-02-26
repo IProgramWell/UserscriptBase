@@ -101,11 +101,12 @@ ${MetadataSegments.join("\n")}
 /**
  * 
  * @param {Metadata} metadata
+ * @param {string} buildPath
  * @param {Configuration["mode"]} mode 
  * @param {string} entry 
  * @returns 
  */
-function getWebpackConfig(metadata, mode = "production", entry = "./src/index.ts")
+function getWebpackConfig(metadata, buildPath, mode = "production", entry = "./src/index.ts")
 {
 	return {
 		entry,
@@ -121,7 +122,7 @@ function getWebpackConfig(metadata, mode = "production", entry = "./src/index.ts
 			]
 		},
 		output: {
-			path: Path.resolve(__dirname, "dist"),
+			path: buildPath,
 			filename: `${metadata.name.replace(/\W/g, "")}.user.js`
 		},
 		optimization: {
