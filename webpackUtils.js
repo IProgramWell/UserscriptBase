@@ -111,6 +111,15 @@ function getWebpackConfig(metadata, mode = "production", entry = "./src/index.ts
 		entry,
 		mode,
 		resolve: { extensions: [".ts", ".js"], },
+		module: {
+			rules: [
+				{
+					test: /\.tsx?$/,
+					use: "ts-loader",
+					exclude: /node_modules/
+				}
+			]
+		},
 		output: {
 			path: Path.resolve(__dirname, "dist"),
 			filename: `${metadata.name.replace(/\W/g, "")}.user.js`
