@@ -14,13 +14,13 @@ function evaluate(expression, contextNode, resolver, type, result) {
 }
 exports.evaluate = evaluate;
 function getSearchParams(url = document.location) {
-    const params = {};
+    const params = new Map();
     let eqIndex;
     for (let param of (url.search.startsWith("?")
         ? url.search.substring(1)
         : url.search).split("&")) {
         eqIndex = param.indexOf("=");
-        params[param.substring(0, eqIndex)] = param.substring(eqIndex + 1);
+        params.set(param.substring(0, eqIndex), param.substring(eqIndex + 1));
     }
     return params;
 }

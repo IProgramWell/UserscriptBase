@@ -13,7 +13,7 @@ class PathWatcher {
         this.urlChangeHandler = moduleUtils_1.onUrlChange;
         this.getCurrentLocation = URLUtils_1.getCurrentLocation;
         (0, ObjUtils_1.bindMethods)({ source: this });
-        let fullOptions = Object.assign(Object.assign({}, PathWatcher.DEFAULT_WATCHER_OPTIONS), options);
+        const fullOptions = Object.assign(Object.assign({}, PathWatcher.DEFAULT_WATCHER_OPTIONS), options);
         this.lastURL = "";
         this.observerInstance = new fullOptions.ObserverClass(this.onUrlChange);
         this.logger = fullOptions.logger;
@@ -43,6 +43,7 @@ class PathWatcher {
             attributeFilter: ["location"]
         });
     }
+    stop() { this.observerInstance.disconnect(); }
 }
 exports.default = PathWatcher;
 PathWatcher.DEFAULT_WATCHER_OPTIONS = {

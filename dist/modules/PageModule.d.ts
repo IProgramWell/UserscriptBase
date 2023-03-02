@@ -1,5 +1,6 @@
 import type QueryAwaiter from "../utils/QueryAwaiter";
-import type { Interfaces } from "../../types";
+import type { Func } from "types/GeneralTypes";
+import type { ILogger, IPageUtils, IURLUtils } from "types/Interfaces";
 export declare class PageModule {
     /**
      * A collection of per module event handlers,
@@ -17,17 +18,17 @@ export declare class PageModule {
         onModuleStop?(): boolean;
     };
     readonly methods: {
-        [methodName: PropertyKey]: (...args: any) => any;
+        [methodName: PropertyKey]: Func<any, any>;
     };
-    readonly shouldBeActive: (url?: string | URL | Location) => boolean;
+    readonly shouldBeActive: Func<[url: string | URL | Location | undefined], boolean>;
     readonly moduleName: string | null | undefined;
-    readonly logger: Interfaces.ILogger;
+    readonly logger: ILogger;
     readonly utils: {
-        urlUtils: Interfaces.IURLUtils;
-        pageUtils: Interfaces.IPageUtils;
+        urlUtils: IURLUtils;
+        pageUtils: IPageUtils;
         queryAwaiter?: QueryAwaiter;
     };
-    state: Record<PropertyKey, any>;
+    state: Map<PropertyKey, any>;
     isActive: boolean;
     constructor(moduleDetails: {
         eventHandlers?: PageModule["eventHandlers"];
@@ -35,9 +36,9 @@ export declare class PageModule {
         utils?: PageModule["utils"];
         shouldBeActive?: PageModule["shouldBeActive"];
         moduleName?: string;
-        logger?: Interfaces.ILogger;
+        logger?: ILogger;
     });
-    getStateValue<T>(name: keyof PageModule["state"], defaultValue?: T | null): T | null | undefined;
-    setStateValue<T>(name: keyof PageModule["state"], value: T): void;
+    getStateValue<T, R = T | null>(name: PropertyKey, defaultValue?: R): R;
+    setStateValue<T>(name: PropertyKey, value: T): void;
 }
 export default PageModule;

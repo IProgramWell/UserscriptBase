@@ -9,7 +9,7 @@ export default class QueryAwaiter
 	static readonly DEFAULY_AWAITER_OPTIONS: {
 		ObserverClass: typeof MutationObserver;
 		pageUtils: IPageUtils;
-		target: QueryAwaiter["target"];
+		target: Node;
 		autoStart: boolean;
 	} = {
 			ObserverClass: MutationObserver,
@@ -111,8 +111,5 @@ export default class QueryAwaiter
 		);
 	}
 
-	stop(): void
-	{
-		this.observerInstance.disconnect();
-	}
+	stop(): void { this.observerInstance.disconnect(); }
 }

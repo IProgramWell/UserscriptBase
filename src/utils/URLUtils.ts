@@ -21,7 +21,7 @@ export function setLocationAttribute(
 export function openNewTab(URL: string | URL | Location): void
 {
 	if (globalThis.GM_openInTab)
-		GM_openInTab(URL.toString());
+		globalThis.GM_openInTab(URL.toString());
 	else
 		globalThis.open(URL.toString(), "_blank");
 }

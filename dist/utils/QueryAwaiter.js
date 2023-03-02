@@ -80,9 +80,7 @@ class QueryAwaiter {
     start() {
         this.observerInstance.observe(this.target, { subtree: true, childList: true, });
     }
-    stop() {
-        this.observerInstance.disconnect();
-    }
+    stop() { this.observerInstance.disconnect(); }
 }
 exports.default = QueryAwaiter;
 QueryAwaiter.DEFAULY_AWAITER_OPTIONS = {

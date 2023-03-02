@@ -9,7 +9,7 @@ export default class IOManager implements ILogger
 	static readonly IFRAME_LOG_PREFIX: string = "iframe";
 	static readonly DEFAULT_LOGGER_OPTIONS: IOManagerOptions = {
 		name: globalThis.GM_info
-			? GM_info.script.name + " v" + GM_info.script.version
+			? `${GM_info.script.name} v${GM_info.script.version}`
 			: "",
 		logTimestamp: true,
 		timestampFormat: "Locale",
@@ -40,9 +40,9 @@ export default class IOManager implements ILogger
 		this.isInIFrame = options.isInIFrame ?? false;
 	}
 
-	static getTimestamp(timestampFormat: TimeStampFormat = IOManager.DEFAULT_LOGGER_OPTIONS.timestampFormat): string
+	getTimestamp(): string
 	{
-		switch (timestampFormat)
+		switch (this.timestampFormat)
 		{
 			case "UTC":
 				return new Date().toUTCString();
@@ -58,37 +58,29 @@ export default class IOManager implements ILogger
 		}
 	}
 
-	static joinPrefixes(prefixList: string[], addSpace: boolean = false): string
-	{
-		const formattedList: string[] = [];
-		for (let prfx of prefixList)
-			if (prfx)
-				formattedList.push(`[${prfx}]`);
-		return formattedList.join(" ") + ":" + (addSpace ? " " : "");
-	}
-
 	getPrefix(includeTimestamp: boolean = false, addSpace: boolean = false): string
 	{
-		const prefixList: string[] = [];
-		if (includeTimestamp)
-			prefixList.push(IOManager.getTimestamp(this.timestampFormat));
-		if (this.isInIFrame)
-			prefixList.push(IOManager.IFRAME_LOG_PREFIX);
-		prefixList.push(this.scriptName);
-
-		return IOManager.joinPrefixes(
-			prefixList,
-			addSpace
-		);
+		return [
+			includeTimestamp && this.getTimestamp(),
+			this.isInIFrame && IOManager.IFRAME_LOG_PREFIX,
+			this.scriptName,
+		]
+			.reduce(
+				function (prefixes, prfx)
+				{
+					if (prfx)
+						prefixes.push(`[${prfx}]`);
+					return prefixes;
+				},
+				[]
+			)
+			.join(" ") + ":" + (addSpace ? " " : "");
 	}
 
 	print(...messages: (string | any)[]): void
 	{
 		console.log(
-			this.getPrefix(
-				this.logTimestamp,
-				false
-			),
+			this.getPrefix(this.logTimestamp, false),
 			...messages
 		);
 	}
@@ -96,38 +88,8 @@ export default class IOManager implements ILogger
 	error(...errors: (string | any)[]): void
 	{
 		console.error(
-			this.getPrefix(
-				this.logTimestamp,
-				false
-			),
+			this.getPrefix(this.logTimestamp, false),
 			...errors
-		);
-	}
-
-	prompt(
-		message: string,
-		defaultText: string,
-		includeTimestamp: boolean = false
-	): string | null
-	{
-		return globalThis.prompt(
-			this.getPrefix(
-				includeTimestamp,
-				true
-			) +
-			message,
-			defaultText
-		);
-	}
-
-	alert(message: string, includeTimestamp: boolean = false): void
-	{
-		globalThis.alert(
-			this.getPrefix(
-				includeTimestamp,
-				true
-			) +
-			message
 		);
 	}
 }

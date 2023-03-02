@@ -1,9 +1,8 @@
 import type PageModule from "./PageModule";
 import type { ILogger } from "../../types/Interfaces";
-export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"], HF extends Required<PageModule["eventHandlers"]>[HN] = Required<PageModule["eventHandlers"]>[HN]>(options: {
+export declare function onModuleEvent<HN extends keyof PageModule["eventHandlers"]>(options: {
     moduleList: PageModule[];
     eventHandlerName: HN;
-    handlerArgs: Parameters<HF>;
     logger?: ILogger;
     currentLocation?: Location | URL | string | null;
     onlyIfShouldBeActive?: boolean;

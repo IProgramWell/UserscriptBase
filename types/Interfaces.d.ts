@@ -4,16 +4,6 @@ export interface ILogger
 {
 	print(...messages: (string | any)[]): void;
 	error(...errors: (string | any)[]): void;
-	prompt(
-		message: string,
-		defaultText: string
-	): string | null;
-	alert(message: string): void;
-}
-
-export interface IComparable<T>
-{
-	compareTo(this: IComparable<T>, other: IComparable<T>): number;
 }
 
 export interface IPageUtils
@@ -27,7 +17,7 @@ export interface IPageUtils
 		type?: number,
 		result?: XPathResult
 	): XPathResult;
-	getSearchParams(url?: URL | Location): { [searchParam: string]: string };
+	getSearchParams(url?: URL | Location): Map<string, string>
 	removeElementById(id: string | null): void;
 	createElement<T extends keyof TagMap = keyof TagMap>(
 		type: T,

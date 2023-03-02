@@ -37,7 +37,7 @@ export default class PathWatcher
 	{
 		bindMethods({ source: this });
 
-		let fullOptions = {
+		const fullOptions = {
 			...PathWatcher.DEFAULT_WATCHER_OPTIONS,
 			...options,
 		};
@@ -71,7 +71,6 @@ export default class PathWatcher
 			logger: this.logger,
 		});
 	}
-
 	start(): void
 	{
 		this.observerInstance.observe(
@@ -83,4 +82,5 @@ export default class PathWatcher
 			}
 		);
 	}
+	stop(): void { this.observerInstance.disconnect(); }
 };

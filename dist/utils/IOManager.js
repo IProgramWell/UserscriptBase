@@ -13,8 +13,8 @@ class IOManager {
         this.timestampFormat = options.timestampFormat;
         this.isInIFrame = (_a = options.isInIFrame) !== null && _a !== void 0 ? _a : false;
     }
-    static getTimestamp(timestampFormat = IOManager.DEFAULT_LOGGER_OPTIONS.timestampFormat) {
-        switch (timestampFormat) {
+    getTimestamp() {
+        switch (this.timestampFormat) {
             case "UTC":
                 return new Date().toUTCString();
             case "ISO":
@@ -28,21 +28,18 @@ class IOManager {
                 return new Date().toString();
         }
     }
-    static joinPrefixes(prefixList, addSpace = false) {
-        const formattedList = [];
-        for (let prfx of prefixList)
-            if (prfx)
-                formattedList.push(`[${prfx}]`);
-        return formattedList.join(" ") + ":" + (addSpace ? " " : "");
-    }
     getPrefix(includeTimestamp = false, addSpace = false) {
-        const prefixList = [];
-        if (includeTimestamp)
-            prefixList.push(IOManager.getTimestamp(this.timestampFormat));
-        if (this.isInIFrame)
-            prefixList.push(IOManager.IFRAME_LOG_PREFIX);
-        prefixList.push(this.scriptName);
-        return IOManager.joinPrefixes(prefixList, addSpace);
+        return [
+            includeTimestamp && this.getTimestamp(),
+            this.isInIFrame && IOManager.IFRAME_LOG_PREFIX,
+            this.scriptName,
+        ]
+            .reduce(function (prefixes, prfx) {
+            if (prfx)
+                prefixes.push(`[${prfx}]`);
+            return prefixes;
+        }, [])
+            .join(" ") + ":" + (addSpace ? " " : "");
     }
     print(...messages) {
         console.log(this.getPrefix(this.logTimestamp, false), ...messages);
@@ -50,20 +47,12 @@ class IOManager {
     error(...errors) {
         console.error(this.getPrefix(this.logTimestamp, false), ...errors);
     }
-    prompt(message, defaultText, includeTimestamp = false) {
-        return globalThis.prompt(this.getPrefix(includeTimestamp, true) +
-            message, defaultText);
-    }
-    alert(message, includeTimestamp = false) {
-        globalThis.alert(this.getPrefix(includeTimestamp, true) +
-            message);
-    }
 }
 exports.default = IOManager;
 IOManager.IFRAME_LOG_PREFIX = "iframe";
 IOManager.DEFAULT_LOGGER_OPTIONS = {
     name: globalThis.GM_info
-        ? GM_info.script.name + " v" + GM_info.script.version
+        ? `${GM_info.script.name} v${GM_info.script.version}`
         : "",
     logTimestamp: true,
     timestampFormat: "Locale",

@@ -33,7 +33,8 @@
 			"DOM",
 		],
 		"target": "ES6",
-		"declaration": true
+		"declaration": true,
+		"skipLibCheck": true
 	},
 	"include": [
 		"./src",
@@ -41,5 +42,5 @@
 	],
 	"files": [
 		"./global.d.ts"
-	]
+	],
 }

@@ -4,7 +4,8 @@ import * as urlUtils from "../utils/URLUtils";
 import * as pageUtils from "../utils/PageUtils";
 
 import type QueryAwaiter from "../utils/QueryAwaiter";
-import type { GeneralTypes, Interfaces } from "../../types";
+import type { EntryArray, Func } from "types/GeneralTypes";
+import type { ILogger, IPageUtils, IURLUtils, } from "types/Interfaces";
 
 export class PageModule
 {
@@ -23,19 +24,20 @@ export class PageModule
 		onModuleStart?(): boolean;
 		onModuleStop?(): boolean;
 	} = {};
-	readonly methods: {
-		[methodName: PropertyKey]: (...args: any) => any
-	} = {};
-	readonly shouldBeActive: (url?: string | URL | Location) => boolean = () => true;
+	readonly methods: { [methodName: PropertyKey]: Func<any, any> } = {};
+	readonly shouldBeActive: Func<[url: string | URL | Location | undefined], boolean> = function ()
+	{
+		return true;
+	};
 	readonly moduleName: string | null | undefined = null;
-	readonly logger: Interfaces.ILogger = IOManager.GLOBAL_MANAGER;
+	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
-		urlUtils: Interfaces.IURLUtils,
-		pageUtils: Interfaces.IPageUtils,
+		urlUtils: IURLUtils,
+		pageUtils: IPageUtils,
 		queryAwaiter?: QueryAwaiter,
 	} = { urlUtils, pageUtils, };
 
-	state: Record<PropertyKey, any> = {};
+	state = new Map<PropertyKey, any>();
 	isActive: boolean = false;
 
 	constructor (moduleDetails: {
@@ -44,7 +46,7 @@ export class PageModule
 		utils?: PageModule["utils"],
 		shouldBeActive?: PageModule["shouldBeActive"],
 		moduleName?: string,
-		logger?: Interfaces.ILogger,
+		logger?: ILogger,
 	})
 	{
 		bindMethods({ source: this });
@@ -56,7 +58,7 @@ export class PageModule
 			let [methodName, methodFunc]
 			of (
 				Object.entries(moduleDetails.eventHandlers ?? {}) as
-				GeneralTypes.EntryArray<PageModule["eventHandlers"]>
+				EntryArray<PageModule["eventHandlers"]>
 			)
 		)
 			if (typeof methodFunc === "function")
@@ -66,7 +68,7 @@ export class PageModule
 			let [methodName, methodFunc]
 			of (
 				Object.entries(moduleDetails.methods ?? {}) as
-				GeneralTypes.EntryArray<PageModule["methods"]>
+				EntryArray<PageModule["methods"]>
 			)
 		)
 			if (typeof methodFunc === "function")
@@ -82,17 +84,17 @@ export class PageModule
 			this.utils = moduleDetails.utils;
 	}
 
-	getStateValue<T>(
-		name: keyof PageModule["state"],
-		defaultValue: T | null = null
-	): T | null | undefined
+	getStateValue<T, R = T | null>(
+		name: PropertyKey,
+		defaultValue: R = null
+	): R
 	{
-		return this.state[name] ?? defaultValue;
+		return this.state.get(name) ?? defaultValue;
 	}
 
-	setStateValue<T>(name: keyof PageModule["state"], value: T): void
+	setStateValue<T>(name: PropertyKey, value: T): void
 	{
-		this.state[name] = value;
+		this.state.set(name, value);
 	}
 }
 export default PageModule;

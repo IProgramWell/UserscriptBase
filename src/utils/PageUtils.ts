@@ -21,9 +21,9 @@ export function evaluate(
 	return document.evaluate(expression, contextNode, resolver, type, result);
 }
 
-export function getSearchParams(url: URL | Location = document.location): { [searchParam: string]: string }
+export function getSearchParams(url: URL | Location = document.location): Map<string, string>
 {
-	const params: Record<string, string> = {};
+	const params = new Map<string, string>();
 
 	let eqIndex: number;
 	for (
@@ -35,7 +35,7 @@ export function getSearchParams(url: URL | Location = document.location): { [sea
 	)
 	{
 		eqIndex = param.indexOf("=");
-		params[param.substring(0, eqIndex)] = param.substring(eqIndex + 1);
+		params.set(param.substring(0, eqIndex), param.substring(eqIndex + 1));
 	}
 	return params;
 }

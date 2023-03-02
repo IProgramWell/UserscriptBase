@@ -9,11 +9,8 @@ export default class IOManager implements ILogger {
     timestampFormat: TimeStampFormat;
     isInIFrame: boolean;
     constructor(loggerOptions?: Partial<IOManagerOptions>);
-    static getTimestamp(timestampFormat?: TimeStampFormat): string;
-    static joinPrefixes(prefixList: string[], addSpace?: boolean): string;
+    getTimestamp(): string;
     getPrefix(includeTimestamp?: boolean, addSpace?: boolean): string;
     print(...messages: (string | any)[]): void;
     error(...errors: (string | any)[]): void;
-    prompt(message: string, defaultText: string, includeTimestamp?: boolean): string | null;
-    alert(message: string, includeTimestamp?: boolean): void;
 }

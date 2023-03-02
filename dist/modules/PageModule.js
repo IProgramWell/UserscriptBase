@@ -44,11 +44,13 @@ class PageModule {
          */
         this.eventHandlers = {};
         this.methods = {};
-        this.shouldBeActive = () => true;
+        this.shouldBeActive = function () {
+            return true;
+        };
         this.moduleName = null;
         this.logger = IOManager_1.default.GLOBAL_MANAGER;
         this.utils = { urlUtils, pageUtils, };
-        this.state = {};
+        this.state = new Map();
         this.isActive = false;
         (0, ObjUtils_1.bindMethods)({ source: this });
         if (moduleDetails.shouldBeActive)
@@ -68,10 +70,10 @@ class PageModule {
     }
     getStateValue(name, defaultValue = null) {
         var _a;
-        return (_a = this.state[name]) !== null && _a !== void 0 ? _a : defaultValue;
+        return (_a = this.state.get(name)) !== null && _a !== void 0 ? _a : defaultValue;
     }
     setStateValue(name, value) {
-        this.state[name] = value;
+        this.state.set(name, value);
     }
 }
 exports.PageModule = PageModule;

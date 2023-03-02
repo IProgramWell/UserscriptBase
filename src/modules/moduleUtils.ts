@@ -4,13 +4,11 @@ import type PageModule from "./PageModule";
 import type { ILogger } from "../../types/Interfaces";
 
 export function onModuleEvent<
-	HN extends keyof PageModule["eventHandlers"] = keyof PageModule["eventHandlers"],
-	HF extends Required<PageModule["eventHandlers"]>[HN] = Required<PageModule["eventHandlers"]>[HN],
+	HN extends keyof PageModule["eventHandlers"],
 >(
 	options: {
 		moduleList: PageModule[],
 		eventHandlerName: HN,
-		handlerArgs: Parameters<HF>,
 		logger?: ILogger,
 		currentLocation?: Location | URL | string | null,
 		onlyIfShouldBeActive?: boolean,
@@ -18,6 +16,7 @@ export function onModuleEvent<
 ): void
 {
 	let newIsActive: boolean;
+	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
 		try
@@ -30,30 +29,25 @@ export function onModuleEvent<
 				)
 			)
 			{
-				newIsActive = (
-					module.eventHandlers[options.eventHandlerName] as
-					//I hate that I have to use `as` EVERYWHERE in typecript
-					(...args: Parameters<HF>) => ReturnType<HF>
-				)?.(...options.handlerArgs);
+				newIsActive = module.eventHandlers[options.eventHandlerName]?.();
 				if (
 					typeof newIsActive === "boolean" &&
 					newIsActive !== module.isActive
 				)
 				{
 					module.isActive = newIsActive;
-					(options.logger ?? IOManager.GLOBAL_MANAGER).print(
-						(newIsActive
+					logger.print(
+						`${(newIsActive
 							? "Started"
 							: "Stopped"
-						) +
-						` module: "${module.moduleName}"`
+						)} module: "${module.moduleName}"`
 					);
 				}
 			}
 		}
 		catch (err)
 		{
-			(options.logger ?? IOManager.GLOBAL_MANAGER).error(err, module);
+			logger.error(err, module);
 		}
 	}
 };
@@ -67,6 +61,7 @@ export function callAllModulesMethod(options: {
 	currentLocation?: Location | URL | string | null,
 }): void
 {
+	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
 		try
@@ -84,7 +79,7 @@ export function callAllModulesMethod(options: {
 		}
 		catch (err)
 		{
-			(options.logger ?? IOManager.GLOBAL_MANAGER).error({
+			logger.error({
 				err,
 				module,
 				methodName: options.methodName,
@@ -100,6 +95,7 @@ export function onUrlChange(options: {
 	currentLocation?: Location | URL | string | null,
 }): void
 {
+	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
 		try
@@ -112,18 +108,18 @@ export function onUrlChange(options: {
 				if (!module.isActive && module.eventHandlers.onModuleStart)
 				{
 					module.isActive = module.eventHandlers.onModuleStart();
-					options.logger?.print(`Started module: "${module.moduleName}"`);
+					logger.print(`Started module: "${module.moduleName}"`);
 				}
 			}
 			else if (module.isActive && module.eventHandlers.onModuleStop)
 			{
 				module.isActive = module.eventHandlers.onModuleStop();
-				options.logger?.print(`Stopped module: "${module.moduleName}"`);
+				logger.print(`Stopped module: "${module.moduleName}"`);
 			}
 		}
 		catch (err)
 		{
-			(options.logger ?? IOManager.GLOBAL_MANAGER).error(err, module);
+			logger.error(err, module);
 		}
 	}
 }

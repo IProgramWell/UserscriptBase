@@ -6,25 +6,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.activateForRegex = exports.onUrlChange = exports.callAllModulesMethod = exports.onModuleEvent = void 0;
 const IOManager_1 = __importDefault(require("../utils/IOManager"));
 function onModuleEvent(options) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     let newIsActive;
+    let logger = (_a = options.logger) !== null && _a !== void 0 ? _a : IOManager_1.default.GLOBAL_MANAGER;
     for (let module of options.moduleList) {
         try {
             if (!options.onlyIfShouldBeActive ||
-                module.isActive !== module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
-                newIsActive = (_c = (_b = module.eventHandlers)[options.eventHandlerName]) === null || _c === void 0 ? void 0 : _c.call(_b, ...options.handlerArgs);
+                module.isActive !== module.shouldBeActive((_b = options.currentLocation) !== null && _b !== void 0 ? _b : module.utils.urlUtils.getCurrentLocation())) {
+                newIsActive = (_d = (_c = module.eventHandlers)[options.eventHandlerName]) === null || _d === void 0 ? void 0 : _d.call(_c);
                 if (typeof newIsActive === "boolean" &&
                     newIsActive !== module.isActive) {
                     module.isActive = newIsActive;
-                    ((_d = options.logger) !== null && _d !== void 0 ? _d : IOManager_1.default.GLOBAL_MANAGER).print((newIsActive
+                    logger.print(`${(newIsActive
                         ? "Started"
-                        : "Stopped") +
-                        ` module: "${module.moduleName}"`);
+                        : "Stopped")} module: "${module.moduleName}"`);
                 }
             }
         }
         catch (err) {
-            ((_e = options.logger) !== null && _e !== void 0 ? _e : IOManager_1.default.GLOBAL_MANAGER).error(err, module);
+            logger.error(err, module);
         }
     }
 }
@@ -32,15 +32,16 @@ exports.onModuleEvent = onModuleEvent;
 ;
 function callAllModulesMethod(options) {
     var _a, _b, _c, _d;
+    let logger = (_a = options.logger) !== null && _a !== void 0 ? _a : IOManager_1.default.GLOBAL_MANAGER;
     for (let module of options.moduleList) {
         try {
             if (!options.onlyIfShouldBeActive ||
-                module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
-                (_c = (_b = module.methods) === null || _b === void 0 ? void 0 : _b[options.methodName]) === null || _c === void 0 ? void 0 : _c.call(_b, ...options.methodArgs);
+                module.shouldBeActive((_b = options.currentLocation) !== null && _b !== void 0 ? _b : module.utils.urlUtils.getCurrentLocation())) {
+                (_d = (_c = module.methods) === null || _c === void 0 ? void 0 : _c[options.methodName]) === null || _d === void 0 ? void 0 : _d.call(_c, ...options.methodArgs);
             }
         }
         catch (err) {
-            ((_d = options.logger) !== null && _d !== void 0 ? _d : IOManager_1.default.GLOBAL_MANAGER).error({
+            logger.error({
                 err,
                 module,
                 methodName: options.methodName,
@@ -51,22 +52,23 @@ function callAllModulesMethod(options) {
 }
 exports.callAllModulesMethod = callAllModulesMethod;
 function onUrlChange(options) {
-    var _a, _b, _c, _d;
+    var _a, _b;
+    let logger = (_a = options.logger) !== null && _a !== void 0 ? _a : IOManager_1.default.GLOBAL_MANAGER;
     for (let module of options.moduleList) {
         try {
-            if (module.shouldBeActive((_a = options.currentLocation) !== null && _a !== void 0 ? _a : module.utils.urlUtils.getCurrentLocation())) {
+            if (module.shouldBeActive((_b = options.currentLocation) !== null && _b !== void 0 ? _b : module.utils.urlUtils.getCurrentLocation())) {
                 if (!module.isActive && module.eventHandlers.onModuleStart) {
                     module.isActive = module.eventHandlers.onModuleStart();
-                    (_b = options.logger) === null || _b === void 0 ? void 0 : _b.print(`Started module: "${module.moduleName}"`);
+                    logger.print(`Started module: "${module.moduleName}"`);
                 }
             }
             else if (module.isActive && module.eventHandlers.onModuleStop) {
                 module.isActive = module.eventHandlers.onModuleStop();
-                (_c = options.logger) === null || _c === void 0 ? void 0 : _c.print(`Stopped module: "${module.moduleName}"`);
+                logger.print(`Stopped module: "${module.moduleName}"`);
             }
         }
         catch (err) {
-            ((_d = options.logger) !== null && _d !== void 0 ? _d : IOManager_1.default.GLOBAL_MANAGER).error(err, module);
+            logger.error(err, module);
         }
     }
 }

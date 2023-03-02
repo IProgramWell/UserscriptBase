@@ -21,4 +21,5 @@ export default class PathWatcher {
     constructor(options?: Partial<typeof PathWatcher.DEFAULT_WATCHER_OPTIONS>);
     onUrlChange(): void;
     start(): void;
+    stop(): void;
 }
