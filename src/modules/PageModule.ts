@@ -4,8 +4,8 @@ import * as urlUtils from "../utils/URLUtils";
 import * as pageUtils from "../utils/PageUtils";
 
 import type QueryAwaiter from "../utils/QueryAwaiter";
-import type { EntryArray, Func } from "types/GeneralTypes";
-import type { ILogger, IPageUtils, IURLUtils, } from "types/Interfaces";
+import type { EntryArray, Func } from "../../types/GeneralTypes";
+import type { ILogger, IPageUtils, IURLUtils, } from "../../types/Interfaces";
 
 export class PageModule
 {
