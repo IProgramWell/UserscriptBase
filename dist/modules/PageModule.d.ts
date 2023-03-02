@@ -1,6 +1,6 @@
 import type QueryAwaiter from "../utils/QueryAwaiter";
-import type { Func } from "types/GeneralTypes";
-import type { ILogger, IPageUtils, IURLUtils } from "types/Interfaces";
+import type { Func } from "../../types/GeneralTypes";
+import type { ILogger, IPageUtils, IURLUtils } from "../../types/Interfaces";
 export declare class PageModule {
     /**
      * A collection of per module event handlers,
