@@ -44,9 +44,7 @@ class PageModule {
          */
         this.eventHandlers = {};
         this.methods = {};
-        this.shouldBeActive = function () {
-            return true;
-        };
+        this.shouldBeActive = function () { return true; };
         this.moduleName = null;
         this.logger = IOManager_1.default.GLOBAL_MANAGER;
         this.utils = { urlUtils, pageUtils, };
@@ -66,7 +64,7 @@ class PageModule {
         if (moduleDetails.moduleName)
             this.moduleName = moduleDetails.moduleName;
         if (moduleDetails.utils)
-            this.utils = moduleDetails.utils;
+            Object.assign(this.utils, moduleDetails.utils);
     }
     getStateValue(name, defaultValue = null) {
         var _a;
@@ -74,6 +72,9 @@ class PageModule {
     }
     setStateValue(name, value) {
         this.state.set(name, value);
+    }
+    removeStateValue(name) {
+        this.state.delete(name);
     }
 }
 exports.PageModule = PageModule;

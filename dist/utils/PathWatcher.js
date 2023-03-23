@@ -45,7 +45,6 @@ class PathWatcher {
     }
     stop() { this.observerInstance.disconnect(); }
 }
-exports.default = PathWatcher;
 PathWatcher.DEFAULT_WATCHER_OPTIONS = {
     moduleList: [],
     logger: IOManager_1.default.GLOBAL_MANAGER,
@@ -54,4 +53,5 @@ PathWatcher.DEFAULT_WATCHER_OPTIONS = {
     ObserverClass: MutationObserver,
     getCurrentLocation: URLUtils_1.getCurrentLocation,
 };
+exports.default = PathWatcher;
 ;

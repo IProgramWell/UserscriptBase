@@ -82,10 +82,10 @@ class QueryAwaiter {
     }
     stop() { this.observerInstance.disconnect(); }
 }
-exports.default = QueryAwaiter;
 QueryAwaiter.DEFAULY_AWAITER_OPTIONS = {
     ObserverClass: MutationObserver,
     pageUtils,
     target: (_a = document.body) !== null && _a !== void 0 ? _a : document,
     autoStart: false,
 };
+exports.default = QueryAwaiter;

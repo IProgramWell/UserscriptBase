@@ -20,7 +20,9 @@ export declare class PageModule {
     readonly methods: {
         [methodName: PropertyKey]: Func<any, any>;
     };
-    readonly shouldBeActive: Func<[url: string | URL | Location | undefined], boolean>;
+    readonly shouldBeActive: Func<[
+        url: string | URL | Location | undefined
+    ], boolean, PageModule>;
     readonly moduleName: string | null | undefined;
     readonly logger: ILogger;
     readonly utils: {
@@ -33,12 +35,13 @@ export declare class PageModule {
     constructor(moduleDetails: {
         eventHandlers?: PageModule["eventHandlers"];
         methods?: PageModule["methods"];
-        utils?: PageModule["utils"];
+        utils?: Partial<PageModule["utils"]>;
         shouldBeActive?: PageModule["shouldBeActive"];
         moduleName?: string;
         logger?: ILogger;
     });
     getStateValue<T, R = T | null>(name: PropertyKey, defaultValue?: R): R;
     setStateValue<T>(name: PropertyKey, value: T): void;
+    removeStateValue(name: PropertyKey): void;
 }
 export default PageModule;

@@ -25,10 +25,11 @@ export class PageModule
 		onModuleStop?(): boolean;
 	} = {};
 	readonly methods: { [methodName: PropertyKey]: Func<any, any> } = {};
-	readonly shouldBeActive: Func<[url: string | URL | Location | undefined], boolean> = function ()
-	{
-		return true;
-	};
+	readonly shouldBeActive: Func<
+		[url: string | URL | Location | undefined],
+		boolean,
+		PageModule
+	> = function () { return true; };
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
@@ -43,7 +44,7 @@ export class PageModule
 	constructor (moduleDetails: {
 		eventHandlers?: PageModule["eventHandlers"],
 		methods?: PageModule["methods"],
-		utils?: PageModule["utils"],
+		utils?: Partial<PageModule["utils"]>,
 		shouldBeActive?: PageModule["shouldBeActive"],
 		moduleName?: string,
 		logger?: ILogger,
@@ -81,7 +82,7 @@ export class PageModule
 			this.moduleName = moduleDetails.moduleName;
 
 		if (moduleDetails.utils)
-			this.utils = moduleDetails.utils;
+			Object.assign(this.utils, moduleDetails.utils);
 	}
 
 	getStateValue<T, R = T | null>(
@@ -95,6 +96,11 @@ export class PageModule
 	setStateValue<T>(name: PropertyKey, value: T): void
 	{
 		this.state.set(name, value);
+	}
+
+	removeStateValue(name: PropertyKey): void
+	{
+		this.state.delete(name);
 	}
 }
 export default PageModule;

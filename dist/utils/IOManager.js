@@ -48,14 +48,14 @@ class IOManager {
         console.error(this.getPrefix(this.logTimestamp, false), ...errors);
     }
 }
-exports.default = IOManager;
 IOManager.IFRAME_LOG_PREFIX = "iframe";
 IOManager.DEFAULT_LOGGER_OPTIONS = {
     name: globalThis.GM_info
-        ? `${GM_info.script.name} v${GM_info.script.version}`
+        ? `${globalThis.GM_info.script.name} v${globalThis.GM_info.script.version}`
         : "",
     logTimestamp: true,
     timestampFormat: "Locale",
     isInIFrame: (0, PageUtils_1.isScriptInIFrame)(),
 };
 IOManager.GLOBAL_MANAGER = new IOManager();
+exports.default = IOManager;

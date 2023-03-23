@@ -9,7 +9,7 @@ export default class IOManager implements ILogger
 	static readonly IFRAME_LOG_PREFIX: string = "iframe";
 	static readonly DEFAULT_LOGGER_OPTIONS: IOManagerOptions = {
 		name: globalThis.GM_info
-			? `${GM_info.script.name} v${GM_info.script.version}`
+			? `${globalThis.GM_info.script.name} v${globalThis.GM_info.script.version}`
 			: "",
 		logTimestamp: true,
 		timestampFormat: "Locale",
