@@ -1,10 +1,10 @@
-name: NPM Build
+name: Build
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -16,13 +16,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Build
+        node-version: ${{ matrix.node-version }}\
+    - name: Install dependencies
+      run: npm install
+    - name: Run unit tests
+      run: npm test
+    - name: Compile Typescript
+      run: npx tsc
+    - name: Setup files
       run: |
-        npm install
-        npm run build
+        mkdir -p ./dist
+        cp ./package.json ./build
+        cp ./global.d.ts ./build
+        cp ./webpackUtils.js ./build
+        cp -r ./types ./build
+        cp ./README.md ./build
+    - name: Pack
+      run: npm run pack
+    - name: Adding to repo
+      run: |
+        git add ./dist
+        git commit -C HEAD
+        git push origin HEAD:master
