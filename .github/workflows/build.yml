@@ -39,5 +39,5 @@ jobs:
     - name: Adding to repo
       run: |
         git add ./dist
-        git commit -C HEAD --author="${{ github.event.pusher.name }}@${{ github.event.pusher.email }}"
+        git commit -C HEAD --author="${{ github.event.pusher.email }}"
         git push origin HEAD:master
