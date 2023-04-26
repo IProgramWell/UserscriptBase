@@ -15,31 +15,29 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - name: Test
-        run: echo "${{ github.event.pusher.name }}@${{ github.event.pusher.email }}"
-    # - uses: actions/checkout@v3
-    # - name: Use Node.js ${{ matrix.node-version }}
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: ${{ matrix.node-version }}
-    # - name: Install dependencies
-    #   run: npm install
-    # - name: Run unit tests
-    #   run: npm test
-    # - name: Compile Typescript
-    #   run: npx tsc
-    # - name: Setup files
-    #   run: |
-    #     mkdir -p ./dist
-    #     cp ./package.json ./build
-    #     cp ./global.d.ts ./build
-    #     cp ./webpackUtils.js ./build
-    #     cp -r ./types ./build
-    #     cp ./README.md ./build
-    # - name: Pack
-    #   run: npm run pack
-    # - name: Adding to repo
-    #   run: |
-    #     git add ./dist
-    #     git commit -C HEAD --author=${{ toJSON(github).actor }}
-    #     git push origin HEAD:master
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm install
+    - name: Run unit tests
+      run: npm test
+    - name: Compile Typescript
+      run: npx tsc
+    - name: Setup files
+      run: |
+        mkdir -p ./dist
+        cp ./package.json ./build
+        cp ./global.d.ts ./build
+        cp ./webpackUtils.js ./build
+        cp -r ./types ./build
+        cp ./README.md ./build
+    - name: Pack
+      run: npm run pack
+    - name: Adding to repo
+      run: |
+        git add ./dist
+        git commit -C HEAD --author="${{ github.event.pusher.name }}@${{ github.event.pusher.email }}"
+        git push origin HEAD:master
