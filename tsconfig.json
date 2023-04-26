@@ -22,7 +22,7 @@
 		"resolveJsonModule": true,
 		"rootDirs": ["src"],
 		"noEmitOnError": true,
-		"outDir": "dist",
+		"outDir": "build",
 		"checkJs": false,
 		"maxNodeModuleJsDepth": 2,
 		"esModuleInterop": true,

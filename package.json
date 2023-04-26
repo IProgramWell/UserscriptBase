@@ -2,11 +2,11 @@
   "name": "userscriptbase",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
-    "build": "npm test && tsc",
+    "build": "bash ./build.sh",
     "test": "",
-    "circ": "madge --circular --exclude dist --extensions js,ts --warning --ts-config ./tsconfig.json .",
+    "circ": "madge --circular --exclude (dist|build) --extensions js,ts --warning --ts-config ./tsconfig.json .",
     "tc": "echo \"Running type checks...\" && tsc --noEmit && echo \"Done!\""
   },
   "author": "",
