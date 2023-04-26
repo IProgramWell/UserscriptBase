@@ -37,7 +37,9 @@ jobs:
     - name: Pack
       run: npm run pack
     - name: Adding to repo
+      env:
+        AUTHOR: github.actor
       run: |
         git add ./dist
-        git commit -C HEAD
+        git commit -C HEAD --author=$AUTHOR
         git push origin HEAD:master
