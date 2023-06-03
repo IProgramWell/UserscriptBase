@@ -33,6 +33,7 @@ jobs:
         cp ./global.d.ts ./build
         cp ./webpackUtils.js ./build
         cp -r ./types ./build
+        cp ./build.tsconfig.json ./build/tsconfig.json
         cp ./README.md ./build
     - name: Pack
       run: npm run pack

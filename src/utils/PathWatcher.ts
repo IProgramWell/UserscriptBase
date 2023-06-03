@@ -4,7 +4,7 @@ import { getCurrentLocation } from "./URLUtils";
 import { onUrlChange } from "../modules/moduleUtils";
 
 import type PageModule from "../modules/PageModule";
-import type { ILogger } from "../../types/Interfaces";
+import type { ILogger } from "types/Interfaces";
 
 export default class PathWatcher
 {

@@ -1,7 +1,7 @@
 import IOManager from "../utils/IOManager";
 
 import type PageModule from "./PageModule";
-import type { ILogger } from "../../types/Interfaces";
+import type { ILogger } from "types/Interfaces";
 
 export function onModuleEvent<
 	HN extends keyof PageModule["eventHandlers"],

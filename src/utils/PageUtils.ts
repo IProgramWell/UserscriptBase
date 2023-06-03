@@ -1,4 +1,4 @@
-import type { TagMap, AttributeMap } from "../../types/ElementTypes";
+import type { TagMap, AttributeMap } from "types/ElementTypes";
 
 export function queryElement<R extends Element = Element>(query: string): R | null
 {

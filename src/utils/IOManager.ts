@@ -1,7 +1,7 @@
 import { bindMethods } from "./ObjUtils";
 import { isScriptInIFrame } from "./PageUtils";
 
-import type { ILogger } from "../../types/Interfaces";
+import type { ILogger } from "types/Interfaces";
 import type { IOManagerOptions, TimeStampFormat } from "types/UtilityTypes";
 
 export default class IOManager implements ILogger
