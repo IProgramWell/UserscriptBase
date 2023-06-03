@@ -74,7 +74,7 @@ export function callAllModulesMethod(options: {
 				)
 			)
 			{
-				module.methods?.[options.methodName]?.(...options.methodArgs);
+				module.methods?.[options.methodName]?.call(module, ...options.methodArgs);
 			}
 		}
 		catch (err)
