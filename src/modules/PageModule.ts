@@ -21,7 +21,7 @@ export class PageModule<
 	 * 
 	 */
 	readonly eventHandlers: E = {} as E;
-	readonly methods: Record<PropertyKey, (...args: any) => any>;
+	readonly methods: Record<PropertyKey, (this: PageModule<E, S>, ...args: any) => any>;
 	readonly shouldBeActive: (this: PageModule<E, S>, url?: string | URL | Location) => boolean = function () { return true; };
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
