@@ -3,9 +3,9 @@ import IOManager from "../utils/IOManager";
 import * as urlUtils from "../utils/URLUtils";
 import * as pageUtils from "../utils/PageUtils";
 
-import type QueryAwaiter from "utils/QueryAwaiter";
-import type { ILogger, IPageUtils, IURLUtils, } from "types/Interfaces";
-import type { ModuleEvents, ModuleState } from "types/ModuleHelpers";
+import type QueryAwaiter from "../utils/QueryAwaiter";
+import type { ILogger, IPageUtils, IURLUtils, } from "../../types/Interfaces";
+import type { ModuleEvents, ModuleState } from "../../types/ModuleHelpers";
 
 export class PageModule<
 	E extends ModuleEvents = ModuleEvents,
