@@ -3,11 +3,14 @@ import IOManager from "../utils/IOManager";
 import * as urlUtils from "../utils/URLUtils";
 import * as pageUtils from "../utils/PageUtils";
 
-import type QueryAwaiter from "../utils/QueryAwaiter";
-import type { EntryArray, Func } from "../../types/GeneralTypes";
-import type { ILogger, IPageUtils, IURLUtils, } from "../../types/Interfaces";
+import type QueryAwaiter from "utils/QueryAwaiter";
+import type { ILogger, IPageUtils, IURLUtils, } from "types/Interfaces";
+import type { ModuleEvents, ModuleState } from "types/ModuleHelpers";
 
-export class PageModule
+export class PageModule<
+	E extends ModuleEvents = ModuleEvents,
+	S extends ModuleState = ModuleState,
+>
 {
 	/**
 	 * A collection of per module event handlers,
@@ -17,19 +20,9 @@ export class PageModule
 	 * indicating whether the current module is active or not.
 	 * 
 	 */
-	readonly eventHandlers: {
-		init?(): boolean;
-		onDocumentLoad?(): boolean;
-		onDocumentStart?(): boolean;
-		onModuleStart?(): boolean;
-		onModuleStop?(): boolean;
-	} = {};
-	readonly methods: { [methodName: PropertyKey]: Func<any, any> } = {};
-	readonly shouldBeActive: Func<
-		[url: string | URL | Location | undefined],
-		boolean,
-		PageModule
-	> = function () { return true; };
+	readonly eventHandlers: E = {} as E;
+	readonly methods: Record<PropertyKey, (...args: any) => any>;
+	readonly shouldBeActive: (this: PageModule<E, S>, url?: string | URL | Location) => boolean = function () { return true; };
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
@@ -37,15 +30,15 @@ export class PageModule
 		pageUtils: IPageUtils,
 		queryAwaiter?: QueryAwaiter,
 	} = { urlUtils, pageUtils, };
+	state = new Map<keyof S, S[keyof S]>();
 
-	state = new Map<PropertyKey, any>();
 	isActive: boolean = false;
 
 	constructor (moduleDetails: {
-		eventHandlers?: PageModule["eventHandlers"],
-		methods?: PageModule["methods"],
-		utils?: Partial<PageModule["utils"]>,
-		shouldBeActive?: PageModule["shouldBeActive"],
+		eventHandlers?: PageModule<E, S>["eventHandlers"],
+		methods?: PageModule<E, S>["methods"],
+		utils?: Partial<PageModule<E, S>["utils"]>,
+		shouldBeActive?: PageModule<E, S>["shouldBeActive"],
 		moduleName?: string,
 		logger?: ILogger,
 	})
@@ -55,25 +48,17 @@ export class PageModule
 		if (moduleDetails.shouldBeActive)
 			this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
 
-		for (
-			let [methodName, methodFunc]
-			of (
-				Object.entries(moduleDetails.eventHandlers ?? {}) as
-				EntryArray<PageModule["eventHandlers"]>
-			)
-		)
-			if (typeof methodFunc === "function")
-				this.eventHandlers[methodName] = methodFunc.bind(this);
+		bindMethods({
+			source: moduleDetails.eventHandlers,
+			assignTo: this.eventHandlers,
+			bindTo: this,
+		});
 
-		for (
-			let [methodName, methodFunc]
-			of (
-				Object.entries(moduleDetails.methods ?? {}) as
-				EntryArray<PageModule["methods"]>
-			)
-		)
-			if (typeof methodFunc === "function")
-				this.methods[methodName] = methodFunc.bind(this);
+		bindMethods({
+			source: moduleDetails.methods,
+			assignTo: this.methods,
+			bindTo: this,
+		});
 
 		if (moduleDetails.logger)
 			this.logger = moduleDetails.logger;
@@ -85,20 +70,20 @@ export class PageModule
 			Object.assign(this.utils, moduleDetails.utils);
 	}
 
-	getStateValue<T, R = T | null>(
-		name: PropertyKey,
-		defaultValue: R = null
-	): R
+	getStateValue<K extends keyof S = keyof S>(
+		name: K,
+		defaultValue: S[K]
+	): S[K]
 	{
-		return this.state.get(name) ?? defaultValue;
+		return this.state.get(name) as S[K] ?? defaultValue;
 	}
 
-	setStateValue<T>(name: PropertyKey, value: T): void
+	setStateValue<K extends keyof S = keyof S>(name: K, value: S[K]): void
 	{
 		this.state.set(name, value);
 	}
 
-	removeStateValue(name: PropertyKey): void
+	removeStateValue(name: keyof S): void
 	{
 		this.state.delete(name);
 	}

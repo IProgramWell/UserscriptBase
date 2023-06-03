@@ -29,7 +29,7 @@ export function onModuleEvent<
 				)
 			)
 			{
-				newIsActive = module.eventHandlers[options.eventHandlerName]?.();
+				newIsActive = module.eventHandlers[options.eventHandlerName]?.call(module);
 				if (
 					typeof newIsActive === "boolean" &&
 					newIsActive !== module.isActive
@@ -107,13 +107,13 @@ export function onUrlChange(options: {
 			{
 				if (!module.isActive && module.eventHandlers.onModuleStart)
 				{
-					module.isActive = module.eventHandlers.onModuleStart();
+					module.isActive = module.eventHandlers.onModuleStart.call(module);
 					logger.print(`Started module: "${module.moduleName}"`);
 				}
 			}
 			else if (module.isActive && module.eventHandlers.onModuleStop)
 			{
-				module.isActive = module.eventHandlers.onModuleStop();
+				module.isActive = module.eventHandlers.onModuleStop.call(module);
 				logger.print(`Stopped module: "${module.moduleName}"`);
 			}
 		}
