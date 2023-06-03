@@ -49,13 +49,13 @@ export class PageModule<
 			this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
 
 		bindMethods({
-			source: moduleDetails.eventHandlers,
+			source: moduleDetails.eventHandlers ?? {},
 			assignTo: this.eventHandlers,
 			bindTo: this,
 		});
 
 		bindMethods({
-			source: moduleDetails.methods,
+			source: moduleDetails.methods ?? {},
 			assignTo: this.methods,
 			bindTo: this,
 		});
