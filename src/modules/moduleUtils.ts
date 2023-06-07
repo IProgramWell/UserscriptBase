@@ -80,10 +80,10 @@ export function callAllModulesMethod(options: {
 		catch (err)
 		{
 			logger.error({
-				err,
-				module,
-				methodName: options.methodName,
-				methodArgs: options.methodArgs,
+				"error": err,
+				"module": module,
+				"methodName": options.methodName,
+				"methodArgs": options.methodArgs,
 			});
 		}
 	}
