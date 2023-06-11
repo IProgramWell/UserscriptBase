@@ -5,3 +5,6 @@ export * as URLUtils from "./URLUtils";
 export { default as IOManager, } from "./IOManager";
 export { default as PathWatcher, } from "./PathWatcher";
 export { default as QueryAwaiter, } from "./QueryAwaiter";
+export * as RequestUtils from "./RequestUtils";
+export { default as Replacement } from "./Replacement";
+export { default as Recorder } from "./Recorder";

@@ -41,6 +41,7 @@ export class PageModule<
 		shouldBeActive?: PageModule<E, S>["shouldBeActive"],
 		moduleName?: string,
 		logger?: ILogger,
+		initialState?: S,
 	})
 	{
 		bindMethods({ source: this });
