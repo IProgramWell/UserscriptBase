@@ -16,6 +16,7 @@ import type { ModuleEvents, ModuleState } from "types/ModuleHelpers";
 export class PageModule<
 	E extends ModuleEvents = ModuleEvents,
 	S extends ModuleState = ModuleState,
+	G extends {} = typeof globalThis,
 >
 {
 	/**
@@ -27,8 +28,8 @@ export class PageModule<
 	 * 
 	 */
 	readonly eventHandlers: E = {} as E;
-	readonly methods: Record<PropertyKey, (this: PageModule<E, S>, ...args: any) => any> = {};
-	readonly shouldBeActive: (this: PageModule<E, S>, url?: string | URL | Location) => boolean = function () { return true; };
+	readonly methods: Record<PropertyKey, (this: PageModule<E, S, G>, ...args: any) => any> = {};
+	readonly shouldBeActive: (this: PageModule<E, S, G>, url?: string | URL | Location) => boolean = function () { return true; };
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
@@ -36,16 +37,17 @@ export class PageModule<
 		pageUtils: IPageUtils;
 		requestUtils: IRequestUtils;
 		queryAwaiter?: QueryAwaiter;
+		globals?: G,
 	} = { urlUtils, pageUtils, requestUtils };
 	state = new Map<keyof S, S[keyof S]>();
 
 	isActive: boolean = false;
 
 	constructor (moduleDetails: {
-		eventHandlers?: PageModule<E, S>["eventHandlers"],
-		methods?: PageModule<E, S>["methods"],
-		utils?: Partial<PageModule<E, S>["utils"]>,
-		shouldBeActive?: PageModule<E, S>["shouldBeActive"],
+		eventHandlers?: PageModule<E, S, G>["eventHandlers"],
+		methods?: PageModule<E, S, G>["methods"],
+		utils?: Partial<PageModule<E, S, G>["utils"]>,
+		shouldBeActive?: PageModule<E, S, G>["shouldBeActive"],
 		moduleName?: string,
 		logger?: ILogger,
 		initialState?: S,
