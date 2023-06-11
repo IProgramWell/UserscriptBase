@@ -6,7 +6,7 @@
   "scripts": {
     "pack": "npm pack ./build --pack-destination ./dist && mv \"./dist/$npm_package_name-$npm_package_version.tgz\" \"./dist/$npm_package_name.tgz\"",
     "test": "",
-    "circ": "madge --circular --exclude (dist|build) --extensions js,ts --warning --ts-config ./tsconfig.json .",
+    "circ": "madge --circular --exclude dist --extensions js,ts --warning --ts-config ./tsconfig.json .",
     "tc": "echo \"Running type checks...\" && tsc --noEmit && echo \"Done!\""
   },
   "author": "",

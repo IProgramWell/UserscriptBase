@@ -2,9 +2,15 @@ import { bindMethods } from "../utils/ObjUtils";
 import IOManager from "../utils/IOManager";
 import * as urlUtils from "../utils/URLUtils";
 import * as pageUtils from "../utils/PageUtils";
+import * as requestUtils from "../utils/RequestUtils";
 
 import type QueryAwaiter from "utils/QueryAwaiter";
-import type { ILogger, IPageUtils, IURLUtils, } from "types/Interfaces";
+import type {
+	ILogger,
+	IPageUtils,
+	IURLUtils,
+	IRequestUtils,
+} from "types/Interfaces";
 import type { ModuleEvents, ModuleState } from "types/ModuleHelpers";
 
 export class PageModule<
@@ -26,10 +32,11 @@ export class PageModule<
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
-		urlUtils: IURLUtils,
-		pageUtils: IPageUtils,
-		queryAwaiter?: QueryAwaiter,
-	} = { urlUtils, pageUtils, };
+		urlUtils: IURLUtils;
+		pageUtils: IPageUtils;
+		requestUtils: IRequestUtils;
+		queryAwaiter?: QueryAwaiter;
+	} = { urlUtils, pageUtils, requestUtils };
 	state = new Map<keyof S, S[keyof S]>();
 
 	isActive: boolean = false;

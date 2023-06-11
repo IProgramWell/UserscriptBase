@@ -44,3 +44,17 @@ export interface IURLUtils
 	openNewTab(URL: string | URL | Location): void;
 	getCurrentLocation(): URL | Location;
 }
+
+export interface IRequestUtils
+{
+	getHeaders(reqeust: XMLHttpRequest): Map<string, string | string[]>;
+	extractFromRequest(request: XMLHttpRequest):
+	{
+		response: {
+			body: string | object;
+			headers: Map<string, string | string[]>;
+			status: number;
+		};
+		url: string;
+	};
+}
