@@ -143,7 +143,7 @@ export function activateForRegex(
 		: regex;
 	return function (
 		this: PageModule,
-		url?: URL | string | Location
+		url: URL | string | Location
 	): boolean
 	{
 		const TEST_URL: URL | Location = url

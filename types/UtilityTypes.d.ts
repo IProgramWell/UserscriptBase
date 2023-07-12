@@ -7,9 +7,10 @@ export interface IOManagerOptions
 	isInIFrame?: boolean;
 }
 
+export type CSSQueryResult<T extends Element = Element> = Array<T>;
+
 export interface QueryCallback<
-	R extends NodeList | XPathResult =
-	NodeList | XPathResult
+	R extends CSSQueryResult = CSSQueryResult
 > { (elements: R): void; }
 export interface XPathQuery
 {
@@ -20,3 +21,4 @@ export interface XPathQuery
 	result?: XPathResult;
 	isValidResult?(result: XPathResult): boolean;
 }
+export interface CSSQuery { selector: string; }
