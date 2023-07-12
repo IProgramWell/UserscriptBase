@@ -8,3 +8,4 @@ export { default as QueryAwaiter, } from "./QueryAwaiter";
 export * as RequestUtils from "./RequestUtils";
 export { default as Replacement } from "./Replacement";
 export { default as Recorder } from "./Recorder";
+export { default as Deffered } from "./deffered";

@@ -1,11 +1,8 @@
 import * as pageUtils from "./PageUtils";
 import { bindMethods } from "./ObjUtils";
 
-import type {
-	QueryCallback,
-	CSSQueryResult,
-} from "types/UtilityTypes";
-import type { IPageUtils } from "types/Interfaces";
+import type { AwaitedQuery, } from "types/UtilityTypes";
+import type { IPageUtils, } from "types/Interfaces";
 
 export default class QueryAwaiter
 {
@@ -23,10 +20,7 @@ export default class QueryAwaiter
 
 	observerInstance: MutationObserver;
 	pageUtils: IPageUtils;
-	queries: {
-		callback: QueryCallback;
-		query: string;
-	}[] = [];
+	queries: AwaitedQuery[] = [];
 	target: Node = document.body ?? document;
 	constructor (
 		options:
@@ -52,28 +46,26 @@ export default class QueryAwaiter
 	onMutation(mutations: MutationRecord[]): void
 	{
 		let matchingNodes: Element[];
-		for (let [i, query] of this.queries.entries())
+		for (let [i, { query, callback }] of this.queries.entries())
 		{
-			matchingNodes = [];
-			if (typeof query.query === "string")
-				for (let mutation of mutations)
-					for (let node of Array.from(mutation.addedNodes))
-						if (
-							node instanceof Element &&
-							node.matches(query.query)
-						)
-							matchingNodes.push(node);
+			matchingNodes = mutations
+				.flatMap(mutation => Array.from(mutation.addedNodes))
+				.filter(node =>
+					node instanceof Element &&
+					node.matches(query)
+				) as Element[];
+
 			if (matchingNodes.length > 0)
-				query.callback(matchingNodes);
+				callback(matchingNodes);
 			this.queries.splice(i, 1);
 		}
 	}
 
-	addQuery(query: string, callback: QueryCallback<CSSQueryResult>): void
+	addQuery<R extends Element = Element>(query: string, callback: AwaitedQuery<R[]>["callback"]): void
 	{
 		if (!query)
 			return;
-		const currentResult = Array.from(this.pageUtils.queryAllElements(query));
+		const currentResult = Array.from(this.pageUtils.queryAllElements<R>(query));
 		if (currentResult.length > 0)
 			return callback(currentResult);
 		this.queries.push({ query, callback });
