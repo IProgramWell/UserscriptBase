@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        commit-prefix: "[Github Action] "
 
     steps:
     - uses: actions/checkout@v3
@@ -43,5 +42,5 @@ jobs:
         git add ./dist
         git config --local user.name ${{ github.event.pusher.name }}
         git config --local user.email ${{ github.event.pusher.email }}
-        git commit -m "${{ matrix.commit-prefix }}Compiling commit: $(git log -n 1 --pretty=format:%B)""
+        git commit -m "[Github Action] Compiling commit: \"$(git log -n 1 --pretty=format:%B)\""
         git push origin HEAD:master
