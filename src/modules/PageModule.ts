@@ -10,9 +10,9 @@ import
 	RequestUtils as requestUtils,
 	IOManager,
 	ObjUtils,
-} from "utils";
+} from "../utils";
 
-import type QueryAwaiter from "utils/QueryAwaiter";
+import type QueryAwaiter from "../utils/QueryAwaiter";
 import type {
 	ILogger,
 	IPageUtils,
