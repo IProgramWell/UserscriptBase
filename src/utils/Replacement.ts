@@ -8,7 +8,7 @@
  * Note that events aren't fired if nothing will change ("beforeInstall" and "installed" events
  * won't fire if the `Replacement` was already installed, and vice versa).
  */
-export default class Replacement<C extends {} = {}, K extends keyof C = keyof C> extends EventTarget
+export default class Replacement<C extends object = object, K extends keyof C = keyof C> extends EventTarget
 {
 	private readonly original: C[K];
 	private readonly replacement: C[K];

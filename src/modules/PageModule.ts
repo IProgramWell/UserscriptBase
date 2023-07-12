@@ -1,8 +1,16 @@
-import { bindMethods } from "../utils/ObjUtils";
-import IOManager from "../utils/IOManager";
-import * as urlUtils from "../utils/URLUtils";
-import * as pageUtils from "../utils/PageUtils";
-import * as requestUtils from "../utils/RequestUtils";
+// import { bindMethods } from "utils/ObjUtils";
+/* import IOManager from "utils/IOManager";
+import * as urlUtils from "utils/URLUtils";
+import * as pageUtils from "utils/PageUtils";
+import * as requestUtils from "utils/RequestUtils"; */
+import
+{
+	URLUtils as urlUtils,
+	PageUtils as pageUtils,
+	RequestUtils as requestUtils,
+	IOManager,
+	ObjUtils,
+} from "utils";
 
 import type QueryAwaiter from "utils/QueryAwaiter";
 import type {
@@ -53,18 +61,18 @@ export class PageModule<
 		initialState?: S,
 	})
 	{
-		bindMethods({ source: this });
+		ObjUtils.bindMethods({ source: this });
 
 		if (moduleDetails.shouldBeActive)
 			this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
 
-		bindMethods({
+		ObjUtils.bindMethods({
 			source: moduleDetails.eventHandlers ?? {},
 			assignTo: this.eventHandlers,
 			bindTo: this,
 		});
 
-		bindMethods({
+		ObjUtils.bindMethods({
 			source: moduleDetails.methods ?? {},
 			assignTo: this.methods,
 			bindTo: this,

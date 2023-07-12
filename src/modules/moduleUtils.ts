@@ -3,8 +3,17 @@ import IOManager from "../utils/IOManager";
 import type PageModule from "./PageModule";
 import type { ILogger } from "types/Interfaces";
 
+export function initModules(options: {
+	moduleList: PageModule[];
+	logger?: ILogger;
+})
+{
+	for (let module of options.moduleList)
+		module.eventHandlers.init?.call(module);
+}
+
 export function onModuleEvent<
-	HN extends keyof PageModule["eventHandlers"],
+	HN extends Exclude<keyof PageModule["eventHandlers"], "init">,
 >(
 	options: {
 		moduleList: PageModule[],

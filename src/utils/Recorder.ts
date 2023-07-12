@@ -1,13 +1,17 @@
 import Replacement from "./Replacement";
 
-export default class Recorder<T, C extends {} = {}, K extends keyof C = keyof C> extends Replacement<C, K>
+export default class Recorder<
+	T,
+	C extends {} = {},
+	K extends keyof C = keyof C
+> extends Replacement<C, K>
 {
 	private readonly items: T[] = [];
 
 	constructor (
 		container: C,
 		key: K,
-		interceptorOptions: ProxyHandler<C[K]>
+		interceptorOptions: C[K] extends {} ? ProxyHandler<C[K]> : never
 	)
 	{
 		super(

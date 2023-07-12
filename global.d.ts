@@ -1,56 +1,58 @@
-type ResponseObject<ContextType = any> = {
-	status: number,
-	statusText: string,
-	readyState: number,
-	responseHeaders: string,
-	response: string | Blob | ArrayBuffer | Document | Object | null,
-	responseText: string | undefined,
-	finalUrl: string,
-	context: ContextType,
-};
-type HeaderObj = Record<PropertyKey, any> & {
-	Cookie: string,
-	Host: string,
-	Origin: string,
-	Referer: string,
-	"User-Agent": string
-};
+interface ResponseObject<ContextType = any>
+{
+	status: number;
+	statusText: string;
+	readyState: number;
+	responseHeaders: string;
+	response: string | Blob | ArrayBuffer | Document | Object | null;
+	responseText: string | undefined;
+	finalUrl: string;
+	context: ContextType;
+}
+interface HeaderObj extends Record<PropertyKey, any>
+{
+	Cookie: string;
+	Host: string;
+	Origin: string;
+	Referer: string;
+	"User-Agent": string;
+}
 
 declare global
 {
 	// const GM_info: {
 	var GM_info: {
 		/**A unique ID of the script. */
-		uuid: string,
+		uuid: string;
 		/** The meta block of the script. */
-		scriptMetaStr: string,
+		scriptMetaStr: string;
 		/** Whether the script will be updated automatically. */
-		scriptWillUpdate: boolean,
+		scriptWillUpdate: boolean;
 		/** The name of userscript manager, which should be the string `Violentmonkey`. */
-		scriptHandler: string,
+		scriptHandler: string;
 		/** Version of Violentmonkey. */
-		version: string,
+		version: string;
 		/** Unlike `navigator.userAgent`, which can be overriden by other extensions/userscripts or by devtools in device-emulation mode, `GM_info.platform` is more reliable as the data is obtained in the background page of Violentmonkey using a specialized extension API (browser.runtime.getPlatformInfo and getBrowserInfo). */
 		platform: {
-			arch: "arm" | "mips" | "mips64" | "x86-32" | "x86-64",
-			browserName: "chrome" | "firefox",
-			browserVersion: string,
-			os: "android" | "cros" | "linux" | "mac" | "openbsd" | "win",
-		},
+			arch: "arm" | "mips" | "mips64" | "x86-32" | "x86-64";
+			browserName: "chrome" | "firefox";
+			browserVersion: string;
+			os: "android" | "cros" | "linux" | "mac" | "openbsd" | "win";
+		};
 		/** Contains structured fields from the {@link https://violentmonkey.github.io/api/metadata-block/ Metadata Block} */
 		script: {
-			description: string,
-			excludes: string[],
-			includes: string[],
-			matches: string[],
-			name: string,
-			namespace: string,
-			// resources: string[],
-			resources: Array<{ name: string, url: string }>,
-			runAt: "document-start" | "document-end" | "document-idle",
-			version: string,
-		},
-		injectInto: "page" | "content" | "auto",
+			description: string;
+			excludes: string[];
+			includes: string[];
+			matches: string[];
+			name: string;
+			namespace: string;
+			// resources: string[];
+			resources: Array<{ name: string, url: string }>;
+			runAt: "document-start" | "document-end" | "document-idle";
+			version: string;
+		};
+		injectInto: "page" | "content" | "auto";
 	};
 	/**
 	 * Retrieves a value for current script from storage.
@@ -80,12 +82,14 @@ declare global
 	 */
 	function GM_addValueChangeListener(
 		name: string,
-		callback: <T>(
-			name: string,
-			oldValue: T | undefined,
-			newValue: T | undefined,
-			remote: boolean
-		) => void
+		callback: {
+			<T>(
+				name: string,
+				oldValue: T | undefined,
+				newValue: T | undefined,
+				remote: boolean
+			): void;
+		}
 	): string;
 	/**
 	 * Removes a change listener by its ID.
@@ -128,20 +132,20 @@ declare global
 	function GM_openInTab(url: string, options?: Record<PropertyKey, any>):
 		{
 			/** Сan be assigned to a function. If provided, it will be called when the opened tab is closed. */
-			onclose?: () => void,
+			onclose?(): void;
 			/** Whether the opened tab is closed. */
-			closed: boolean,
+			closed: boolean;
 			/** A function to explicitly close the opened tab */
-			close: () => void,
+			close(): void;
 		};
 	function GM_openInTab(url: string, openInBackground: boolean):
 		{
 			/** Сan be assigned to a function. If provided, it will be called when the opened tab is closed. */
-			onclose?: () => void,
+			onclose?(): void;
 			/** Whether the opened tab is closed. */
-			closed: boolean,
+			closed: boolean;
 			/** A function to explicitly close the opened tab */
-			close: () => void,
+			close(): void;
 		}
 	/**
 	 * Registers a command in Violentmonkey popup menu.
@@ -162,23 +166,18 @@ declare global
 	 * @see https://violentmonkey.github.io/api/gm/#gm_notification
 	 */
 	function GM_notification(options: {
-		text: string,
-		title?: string,
-		image?: string,
-		onclick?: () => void,
-		ondone?: () => void,
-	}):
-		{
-			remove: () => Promise<unknown>,
-		};
+		text: string;
+		title?: string;
+		image?: string;
+		onclick?(): void;
+		ondone?(): void;
+	}): { remove(): Promise<unknown>; };
 	/**
 	 * Shows an HTML5 desktop notification.
 	 * @see https://violentmonkey.github.io/api/gm/#gm_notification
 	 */
 	function GM_notification(text: string, title?: string, image?: string, onclick?: () => void):
-		{
-			remove: () => Promise<unknown>
-		};
+		{ remove(): Promise<unknown>; };
 	/**
 	 * Sets data to system clipboard.
 	 * @param data 
@@ -192,44 +191,41 @@ declare global
 	 * @see https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest
 	 */
 	function GM_xmlhttpRequest<ContextType = any>(details: {
-		url: string,
-		method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE",
-		user?: string,
-		password?: string,
-		overrideMimeType?: string,
-		headers?: HeaderObj,
-		responseType?: "text" | "json" | "blob" | "arraybuffer" | "document",
-		timeout?: number,
-		data?: string | FormData | Blob,
-		binary?: boolean,
-		context?: ContextType,
-		anonymous?: boolean,
-		onabort?: (responseObject: ResponseObject<ContextType>) => void,
-		onerror?: (responseObject: ResponseObject<ContextType>) => void,
-		onload?: (responseObject: ResponseObject<ContextType>) => void,
-		onloadend?: (responseObject: ResponseObject<ContextType>) => void,
-		onloadstart?: (responseObject: ResponseObject<ContextType>) => void,
-		onprogress?: (responseObject: ResponseObject<ContextType>) => void,
-		onreadystatechange?: (responseObject: ResponseObject<ContextType>) => void,
-		ontimeout?: (responseObject: ResponseObject<ContextType>) => void,
-	}):
-		{
-			abort: () => void,
-		};
+		url: string;
+		method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+		user?: string;
+		password?: string;
+		overrideMimeType?: string;
+		headers?: HeaderObj;
+		responseType?: "text" | "json" | "blob" | "arraybuffer" | "document";
+		timeout?: number;
+		data?: string | FormData | Blob;
+		binary?: boolean;
+		context?: ContextType;
+		anonymous?: boolean;
+		onabort?(responseObject: ResponseObject<ContextType>): void;
+		onerror?(responseObject: ResponseObject<ContextType>): void;
+		onload?(responseObject: ResponseObject<ContextType>): void;
+		onloadend?(responseObject: ResponseObject<ContextType>): void;
+		onloadstart?(responseObject: ResponseObject<ContextType>): void;
+		onprogress?(responseObject: ResponseObject<ContextType>): void;
+		onreadystatechange?(responseObject: ResponseObject<ContextType>): void;
+		ontimeout?(responseObject: ResponseObject<ContextType>): void;
+	}): { abort(): void; };
 	/**
 	 * Downloads a URL to a local file.
 	 * @param options 
 	 * @see https://violentmonkey.github.io/api/gm/#gm_download
 	 */
 	function GM_download<ContextType = any>(options: {
-		url: string,
-		name?: string,
-		onload?: () => void,
-		headers?: HeaderObj,
-		timeout?: number,
-		onerror?: (responseObject: ResponseObject<ContextType>) => void,
-		onprogress?: (responseObject: ResponseObject<ContextType>) => void,
-		ontimeout?: (responseObject: ResponseObject<ContextType>) => void,
+		url: string;
+		name?: string;
+		onload?(): void;
+		headers?: HeaderObj;
+		timeout?: number;
+		onerror?(responseObject: ResponseObject<ContextType>): void;
+		onprogress?(responseObject: ResponseObject<ContextType>): void;
+		ontimeout?(responseObject: ResponseObject<ContextType>): void;
 	}): void;
 	/**
 	 * Downloads a URL to a local file.

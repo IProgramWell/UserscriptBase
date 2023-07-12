@@ -2,7 +2,7 @@ import type { PageModule } from "modules";
 
 export interface ModuleEvents
 {
-	init?(this: PageModule): boolean;
+	init?(this: PageModule): void;
 	onDocumentLoad?(this: PageModule): boolean;
 	onDocumentStart?(this: PageModule): boolean;
 	onModuleStart?(this: PageModule): boolean;
