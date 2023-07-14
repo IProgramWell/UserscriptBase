@@ -46,29 +46,41 @@ export default class QueryAwaiter
 	onMutation(mutations: MutationRecord[]): void
 	{
 		let matchingNodes: Element[];
-		for (let [i, { query, callback }] of this.queries.entries())
+		for (let [i, query] of this.queries.entries())
 		{
 			matchingNodes = mutations
 				.flatMap(mutation => Array.from(mutation.addedNodes))
 				.filter(node =>
 					node instanceof Element &&
-					node.matches(query)
+					node.matches(query.query)
 				) as Element[];
 
 			if (matchingNodes.length > 0)
-				callback(matchingNodes);
-			this.queries.splice(i, 1);
+			{
+				query.callback(matchingNodes);
+				if (query.removeWhenFound)
+					this.queries.splice(i, 1);
+			}
 		}
 	}
 
-	addQuery<R extends Element = Element>(query: string, callback: AwaitedQuery<R[]>["callback"]): void
+	addQuery<R extends Element = Element>(
+		query: string,
+		callback: AwaitedQuery<R[]>["callback"],
+		removeWhenFound: boolean = true
+	): void
 	{
 		if (!query)
 			return;
 		const currentResult = Array.from(this.pageUtils.queryAllElements<R>(query));
 		if (currentResult.length > 0)
-			return callback(currentResult);
-		this.queries.push({ query, callback });
+		{
+			callback(currentResult);
+			if (!removeWhenFound)
+				this.queries.push({ query, callback, removeWhenFound, });
+		}
+		else
+			this.queries.push({ query, callback, removeWhenFound, });
 	}
 
 	start(): void

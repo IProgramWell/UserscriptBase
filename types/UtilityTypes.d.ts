@@ -11,4 +11,5 @@ export interface AwaitedQuery<R extends Element[] = Element[]>
 {
 	query: string;
 	callback(elements: R): void;
+	removeWhenFound?: boolean;
 }
