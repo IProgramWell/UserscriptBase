@@ -1,5 +1,46 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./"
-	}
+		"baseUrl": "./",
+		"paths": {
+			"types": [
+				"../types"
+			],
+			"types/*": [
+				"../types/*"
+			]
+		},
+		"allowJs": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strictBindCallApply": true,
+		"allowSyntheticDefaultImports": true,
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"resolveJsonModule": true,
+		"noEmitOnError": true,
+		"outDir": "build",
+		"checkJs": false,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": false,
+		"lib": [
+			"ESNext",
+			"DOM"
+		],
+		"target": "ES6",
+		"declaration": true
+	},
+	"include": [
+		"./"
+	],
+	"files": [
+		"./global.d.ts"
+	]
 }
