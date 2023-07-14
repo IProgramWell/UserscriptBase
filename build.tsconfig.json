@@ -3,10 +3,10 @@
 		"baseUrl": "./",
 		"paths": {
 			"types": [
-				"../types"
+				"./types"
 			],
 			"types/*": [
-				"../types/*"
+				"./types/*"
 			]
 		},
 		"allowJs": true,
