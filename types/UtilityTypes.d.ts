@@ -1,4 +1,5 @@
 export type TimeStampFormat = "ISO" | "UTC" | "Locale" | "Milliseconds" | "Human";
+
 export interface IOManagerOptions
 {
 	name: string;

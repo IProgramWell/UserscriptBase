@@ -1,3 +1,6 @@
+import { bindMethods } from "./ObjUtils";
+import DetailedEvent from "./DetailedEvent";
+
 /**
  * Replacement events:
  * 	- "beforeInstall",
@@ -20,6 +23,9 @@ export default class Replacement<C extends object = object, K extends keyof C = 
 	constructor (container: C, key: K, replacement: C[K])
 	{
 		super();
+
+		bindMethods({ source: this, });
+
 		this.container = container;
 		this.key = key;
 		this.replacement = replacement;
@@ -33,9 +39,15 @@ export default class Replacement<C extends object = object, K extends keyof C = 
 			return true;
 		try
 		{
-			this.dispatchEvent(new Event("beforeInstall"));
+			this.dispatchEvent(new DetailedEvent(
+				"beforeInstall",
+				this.container[this.key]
+			));
 			this.container[this.key] = this.replacement;
-			this.dispatchEvent(new Event("installed"));
+			this.dispatchEvent(new DetailedEvent(
+				"installed",
+				this.container[this.key]
+			));
 			return true;
 		}
 		catch (_)
@@ -50,9 +62,15 @@ export default class Replacement<C extends object = object, K extends keyof C = 
 			return true;
 		try
 		{
-			this.dispatchEvent(new Event("beforeUninstall"));
+			this.dispatchEvent(new DetailedEvent(
+				"beforeUninstall",
+				this.container[this.key]
+			));
 			this.container[this.key] = this.original;
-			this.dispatchEvent(new Event("uninstalled"));
+			this.dispatchEvent(new DetailedEvent(
+				"uninstalled",
+				this.container[this.key]
+			));
 			return true;
 		}
 		catch (_)

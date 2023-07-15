@@ -12,16 +12,21 @@ export function bindMethods<
 	assignTo?: T;
 	bindTo?: B;
 	pure?: boolean;
+	methods?: (keyof T)[];
 }): T
 {
 	const bindTo = options.bindTo ?? options.source,
 		assignTo: Partial<T> = options.pure
 			? {}
 			: options.assignTo ?? options.source,
-		//If `source` is a plain JS object
-		sourceProperties: (keyof T)[] = options.source.constructor === Object
-			? Object.keys(options.source)
-			: Object.getOwnPropertyNames(Object.getPrototypeOf(options.source));
+		sourceProperties: (keyof T)[] = options.methods ??
+			//If `source` is a plain JS object
+			(options.source.constructor === Object
+				? Object.keys(options.source)
+				: Object.getOwnPropertyNames(
+					Object.getPrototypeOf(options.source)
+				)
+			);
 
 	for (let key of sourceProperties)
 		if (key !== "constructor" && typeof options.source[key] === "function")

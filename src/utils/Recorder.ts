@@ -1,5 +1,13 @@
 import Replacement from "./Replacement";
+import DetailedEvent from "./DetailedEvent";
 
+/**
+ * Recorder-specific events:
+ * 
+ * 	- "added"
+ * 	- "removed"
+ * 	- "cleared"
+ */
 export default class Recorder<
 	T,
 	C extends {} = {},
@@ -21,11 +29,25 @@ export default class Recorder<
 		);
 	}
 
-	add(this: Recorder<T, C, K>, item: T): void { this.items.push(item); }
+	add(this: Recorder<T, C, K>, item: T): void
+	{
+		this.items.push(item);
+		this.dispatchEvent(new DetailedEvent("added", item));
+	}
 
-	remove(this: Recorder<T, C, K>, index: number): T | undefined { return this.items.splice(index, 1)[0]; }
+	remove(this: Recorder<T, C, K>, index: number): T | undefined
+	{
+		let removed = this.items.splice(index, 1)[0];
+		this.dispatchEvent(new DetailedEvent("removed", removed));
+		return removed;
+	}
 
-	clear(this: Recorder<T, C, K>): T[] { return this.items.splice(0, this.items.length); }
+	clear(this: Recorder<T, C, K>): T[]
+	{
+		let removed = this.items.splice(0, this.items.length);
+		this.dispatchEvent(new DetailedEvent("cleared", removed));
+		return removed;
+	}
 
 	item(this: Recorder<T, C, K>, index: number): T | undefined { return this.items[index]; }
 
@@ -37,7 +59,7 @@ export default class Recorder<
 
 	*[Symbol.iterator]()
 	{
-		for (let i = 0; i <= this.items.length; i++)
+		for (let i = 0; i < this.items.length; i++)
 			yield this.items[i];
 	}
 }
