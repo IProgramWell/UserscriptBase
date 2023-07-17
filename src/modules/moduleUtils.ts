@@ -2,6 +2,7 @@ import IOManager from "../utils/IOManager";
 
 import type PageModule from "./PageModule";
 import type { ILogger } from "types/Interfaces";
+import type { ModuleState, ModuleEvents } from "types/ModuleHelpers";
 
 export function initModules(options: {
 	moduleList: PageModule[];
@@ -133,19 +134,24 @@ export function onUrlChange(options: {
 	}
 }
 
-export function activateForRegex(
+export function activateForRegex<
+	E extends ModuleEvents = ModuleEvents,
+	S extends ModuleState = ModuleState,
+>(
 	regex: RegExp | string,
 	wholeUrl: boolean = false
-): PageModule["shouldBeActive"]
+): PageModule<E, S>["shouldBeActive"]
 {
 	const ACTIVATE_REGEXP: RegExp = typeof regex === "string"
 		? new RegExp(regex)
 		: regex;
 	return function (
-		this: PageModule,
+		this: PageModule<E, S>,
 		url: URL | string | Location
 	): boolean
 	{
+		if (this.isDisabled)
+			return false;
 		const TEST_URL: URL | Location = url
 			? (typeof url === "string"
 				? new URL(url)

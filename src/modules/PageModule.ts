@@ -11,6 +11,7 @@ import
 	IOManager,
 	ObjUtils,
 } from "../utils";
+import * as moduleUtils from "./moduleUtils";
 
 import type QueryAwaiter from "../utils/QueryAwaiter";
 import type {
@@ -23,8 +24,7 @@ import type { ModuleEvents, ModuleState } from "types/ModuleHelpers";
 
 export class PageModule<
 	E extends ModuleEvents = ModuleEvents,
-	S extends ModuleState = ModuleState,
-	G extends {} = typeof globalThis,
+	S extends ModuleState = ModuleState
 >
 {
 	/**
@@ -36,8 +36,11 @@ export class PageModule<
 	 * 
 	 */
 	readonly eventHandlers: E = {} as E;
-	readonly methods: Record<PropertyKey, (this: PageModule<E, S, G>, ...args: any) => any> = {};
-	readonly shouldBeActive: (this: PageModule<E, S, G>, url?: string | URL | Location) => boolean = function () { return true; };
+	readonly methods: Record<PropertyKey, (this: PageModule<E, S>, ...args: any) => any> = {};
+	readonly shouldBeActive: (this: PageModule<E, S>, url?: string | URL | Location) => boolean = function ()
+	{
+		return this.activationState !== -1;
+	};
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
 	readonly utils: {
@@ -45,17 +48,32 @@ export class PageModule<
 		pageUtils: IPageUtils;
 		requestUtils: IRequestUtils;
 		queryAwaiter?: QueryAwaiter;
-		globals?: G,
 	} = { urlUtils, pageUtils, requestUtils };
-	state = new Map<keyof S, S[keyof S]>();
+	state = new Map<keyof S, S[keyof S]>;
 
-	isActive: boolean = false;
+	// isActive: boolean = false;
+	/**
+	 * 	- -1 = Disabled
+	 * 	- 0 = Off - not active, but can be activated.
+	 * 	- 1 = On - active
+	 */
+	private activationState: -1 | 0 | 1 = 0;
+
+	get isActive() { return this.activationState !== -1; }
+	set isActive(value: boolean)
+	{
+		if (this.activationState !== -1)
+			this.activationState = value ? 1 : 0;
+	}
+
+	get isDisabled() { return this.activationState === -1; }
+	set isDisabled(value: boolean) { this.activationState = value ? -1 : 0; }
 
 	constructor (moduleDetails: {
-		eventHandlers?: PageModule<E, S, G>["eventHandlers"],
-		methods?: PageModule<E, S, G>["methods"],
-		utils?: Partial<PageModule<E, S, G>["utils"]>,
-		shouldBeActive?: PageModule<E, S, G>["shouldBeActive"],
+		eventHandlers?: PageModule<E, S>["eventHandlers"],
+		methods?: PageModule<E, S>["methods"],
+		utils?: Partial<PageModule<E, S>["utils"]>,
+		shouldBeActive?: { (this: PageModule<E, S>, url?: string | URL | Location): boolean; } | RegExp,
 		moduleName?: string,
 		logger?: ILogger,
 		initialState?: S,
@@ -64,7 +82,12 @@ export class PageModule<
 		ObjUtils.bindMethods({ source: this });
 
 		if (moduleDetails.shouldBeActive)
-			this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
+		{
+			if (typeof moduleDetails.shouldBeActive === "function")
+				this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
+			else if (moduleDetails.shouldBeActive instanceof RegExp)
+				this.shouldBeActive = moduleUtils.activateForRegex(moduleDetails.shouldBeActive, false);
+		}
 
 		ObjUtils.bindMethods({
 			source: moduleDetails.eventHandlers ?? {},

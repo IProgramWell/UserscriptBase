@@ -1,4 +1,4 @@
-import { bindMethods } from "./ObjUtils";
+// import { bindMethods } from "./ObjUtils";
 import DetailedEvent from "./DetailedEvent";
 
 /**
@@ -24,7 +24,7 @@ export default class Replacement<C extends object = object, K extends keyof C = 
 	{
 		super();
 
-		bindMethods({ source: this, });
+		// bindMethods({ source: this, });
 
 		this.container = container;
 		this.key = key;
