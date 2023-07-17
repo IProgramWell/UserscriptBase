@@ -31,7 +31,7 @@ export function bindMethods<
 	for (let key of sourceProperties)
 		if (key !== "constructor" && typeof options.source[key] === "function")
 			assignTo[key] = options.source[key].bind(bindTo);
-		else
+		else if (options.pure)
 			assignTo[key] = options.source[key];
 	return assignTo as T;
 }

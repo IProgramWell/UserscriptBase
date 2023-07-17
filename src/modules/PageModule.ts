@@ -59,7 +59,7 @@ export class PageModule<
 	 */
 	private activationState: -1 | 0 | 1 = 0;
 
-	get isActive() { return this.activationState !== -1; }
+	get isActive() { return this.activationState !== 1; }
 	set isActive(value: boolean)
 	{
 		if (this.activationState !== -1)
@@ -86,7 +86,9 @@ export class PageModule<
 			if (typeof moduleDetails.shouldBeActive === "function")
 				this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
 			else if (moduleDetails.shouldBeActive instanceof RegExp)
-				this.shouldBeActive = moduleUtils.activateForRegex(moduleDetails.shouldBeActive, false);
+				this.shouldBeActive = moduleUtils
+					.activateForRegex<E, S>(moduleDetails.shouldBeActive, false)
+					.bind(this);
 		}
 
 		ObjUtils.bindMethods({

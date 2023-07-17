@@ -152,6 +152,7 @@ export function activateForRegex<
 	{
 		if (this.isDisabled)
 			return false;
+
 		const TEST_URL: URL | Location = url
 			? (typeof url === "string"
 				? new URL(url)
