@@ -120,8 +120,8 @@ export class PageModule<
 		this.state.delete(name);
 	}
 
-	isDisabled(this: PageModule<E, S>) { return this.activationState === -1; }
-	disable(this: PageModule<E, S>)
+	isDisabled(this: PageModule<E, S>): boolean { return this.activationState === -1; }
+	disable(this: PageModule<E, S>): void
 	{
 		if (this.isActive())
 			// I hate this. I hate this SO MUCH. WHY DO YOU DO THIS TO ME, TYPESCRIPT???
@@ -129,32 +129,41 @@ export class PageModule<
 			this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
 		this.activationState = -1;
 	}
-	enable(this: PageModule<E, S>, activate: boolean = false)
+	enable(this: PageModule<E, S>, activate: boolean = false): void
 	{
 		this.activationState = (
 			activate &&
-			this.shouldBeActive(this.utils.urlUtils.getCurrentLocation())
+			this.shouldBeActive(this.utils.urlUtils.getCurrentLocation()) &&
+			this.eventHandlers.onModuleStart?.call(this as unknown as PageModule<ModuleEvents, ModuleState>)
 		)
 			? 1
 			: 0;
 	}
 
-	isActive(this: PageModule<E, S>) { return this.activationState === 1; }
-	activate(this: PageModule<E, S>)
+	isActive(this: PageModule<E, S>): boolean { return this.activationState === 1; }
+	activate(this: PageModule<E, S>): boolean
 	{
-		if (this.activationState === 0)
+		if (
+			this.activationState === 0 &&
+			this.eventHandlers.onModuleStart?.call(this as unknown as PageModule<ModuleEvents, ModuleState>)
+		)
 		{
-			this.eventHandlers.onModuleStart?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
 			this.activationState = 1;
+			return true;
 		}
+		return false;
 	}
-	deactivate(this: PageModule<E, S>)
+	deactivate(this: PageModule<E, S>): boolean
 	{
-		if (this.activationState === 1)
+		if (
+			this.activationState === 1 &&
+			!this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>)
+		)
 		{
 			this.activationState = 0;
-			this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
+			return false;
 		}
+		return true;
 	}
 }
 export default PageModule;

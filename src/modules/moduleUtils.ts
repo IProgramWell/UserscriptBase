@@ -16,40 +16,28 @@ export function initModules(options: {
 
 export function onModuleEvent<
 	HN extends Exclude<keyof PageModule["eventHandlers"], "init">,
->(
-	options: {
-		moduleList: PageModule[],
-		eventHandlerName: HN,
-		logger?: ILogger,
-		currentLocation?: Location | URL | string | null,
-		onlyIfShouldBeActive?: boolean,
-	}
-): void
+>(options: {
+	moduleList: PageModule[],
+	eventHandlerName: HN,
+	logger?: ILogger,
+	currentLocation?: Location | URL | string | null,
+}): void
 {
 	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
 		try
 		{
-			if (
-				!options.onlyIfShouldBeActive ||
-				module.isActive() !== module.shouldBeActive(
-					options.currentLocation ??
-					module.utils.urlUtils.getCurrentLocation()
-				)
-			)
+			if (module.shouldBeActive(
+				options.currentLocation ??
+				module.utils.urlUtils.getCurrentLocation()
+			))
 			{
-				if (module.eventHandlers[options.eventHandlerName]?.call(module))
-				{
-					module.activate();
+				if (!module.isActive() && module.activate())
 					logger.print(`Module "${module.moduleName}" has started!`);
-				}
-				else
-				{
-					module.deactivate();
-					logger.print(`Module "${module.moduleName}" has stopped!`);
-				}
 			}
+			else if (module.isActive && !module.deactivate())
+				logger.print(`Module "${module.moduleName}" has stopped!`);
 		}
 		catch (err)
 		{
