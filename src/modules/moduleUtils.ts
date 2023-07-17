@@ -10,7 +10,7 @@ export function initModules(options: {
 })
 {
 	for (let module of options.moduleList)
-		if (!module.isDisabled)
+		if (!module.isDisabled())
 			module.eventHandlers.init?.call(module);
 }
 
@@ -73,7 +73,7 @@ export function callAllModulesMethod(options: {
 		try
 		{
 			if (
-				!module.isDisabled &&
+				!module.isDisabled() &&
 				(
 					!options.onlyIfShouldBeActive ||
 					module.shouldBeActive(
@@ -107,7 +107,7 @@ export function onUrlChange(options: {
 	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
-		if (module.isDisabled)
+		if (module.isDisabled())
 			continue;
 		try
 		{
@@ -116,13 +116,13 @@ export function onUrlChange(options: {
 				module.utils.urlUtils.getCurrentLocation()
 			))
 			{
-				if (!module.isActive)
+				if (!module.isActive())
 				{
 					module.activate();
 					logger.print(`Started module: "${module.moduleName}"`);
 				}
 			}
-			else if (module.isActive)
+			else if (module.isActive())
 			{
 				module.deactivate();
 				logger.print(`Stopped module: "${module.moduleName}"`);
@@ -151,7 +151,7 @@ export function activateForRegex<
 		url: URL | string | Location
 	): boolean
 	{
-		if (this.isDisabled)
+		if (this.isDisabled())
 			return false;
 
 		const TEST_URL: URL | Location = url
