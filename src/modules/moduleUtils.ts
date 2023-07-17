@@ -10,7 +10,8 @@ export function initModules(options: {
 })
 {
 	for (let module of options.moduleList)
-		module.eventHandlers.init?.call(module);
+		if (!module.isDisabled)
+			module.eventHandlers.init?.call(module);
 }
 
 export function onModuleEvent<
@@ -25,7 +26,6 @@ export function onModuleEvent<
 	}
 ): void
 {
-	let newIsActive: boolean;
 	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
@@ -33,25 +33,21 @@ export function onModuleEvent<
 		{
 			if (
 				!options.onlyIfShouldBeActive ||
-				module.isActive !== module.shouldBeActive(
+				module.isActive() !== module.shouldBeActive(
 					options.currentLocation ??
 					module.utils.urlUtils.getCurrentLocation()
 				)
 			)
 			{
-				newIsActive = module.eventHandlers[options.eventHandlerName]?.call(module);
-				if (
-					typeof newIsActive === "boolean" &&
-					newIsActive !== module.isActive
-				)
+				if (module.eventHandlers[options.eventHandlerName]?.call(module))
 				{
-					module.isActive = newIsActive;
-					logger.print(
-						`${(newIsActive
-							? "Started"
-							: "Stopped"
-						)} module: "${module.moduleName}"`
-					);
+					module.activate();
+					logger.print(`Module "${module.moduleName}" has started!`);
+				}
+				else
+				{
+					module.deactivate();
+					logger.print(`Module "${module.moduleName}" has stopped!`);
 				}
 			}
 		}
@@ -77,10 +73,13 @@ export function callAllModulesMethod(options: {
 		try
 		{
 			if (
-				!options.onlyIfShouldBeActive ||
-				module.shouldBeActive(
-					options.currentLocation ??
-					module.utils.urlUtils.getCurrentLocation()
+				!module.isDisabled &&
+				(
+					!options.onlyIfShouldBeActive ||
+					module.shouldBeActive(
+						options.currentLocation ??
+						module.utils.urlUtils.getCurrentLocation()
+					)
 				)
 			)
 			{
@@ -108,6 +107,8 @@ export function onUrlChange(options: {
 	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
 	for (let module of options.moduleList)
 	{
+		if (module.isDisabled)
+			continue;
 		try
 		{
 			if (module.shouldBeActive(
@@ -115,15 +116,15 @@ export function onUrlChange(options: {
 				module.utils.urlUtils.getCurrentLocation()
 			))
 			{
-				if (!module.isActive && module.eventHandlers.onModuleStart)
+				if (!module.isActive)
 				{
-					module.isActive = module.eventHandlers.onModuleStart.call(module);
+					module.activate();
 					logger.print(`Started module: "${module.moduleName}"`);
 				}
 			}
-			else if (module.isActive && module.eventHandlers.onModuleStop)
+			else if (module.isActive)
 			{
-				module.isActive = module.eventHandlers.onModuleStop.call(module);
+				module.deactivate();
 				logger.print(`Stopped module: "${module.moduleName}"`);
 			}
 		}

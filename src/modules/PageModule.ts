@@ -39,7 +39,7 @@ export class PageModule<
 	readonly methods: Record<PropertyKey, (this: PageModule<E, S>, ...args: any) => any> = {};
 	readonly shouldBeActive: (this: PageModule<E, S>, url?: string | URL | Location) => boolean = function ()
 	{
-		return this.activationState !== -1;
+		return !this.isDisabled();
 	};
 	readonly moduleName: string | null | undefined = null;
 	readonly logger: ILogger = IOManager.GLOBAL_MANAGER;
@@ -51,23 +51,12 @@ export class PageModule<
 	} = { urlUtils, pageUtils, requestUtils };
 	state = new Map<keyof S, S[keyof S]>;
 
-	// isActive: boolean = false;
 	/**
 	 * 	- -1 = Disabled
 	 * 	- 0 = Off - not active, but can be activated.
 	 * 	- 1 = On - active
 	 */
 	private activationState: -1 | 0 | 1 = 0;
-
-	get isActive() { return this.activationState !== 1; }
-	set isActive(value: boolean)
-	{
-		if (this.activationState !== -1)
-			this.activationState = value ? 1 : 0;
-	}
-
-	get isDisabled() { return this.activationState === -1; }
-	set isDisabled(value: boolean) { this.activationState = value ? -1 : 0; }
 
 	constructor (moduleDetails: {
 		eventHandlers?: PageModule<E, S>["eventHandlers"],
@@ -129,6 +118,43 @@ export class PageModule<
 	removeStateValue(name: keyof S): void
 	{
 		this.state.delete(name);
+	}
+
+	isDisabled(this: PageModule<E, S>) { return this.activationState === -1; }
+	disable(this: PageModule<E, S>)
+	{
+		if (this.isActive())
+			// I hate this. I hate this SO MUCH. WHY DO YOU DO THIS TO ME, TYPESCRIPT???
+			// TODO: Rework this shit.
+			this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
+		this.activationState = -1;
+	}
+	enable(this: PageModule<E, S>, activate: boolean = false)
+	{
+		this.activationState = (
+			activate &&
+			this.shouldBeActive(this.utils.urlUtils.getCurrentLocation())
+		)
+			? 1
+			: 0;
+	}
+
+	isActive(this: PageModule<E, S>) { return this.activationState === 1; }
+	activate(this: PageModule<E, S>)
+	{
+		if (this.activationState === 0)
+		{
+			this.eventHandlers.onModuleStart?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
+			this.activationState = 1;
+		}
+	}
+	deactivate(this: PageModule<E, S>)
+	{
+		if (this.activationState === 1)
+		{
+			this.activationState = 0;
+			this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
+		}
 	}
 }
 export default PageModule;
