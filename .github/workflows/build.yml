@@ -42,5 +42,5 @@ jobs:
         git add ./dist
         git config --local user.name '${{ github.event.pusher.name }}'
         git config --local user.email '${{ github.event.pusher.email }}'
-        git commit -m '[Github Action] Compiling commit #${{ github.event.head_commit.id }}'
+        git commit -m '[Github Action] Compiling commit #$GITHUB_SHA'
         git push origin HEAD:master
