@@ -1,6 +1,14 @@
 {
 	"compilerOptions": {
 		"baseUrl": "./",
+		"paths": {
+			"types": [
+				"./types"
+			],
+			"types/*": [
+				"./types/*"
+			]
+		},
 		"allowJs": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
