@@ -20,10 +20,7 @@ export function setLocationAttribute(
 
 export function openNewTab(URL: string | URL | Location): void
 {
-	if (globalThis.GM_openInTab)
-		globalThis.GM_openInTab(URL.toString());
-	else
-		globalThis.open(URL.toString(), "_blank");
+	globalThis.open(URL.toString(), "_blank");
 }
 
 export function getCurrentLocation(): URL | Location

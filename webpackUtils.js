@@ -131,7 +131,7 @@ function getWebpackConfig(metadata, buildPath, mode = "production", entry = "./s
 				new TerserPlugin({
 					terserOptions: {
 						format: { preamble: generateMetadataBlock(metadata, true), },
-						mangle: { properties: { keep_quoted: true, }, },
+						mangle: mode === "production" && { properties: { keep_quoted: true, }, },
 					},
 				})
 			]

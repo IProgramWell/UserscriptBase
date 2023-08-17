@@ -23,19 +23,19 @@ export function onModuleEvent<
 }): void
 {
 	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
+	let wasActive: boolean;
 	for (let module of options.moduleList)
 	{
 		try
 		{
-			if (module.shouldBeActive(
-				options.currentLocation ??
-				module.utils.urlUtils.getCurrentLocation()
-			))
+			wasActive = module.isActive();
+
+			if (module.onModuleEvent(options.eventHandlerName))
 			{
-				if (!module.isActive() && module.activate())
+				if (!wasActive)
 					logger.print(`Module "${module.moduleName}" has started!`);
 			}
-			else if (module.isActive && !module.deactivate())
+			else if (wasActive)
 				logger.print(`Module "${module.moduleName}" has stopped!`);
 		}
 		catch (err)
@@ -92,28 +92,22 @@ export function onUrlChange(options: {
 }): void
 {
 	let logger = options.logger ?? IOManager.GLOBAL_MANAGER;
+	let wasActive: boolean;
 	for (let module of options.moduleList)
 	{
 		if (module.isDisabled())
 			continue;
 		try
 		{
-			if (module.shouldBeActive(
-				options.currentLocation ??
-				module.utils.urlUtils.getCurrentLocation()
-			))
+			wasActive = module.isActive();
+
+			if (module.onModuleEvent("onModuleStart"))
 			{
-				if (!module.isActive())
-				{
-					module.activate();
+				if (!wasActive)
 					logger.print(`Started module: "${module.moduleName}"`);
-				}
 			}
-			else if (module.isActive())
-			{
-				module.deactivate();
+			else if (wasActive)
 				logger.print(`Stopped module: "${module.moduleName}"`);
-			}
 		}
 		catch (err)
 		{

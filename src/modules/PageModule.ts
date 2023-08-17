@@ -117,15 +117,58 @@ export class PageModule<S extends Record<PropertyKey, any> = {}>
 		this.state.delete(name);
 	}
 
+	onModuleEvent<
+		N extends Exclude<keyof PageModule["eventHandlers"], "init">
+	>(this: PageModule<S>, eventName: N, currentLocation?: Location | URL | string | null): boolean
+	{
+		if (!this.isDisabled())
+		{
+			let shouldBeActive = this.shouldBeActive(
+				currentLocation ??
+				this.utils.urlUtils.getCurrentLocation()
+			);
+
+			switch (eventName)
+			{
+				case "onDocumentLoad":
+				case "onDocumentStart":
+				case "onModuleStart":
+					if (
+						this.activationState === 0 &&
+						shouldBeActive &&
+						this.eventHandlers[eventName]?.call(this)
+					)
+					{
+						this.activationState = 1;
+						return true;
+					}
+					break;
+				case "onModuleStop":
+					if (
+						this.activationState === 1 &&
+						!shouldBeActive &&
+						!this.eventHandlers[eventName]?.call(this)
+					)
+					{
+						this.activationState = 0;
+						return false;
+					}
+					break;
+				default: throw new Error(`Unknown event type "${eventName}"!`);
+			}
+		}
+		return this.isActive();
+	}
+
 	isDisabled(this: PageModule<S>): boolean { return this.activationState === -1; }
+
 	disable(this: PageModule<S>): void
 	{
 		if (this.isActive())
-			// I hate this. I hate this SO MUCH. WHY DO YOU DO THIS TO ME, TYPESCRIPT???
-			// TODO: Rework this shit.
 			this.eventHandlers.onModuleStop?.call(this);
 		this.activationState = -1;
 	}
+
 	enable(this: PageModule<S>, activate: boolean = false): void
 	{
 		this.activationState = (
@@ -138,29 +181,5 @@ export class PageModule<S extends Record<PropertyKey, any> = {}>
 	}
 
 	isActive(this: PageModule<S>): boolean { return this.activationState === 1; }
-	activate(this: PageModule<S>): boolean
-	{
-		if (
-			this.activationState === 0 &&
-			this.eventHandlers.onModuleStart?.call(this)
-		)
-		{
-			this.activationState = 1;
-			return true;
-		}
-		return false;
-	}
-	deactivate(this: PageModule<S>): boolean
-	{
-		if (
-			this.activationState === 1 &&
-			!this.eventHandlers.onModuleStop?.call(this)
-		)
-		{
-			this.activationState = 0;
-			return false;
-		}
-		return true;
-	}
 }
 export default PageModule;
