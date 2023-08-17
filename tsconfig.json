@@ -7,7 +7,7 @@
 			],
 			"types/*": [
 				"../types/*"
-			],
+			]
 		},
 		"allowJs": true,
 		"allowUnreachableCode": false,
@@ -22,8 +22,7 @@
 		"strictBindCallApply": true,
 		"allowSyntheticDefaultImports": true,
 		"module": "NodeNext",
-		// "moduleResolution": "NodeNext",
-		"resolveJsonModule": true,
+		"moduleResolution": "NodeNext",
 		"noEmitOnError": true,
 		"outDir": "build",
 		"checkJs": false,
@@ -32,14 +31,14 @@
 		"isolatedModules": false,
 		"lib": [
 			"ESNext",
-			"DOM",
+			"DOM"
 		],
 		"target": "ES6",
 		"declaration": true
 	},
 	"include": [
 		"./src",
-		"./types",
+		"./types"
 	],
 	"files": [
 		"./global.d.ts"

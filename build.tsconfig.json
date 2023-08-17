@@ -1,14 +1,6 @@
 {
 	"compilerOptions": {
 		"baseUrl": "./",
-		"paths": {
-			"types": [
-				"./types"
-			],
-			"types/*": [
-				"./types/*"
-			]
-		},
 		"allowJs": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
@@ -23,7 +15,6 @@
 		"allowSyntheticDefaultImports": true,
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
-		"resolveJsonModule": true,
 		"noEmitOnError": true,
 		"outDir": "build",
 		"checkJs": false,
@@ -38,7 +29,8 @@
 		"declaration": true
 	},
 	"include": [
-		"./"
+		"./src",
+		"./types"
 	],
 	"files": [
 		"./global.d.ts"
