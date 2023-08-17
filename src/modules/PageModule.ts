@@ -1,8 +1,3 @@
-// import { bindMethods } from "utils/ObjUtils";
-/* import IOManager from "utils/IOManager";
-import * as urlUtils from "utils/URLUtils";
-import * as pageUtils from "utils/PageUtils";
-import * as requestUtils from "utils/RequestUtils"; */
 import
 {
 	URLUtils as urlUtils,
@@ -20,12 +15,8 @@ import type {
 	IURLUtils,
 	IRequestUtils,
 } from "types/Interfaces";
-import type { ModuleEvents, ModuleState } from "types/ModuleHelpers";
 
-export class PageModule<
-	E extends ModuleEvents = ModuleEvents,
-	S extends ModuleState = ModuleState
->
+export class PageModule<S extends Record<PropertyKey, any> = {}>
 {
 	/**
 	 * A collection of per module event handlers,
@@ -35,9 +26,15 @@ export class PageModule<
 	 * indicating whether the current module is active or not.
 	 * 
 	 */
-	readonly eventHandlers: E = {} as E;
-	readonly methods: Record<PropertyKey, (this: PageModule<E, S>, ...args: any) => any> = {};
-	readonly shouldBeActive: (this: PageModule<E, S>, url?: string | URL | Location) => boolean = function ()
+	readonly eventHandlers: {
+		init?(this: PageModule<S>): void;
+		onDocumentLoad?(this: PageModule<S>): boolean;
+		onDocumentStart?(this: PageModule<S>): boolean;
+		onModuleStart?(this: PageModule<S>): boolean;
+		onModuleStop?(this: PageModule<S>): boolean;
+	} = {};
+	readonly methods: Record<PropertyKey, (this: PageModule<S>, ...args: any) => any> = {};
+	readonly shouldBeActive: (this: PageModule<S>, url?: string | URL | Location) => boolean = function ()
 	{
 		return !this.isDisabled();
 	};
@@ -59,10 +56,10 @@ export class PageModule<
 	private activationState: -1 | 0 | 1 = 0;
 
 	constructor (moduleDetails: {
-		eventHandlers?: PageModule<E, S>["eventHandlers"],
-		methods?: PageModule<E, S>["methods"],
-		utils?: Partial<PageModule<E, S>["utils"]>,
-		shouldBeActive?: { (this: PageModule<E, S>, url?: string | URL | Location): boolean; } | RegExp,
+		eventHandlers?: PageModule<S>["eventHandlers"],
+		methods?: PageModule<S>["methods"],
+		utils?: Partial<PageModule<S>["utils"]>,
+		shouldBeActive?: { (this: PageModule<S>, url?: string | URL | Location): boolean; } | RegExp,
 		moduleName?: string,
 		logger?: ILogger,
 		initialState?: S,
@@ -76,7 +73,7 @@ export class PageModule<
 				this.shouldBeActive = moduleDetails.shouldBeActive.bind(this);
 			else if (moduleDetails.shouldBeActive instanceof RegExp)
 				this.shouldBeActive = moduleUtils
-					.activateForRegex<E, S>(moduleDetails.shouldBeActive, false)
+					.activateForRegex<S>(moduleDetails.shouldBeActive, false)
 					.bind(this);
 		}
 
@@ -120,32 +117,32 @@ export class PageModule<
 		this.state.delete(name);
 	}
 
-	isDisabled(this: PageModule<E, S>): boolean { return this.activationState === -1; }
-	disable(this: PageModule<E, S>): void
+	isDisabled(this: PageModule<S>): boolean { return this.activationState === -1; }
+	disable(this: PageModule<S>): void
 	{
 		if (this.isActive())
 			// I hate this. I hate this SO MUCH. WHY DO YOU DO THIS TO ME, TYPESCRIPT???
 			// TODO: Rework this shit.
-			this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>);
+			this.eventHandlers.onModuleStop?.call(this);
 		this.activationState = -1;
 	}
-	enable(this: PageModule<E, S>, activate: boolean = false): void
+	enable(this: PageModule<S>, activate: boolean = false): void
 	{
 		this.activationState = (
 			activate &&
 			this.shouldBeActive(this.utils.urlUtils.getCurrentLocation()) &&
-			this.eventHandlers.onModuleStart?.call(this as unknown as PageModule<ModuleEvents, ModuleState>)
+			this.eventHandlers.onModuleStart?.call(this)
 		)
 			? 1
 			: 0;
 	}
 
-	isActive(this: PageModule<E, S>): boolean { return this.activationState === 1; }
-	activate(this: PageModule<E, S>): boolean
+	isActive(this: PageModule<S>): boolean { return this.activationState === 1; }
+	activate(this: PageModule<S>): boolean
 	{
 		if (
 			this.activationState === 0 &&
-			this.eventHandlers.onModuleStart?.call(this as unknown as PageModule<ModuleEvents, ModuleState>)
+			this.eventHandlers.onModuleStart?.call(this)
 		)
 		{
 			this.activationState = 1;
@@ -153,11 +150,11 @@ export class PageModule<
 		}
 		return false;
 	}
-	deactivate(this: PageModule<E, S>): boolean
+	deactivate(this: PageModule<S>): boolean
 	{
 		if (
 			this.activationState === 1 &&
-			!this.eventHandlers.onModuleStop?.call(this as unknown as PageModule<ModuleEvents, ModuleState>)
+			!this.eventHandlers.onModuleStop?.call(this)
 		)
 		{
 			this.activationState = 0;
