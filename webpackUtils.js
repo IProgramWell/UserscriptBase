@@ -104,7 +104,7 @@ ${MetadataSegments.join("\n")}
  * @param {string} buildPath
  * @param {Configuration["mode"]} mode 
  * @param {string} entry 
- * @returns 
+ * @returns {Configuration}
  */
 function getWebpackConfig(metadata, buildPath, mode = "production", entry = "./src/index.ts")
 {

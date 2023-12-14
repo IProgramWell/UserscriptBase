@@ -37,10 +37,16 @@ jobs:
         cp ./README.md ./build
     - name: Pack
       run: npm run pack
-    - name: Adding to repo
-      run: |
-        git add ./dist
-        git config --local user.name '${{ github.event.pusher.name }}'
-        git config --local user.email '${{ github.event.pusher.email }}'
-        git commit -m '[Github Action] Compiling commit #${{ github.sha }}'
-        git push origin HEAD:master
+    - name: Adding as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: userscriptbase
+        path: dist/userscriptbase.tgz
+    # Leaving this here as a testament to my ignorance
+    # - name: Adding to repo
+    #   run: |
+    #     git add ./dist
+    #     git config --local user.name '${{ github.event.pusher.name }}'
+    #     git config --local user.email '${{ github.event.pusher.email }}'
+    #     git commit -m '[Github Action] Compiling commit #${{ github.sha }}'
+    #     git push origin HEAD:master
